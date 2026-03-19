@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAG Incident Report — 13 March 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-slide: #0a0a0a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #555555;
+    --accent: #00d4ff;
+    --accent-dim: #0a1a2e;
+    --positive: #4ade80;
+    --negative: #f87171;
+    --warning: #fbbf24;
+    --border: #1e1e1e;
+    --card-bg: #141414;
+    --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .deck {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 100px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    background: var(--bg-slide);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .slide.active [data-animate] {
+    animation-play-state: running;
+  }
+
+  .slide h1 {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+
+  .slide h2 {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+
+  .slide h3 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .slide p {
+    font-size: 20px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 720px;
+  }
+
+  .slide ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .slide ul li {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    padding: 8px 0 8px 28px;
+    position: relative;
+  }
+
+  .slide ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .accent { color: var(--accent); }
+  .neg { color: var(--negative); }
+  .warn { color: var(--warning); }
+  .muted { color: var(--text-muted); font-size: 14px; }
+  .source { color: var(--text-muted); font-size: 12px; margin-top: 16px; }
+
+  .stat {
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--negative);
+    line-height: 1;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat.cyan { color: var(--accent); }
+
+  .stat-label {
+    font-size: 18px;
+    color: var(--text-secondary);
+  }
+
+  .stat-group {
+    display: flex;
+    gap: 56px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+    width: 100%;
+  }
+
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .card .card-stat {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+    width: 100%;
+  }
+
+  .callout {
+    border-left: 3px solid var(--negative);
+    padding: 14px 20px;
+    margin-top: 16px;
+    background: rgba(248, 113, 113, 0.06);
+    border-radius: 0 8px 8px 0;
+    max-width: 640px;
+  }
+
+  .callout.blue {
+    border-left-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .callout.warn {
+    border-left-color: var(--warning);
+    background: rgba(251, 191, 36, 0.06);
+  }
+
+  .callout p {
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .callout .attr {
+    font-size: 12px;
+    font-style: normal;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  /* Timeline */
+  .timeline {
+    margin-top: 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #111;
+    align-items: start;
+  }
+
+  .timeline-row:last-child { border-bottom: none; }
+
+  .timeline-time {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    padding-top: 2px;
+  }
+
+  .timeline-event {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .timeline-event.customer { color: var(--negative); }
+  .timeline-event.support { color: var(--text-secondary); }
+  .timeline-event.engineering { color: var(--accent); }
+
+  .timeline-day {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    padding: 16px 0 6px 0;
+    grid-column: 1 / -1;
+  }
+
+  .timeline-day:first-child { padding-top: 0; }
+
+  .timeline-gap {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--negative);
+    letter-spacing: 1px;
+  }
+
+  /* Pattern cards */
+  .pattern-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-top: 16px;
+  }
+
+  .pattern-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .pattern-card p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+
+  .pattern-card .tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-right: 8px;
+    margin-top: 8px;
+  }
+
+  .tag.red { background: rgba(248, 113, 113, 0.15); color: var(--negative); }
+  .tag.yellow { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+
+  .done-list, .needed-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 12px;
+  }
+
+  .done-list li, .needed-list li {
+    font-size: 16px;
+    line-height: 1.5;
+    padding: 6px 0 6px 24px;
+    position: relative;
+  }
+
+  .done-list li { color: var(--text-secondary); }
+  .needed-list li { color: var(--text-secondary); }
+
+  .done-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--positive);
+    font-weight: 700;
+  }
+
+  .needed-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--negative);
+    font-weight: 700;
+  }
+
+  /* Animations */
+  [data-animate="fade-up"] {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.6s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="fade-in"] {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="scale-in"] {
+    opacity: 0;
+    transform: scale(0.92);
+    animation: scaleIn 0.5s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="slide-left"] {
+    opacity: 0;
+    transform: translateX(30px);
+    animation: slideLeft 0.6s ease forwards;
+    animation-play-state: paused;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes scaleIn {
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes slideLeft {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  [data-delay="1"] { animation-delay: 0.15s; }
+  [data-delay="2"] { animation-delay: 0.3s; }
+  [data-delay="3"] { animation-delay: 0.45s; }
+  [data-delay="4"] { animation-delay: 0.6s; }
+  [data-delay="5"] { animation-delay: 0.75s; }
+  [data-delay="6"] { animation-delay: 0.9s; }
+
+  .progress-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    z-index: 100;
+    opacity: 0.7;
+  }
+
+  .slide-counter {
+    position: fixed;
+    bottom: 14px; right: 24px;
+    font-size: 13px;
+    color: var(--text-muted);
+    z-index: 100;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.6;
+  }
+
+  .notes-panel {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.94);
+    border-top: 1px solid var(--border);
+    padding: 20px 48px;
+    max-height: 30vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 200;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  .notes-panel.visible {
+    transform: translateY(0);
+  }
+
+  .notes-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .slide aside.notes {
+    display: none;
+  }
+
+  .confidential {
+    position: fixed;
+    top: 14px;
+    right: 24px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--negative);
+    opacity: 0.5;
+    z-index: 100;
+  }
+
+  .slide .subtitle {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  .slide .context-line {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 24px;
+  }
+
+  @media print {
+    .slide { position: relative; opacity: 1; pointer-events: all; page-break-after: always; }
+    .progress-bar, .slide-counter, .notes-panel, .confidential { display: none; }
+    [data-animate] { opacity: 1 !important; transform: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="confidential">Confidential</div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <section class="slide active" data-slide="1">
+    <h3 data-animate="fade-in">Incident Report</h3>
+    <h1 data-animate="fade-up" data-delay="1">Campaigns Email Failure</h1>
+    <h1 data-animate="fade-up" data-delay="1" style="color: var(--negative); font-size: 42px;">13 March 2026</h1>
+    <p data-animate="fade-up" data-delay="2" style="margin-top: 32px;">A cascading pipeline failure sent <span class="neg">~1.6 million duplicate emails</span> to customers across 35 accounts. One customer, MAG (Motor Auction Group), was severely impacted. The support experience that followed made things significantly worse.</p>
+    <p class="context-line" data-animate="fade-up" data-delay="3">For CPTO and CCO · Prepared by Gilad, Product @ Campaigns</p>
+    <aside class="notes">This report covers both the technical incident and the support failure. The support failure is the primary concern: it's a pattern we've seen before (AHA, Feb 2026) and it needs executive attention.</aside>
+  </section>
+
+  <!-- SLIDE 2: What Happened -->
+  <section class="slide" data-slide="2">
+    <h3 data-animate="fade-in">What Happened</h3>
+    <h2 data-animate="fade-up" data-delay="1">The Technical Incident</h2>
+    <div class="timeline" data-animate="fade-up" data-delay="2">
+      <div class="timeline-day">Friday 13 March</div>
+      <div class="timeline-row">
+        <div class="timeline-time">11:00 AM</div>
+        <div class="timeline-event engineering">Bug deployed causing 2x duplicate emails</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time">12:52 PM</div>
+        <div class="timeline-event engineering">System degrades further. Duplicates escalate to <span class="neg">300x</span></div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time">1:25 PM</div>
+        <div class="timeline-event engineering">Incident declared. Initial fix deployed at 1:30 PM, but system still degraded</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time" style="color: var(--negative); font-weight: 700;">1:43 PM</div>
+        <div class="timeline-event customer">MAG sends their campaign. System is degraded. No warning to customers.</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time">3:59 PM</div>
+        <div class="timeline-event engineering">Email sending finally disabled (2.5 hours after incident declared)</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-time">10:41 PM</div>
+        <div class="timeline-event engineering">Six fixes deployed. Sending re-enabled</div>
+      </div>
+    </div>
+    <p class="source" data-animate="fade-in" data-delay="3">MAG's campaign to 4,290 contacts resulted in 1,301,446 emails sent (vs 225,000 monthly limit)</p>
+    <aside class="notes">The system was known to be degraded when MAG sent their campaign. There was no mechanism to warn customers or prevent sending during an active incident. The 2.5-hour gap between incident declaration and disabling sending is a key finding.</aside>
+  </section>
+
+  <!-- SLIDE 3: Customer Impact -->
+  <section class="slide" data-slide="3">
+    <h3 data-animate="fade-in">Customer Impact</h3>
+    <h2 data-animate="fade-up" data-delay="1">MAG (Motor Auction Group)</h2>
+    <div class="stat-group" data-animate="scale-in" data-delay="2">
+      <div>
+        <div class="stat">24,000</div>
+        <div class="stat-label">Duplicate emails to a single contact<br><span class="muted">Posted on social media (23.6K followers)</span></div>
+      </div>
+      <div>
+        <div class="stat">4,000+</div>
+        <div class="stat-label">Subscribers lost</div>
+      </div>
+    </div>
+    <ul style="margin-top: 28px;">
+      <li data-animate="fade-up" data-delay="3">Sending domains <span class="neg">blocked by Hotmail, iCloud, and Apple</span></li>
+      <li data-animate="fade-up" data-delay="4">Staff took sick leave due to abuse (calls, social media, emails)</li>
+      <li data-animate="fade-up" data-delay="5">Emergency board meetings called. Legal team engaged with customer complaints</li>
+      <li data-animate="fade-up" data-delay="6"><span class="neg">Brand new campaigns customer</span> (6 days). No AM or CSM assigned. Was forecast to upgrade</li>
+    </ul>
+    <aside class="notes">MAG is a multi-brand automotive business based in the UK. They added campaigns on 7 March, just 6 days before the incident. Their account is currently unassigned. Victoria, the previous AM, was providing bridge support as a favour while the seat remains vacant. ARR is ~$16.6K (CRM + Marketing). One of their brands may not recover. They are considering legal action and switching providers.</aside>
+  </section>
+
+  <!-- SLIDE 4: The Support Experience -->
+  <section class="slide" data-slide="4">
+    <h3 data-animate="fade-in">The Support Experience</h3>
+    <h2 data-animate="fade-up" data-delay="1">What the customer received</h2>
+    <div class="two-col" data-animate="fade-up" data-delay="2" style="align-items: start; gap: 40px;">
+      <div>
+        <div class="callout" style="margin-top: 0;">
+          <p>"There are no current bugs or incidents reported that match this specific issue."</p>
+          <div class="attr">AI bot Tim, 2:07 PM Friday (while 1.3M emails were actively sending)</div>
+        </div>
+        <div class="callout" style="margin-top: 12px;">
+          <p>"Once a campaign is sent, monday cannot stop it in that travel process, similar to how an email is sent directly from your email account."</p>
+          <div class="attr">Rushi (support agent), 2:29 PM Friday (incorrect)</div>
+        </div>
+        <div class="callout warn" style="margin-top: 12px;">
+          <p>"It was about HTML formatting. However, you said that your customers are getting duplicates?"</p>
+          <div class="attr">Jacqueline (support agent), Monday, referencing an unrelated old ticket</div>
+        </div>
+      </div>
+      <div>
+        <div class="callout" style="margin-top: 0;">
+          <p>"THIS IS URGENT, ITS STILL SENDING PLEASE TURN IT OFF"</p>
+          <div class="attr">Melanie Frost (MAG), 2:40 PM Friday</div>
+        </div>
+        <div class="callout" style="margin-top: 12px;">
+          <p>"URGENT CAN SOMEBODY PLEASE RESPOND. Our customers are still receiving thousands of the same email. We are losing customers and my teams are being abused."</p>
+          <div class="attr">Lisa Grimsley (MAG), Sunday morning. Third attempt.</div>
+        </div>
+        <div class="callout" style="margin-top: 12px;">
+          <p>"Your support teams need to flush the queue to stop them. Your support are not responding to my emails."</p>
+          <div class="attr">Lisa Grimsley (MAG), Monday afternoon. Opened a second support ticket.</div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">Left column shows what support told the customer. Right column shows what the customer was experiencing. The AI bot told the customer there were no known bugs while the system was actively failing. The agent gave incorrect technical guidance. An unrelated HTML formatting ticket was referenced. The customer opened a second support ticket because nobody responded to the first. At no point was the product team notified.</aside>
+  </section>
+
+  <!-- SLIDE 5: Nobody Was There -->
+  <section class="slide" data-slide="5">
+    <h3 data-animate="fade-in">The Gap</h3>
+    <h2 data-animate="fade-up" data-delay="1">Nobody was there for the customer</h2>
+    <div class="card-grid cols-3" style="margin-top: 20px;">
+      <div class="card" data-animate="fade-up" data-delay="2">
+        <h4 style="color: var(--negative);">No Account Owner</h4>
+        <p>MAG's account is <strong>unassigned</strong>. No AM, no CSM. Victoria (previous AM) was covering as a favour. When Fabio flagged the severity at 10:45 PM Friday, she responded at <strong>10:19 AM Monday</strong>.</p>
+        <span class="tag red">Weekend gap: ~60 hours</span>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="3">
+        <h4 style="color: var(--negative);">Product Team Not Notified</h4>
+        <p>Support handled the crisis for <strong>3+ days</strong> without notifying the campaigns product team. The customer found senior monday.com staff through <strong>LinkedIn</strong>.</p>
+        <span class="tag red">No escalation path exists</span>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="4">
+        <h4 style="color: var(--negative);">Support Couldn't Help</h4>
+        <p>Agents gave <strong>incorrect information</strong>, referenced unrelated tickets, and could not stop the emails. The customer was told to disconnect their own email account and do a "hard refresh".</p>
+        <span class="tag red">No emergency tooling</span>
+      </div>
+    </div>
+    <div class="callout blue" data-animate="fade-up" data-delay="5" style="margin-top: 24px; max-width: 100%;">
+      <p style="font-style: normal; font-size: 15px;">"Monday.com's disaster recovery plan is non-existent and terrible."</p>
+      <div class="attr">Lisa Grimsley, MAG, during follow-up call with Ron (19 March 2026)</div>
+    </div>
+    <aside class="notes">Three systemic failures converged: an unassigned account with no one responsible, no mechanism for support to escalate to the product team, and support agents not equipped to handle emergencies. The customer had to find help themselves through LinkedIn. When Fabio (engineering) flagged it to Victoria (previous AM) on Friday night, she had no obligation to respond and didn't until Monday morning.</aside>
+  </section>
+
+  <!-- SLIDE 6: The Pattern -->
+  <section class="slide" data-slide="6">
+    <h3 data-animate="fade-in">This Is Not Isolated</h3>
+    <h2 data-animate="fade-up" data-delay="1">The pattern: AHA Advising</h2>
+    <div class="two-col" data-animate="fade-up" data-delay="2" style="gap: 48px;">
+      <div>
+        <div class="pattern-card">
+          <h4>AHA Advising (Account 22010338)</h4>
+          <p>Churned <strong>19 February 2026</strong>. <span class="neg">$59,900 ARR lost</span>.</p>
+          <p>Warm prospect referred by the CRM team in March 2025. Never trained on campaigns. Product described as "not usable". Contract terms shifted during migration without communication.</p>
+          <p style="margin-bottom: 0;">The campaigns product team first learned about AHA through the <strong>automated churn analysis</strong>, the day after the account had already churned. An 11-month gap.</p>
+          <span class="tag red">Product team not notified</span>
+          <span class="tag red">Support failure</span>
+          <span class="tag yellow">No onboarding</span>
+        </div>
+      </div>
+      <div>
+        <div class="callout" style="margin-top: 0; border-left-color: var(--warning); background: rgba(251, 191, 36, 0.06);">
+          <p>"Nobody ever discussed the changing contract. Not in emails. Not in the writing. Nothing."</p>
+          <div class="attr">AHA customer, churn call (11 Feb 2026)</div>
+        </div>
+        <div class="callout" style="margin-top: 12px; border-left-color: var(--warning); background: rgba(251, 191, 36, 0.06);">
+          <p>"It's basically tricking your client into signing something that was not at all agreed upon."</p>
+          <div class="attr">AHA customer, churn call (11 Feb 2026)</div>
+        </div>
+        <div style="margin-top: 24px; padding: 20px; border: 1px solid var(--border); border-radius: 8px;">
+          <p style="font-size: 16px; color: var(--text-primary); font-weight: 600;">Two cases in two months.</p>
+          <p style="font-size: 15px; color: var(--text-secondary); margin-top: 6px;">Both customers received inadequate support during a crisis. In both cases, the product team was never notified. In both cases, the customer had to escalate outside normal channels to get help.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">AHA is the pattern evidence. $60K ARR lost because of a combination of contract mishandling, product adoption failure, and support that never escalated to the product team. The product team only found out the day after the churn. Same pattern as MAG: support handles it alone, product team in the dark, customer escalates outside normal channels. Two in two months suggests this is systemic, not incidental.</aside>
+  </section>
+
+  <!-- SLIDE 7: What We've Done + What Needs to Change -->
+  <section class="slide" data-slide="7">
+    <h3 data-animate="fade-in">Actions</h3>
+    <h2 data-animate="fade-up" data-delay="1">What we've done, what needs to change</h2>
+    <div class="two-col" data-animate="fade-up" data-delay="2" style="gap: 48px; align-items: start;">
+      <div>
+        <h4 style="color: var(--positive); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Done</h4>
+        <ul class="done-list">
+          <li>Six technical fixes deployed same day (idempotency guards, timeout adjustments, load shedding)</li>
+          <li>Additional safeguards deployed 18 March (duplicate prevention)</li>
+          <li>Customer call held 19 March with Ron, Victoria, and Gilad</li>
+          <li>All AMs and AEs briefed to reach out to campaigns on-call for any issue</li>
+          <li>Product team joined all CX escalation channels</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color: var(--negative); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Needs Executive Action</h4>
+        <ul class="needed-list">
+          <li><strong>Escalation path:</strong> No mechanism for support to escalate critical product incidents to product teams in real time</li>
+          <li><strong>Severity-1 SLA:</strong> No defined SLA for critical customer incidents. This customer waited 3+ days</li>
+          <li><strong>Emergency tooling:</strong> Support cannot stop active email sending. Agents gave incorrect guidance because they lack both tools and knowledge</li>
+          <li><strong>Incident safeguards:</strong> No mechanism to warn customers or block sending during a known incident</li>
+          <li><strong>Account coverage:</strong> Enterprise accounts with no AM or CSM create invisible risk. MAG was unassigned</li>
+        </ul>
+      </div>
+    </div>
+    <p class="source" data-animate="fade-in" data-delay="3">Pending: Ron connecting with Natalie Margolin and legal team</p>
+    <aside class="notes">The technical fixes are solid and were deployed quickly. The systemic gaps are where executive attention is needed. The five items on the right side require decisions and investment that go beyond the campaigns team. The lack of an escalation path between support and product teams is the most critical gap: it's the common thread in both MAG and AHA.</aside>
+  </section>
+
+</div>
+
+<div class="progress-bar" id="progress"></div>
+<div class="slide-counter" id="counter"></div>
+
+<div class="notes-panel" id="notesPanel">
+  <div class="notes-label">Speaker Notes</div>
+  <div id="notesContent"></div>
+</div>
+
+<script>
+(() => {
+  const deck = document.getElementById('deck');
+  const slides = deck.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesContent = document.getElementById('notesContent');
+  let current = 0;
+  let notesVisible = false;
+
+  function resetAnimations(slide) {
+    slide.querySelectorAll('[data-animate]').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[current].classList.remove('active');
+    resetAnimations(slides[current]);
+    current = index;
+    slides[current].classList.add('active');
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+    const notes = slides[current].querySelector('aside.notes');
+    notesContent.textContent = notes ? notes.textContent : '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        e.preventDefault();
+        goTo(current + 1);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault();
+        goTo(current - 1);
+        break;
+      case 'n':
+      case 'N':
+        notesVisible = !notesVisible;
+        notesPanel.classList.toggle('visible', notesVisible);
+        break;
+    }
+  });
+
+  goTo(0);
+})();
+</script>
+
+</body>
+</html>
