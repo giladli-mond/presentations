@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAG Incident Report — Case Manager Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #d4d4d4;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 48px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .report-header {
+    border-bottom: 2px solid #222;
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+  }
+
+  .report-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .report-header .meta {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.8;
+  }
+
+  .report-header .meta strong {
+    color: #999;
+  }
+
+  .confidential-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+  }
+
+  /* Section headers */
+  .section-num {
+    font-size: 12px;
+    font-weight: 600;
+    color: #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    margin-top: 48px;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #e0e0e0;
+    margin-top: 28px;
+    margin-bottom: 12px;
+  }
+
+  h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 12px;
+    max-width: 780px;
+  }
+
+  strong { color: #e0e0e0; }
+
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 16px;
+  }
+
+  li {
+    margin-bottom: 6px;
+    padding-left: 4px;
+  }
+
+  .accent { color: #00d4ff; }
+  .neg { color: #f87171; }
+  .pos { color: #4ade80; }
+  .warn { color: #fbbf24; }
+
+  /* Executive summary box */
+  .exec-summary {
+    background: #111;
+    border: 1px solid #222;
+    border-left: 3px solid #00d4ff;
+    border-radius: 0 8px 8px 0;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+
+  .exec-summary p {
+    font-size: 15px;
+    color: #c0c0c0;
+    margin-bottom: 8px;
+  }
+
+  .exec-summary p:last-child { margin-bottom: 0; }
+
+  .exec-summary ul {
+    margin-top: 8px;
+  }
+
+  .exec-summary li {
+    color: #c0c0c0;
+  }
+
+  /* Quote blocks */
+  .quote {
+    border-left: 3px solid #f87171;
+    padding: 12px 20px;
+    margin: 16px 0;
+    background: rgba(248, 113, 113, 0.04);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .quote.blue {
+    border-left-color: #00d4ff;
+    background: rgba(0, 212, 255, 0.04);
+  }
+
+  .quote.amber {
+    border-left-color: #fbbf24;
+    background: rgba(251, 191, 36, 0.04);
+  }
+
+  .quote p {
+    font-style: italic;
+    color: #e0e0e0;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .quote .attr {
+    font-size: 12px;
+    font-style: normal;
+    color: #666;
+  }
+
+  /* Timeline table */
+  .timeline-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px 0;
+    font-size: 14px;
+  }
+
+  .timeline-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #333;
+  }
+
+  .timeline-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #1a1a1a;
+    color: #b0b0b0;
+    vertical-align: top;
+  }
+
+  .timeline-table .day-header td {
+    font-weight: 600;
+    color: #00d4ff;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-top: 20px;
+    border-bottom: 1px solid #222;
+    background: rgba(0, 212, 255, 0.02);
+  }
+
+  .timeline-table .highlight td {
+    color: #f87171;
+  }
+
+  .timeline-table .eng td {
+    color: #00d4ff;
+  }
+
+  /* Info cards */
+  .info-card {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+
+  .info-card h4 {
+    margin-top: 0;
+    color: #e0e0e0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 15px;
+  }
+
+  .info-card p {
+    font-size: 14px;
+    color: #999;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 40px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #f87171;
+  }
+
+  .stat-value.cyan { color: #00d4ff; }
+
+  .stat-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  /* Two column */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 16px 0;
+  }
+
+  /* Divider */
+  hr {
+    border: none;
+    border-top: 1px solid #222;
+    margin: 40px 0;
+  }
+
+  /* Print styles */
+  @media print {
+    body {
+      background: #fff;
+      color: #333;
+      font-size: 11pt;
+      padding: 0;
+      max-width: 100%;
+    }
+
+    .report-header { border-bottom-color: #ccc; }
+    .report-header h1 { color: #111; }
+    .report-header .meta { color: #666; }
+    .report-header .meta strong { color: #333; }
+    .confidential-tag { color: #c00; background: #fee; }
+
+    .section-num { color: #0077aa; }
+    h2 { color: #111; }
+    h3 { color: #222; }
+    h4 { color: #555; }
+    p { color: #333; }
+    strong { color: #111; }
+    li { color: #333; }
+    .accent { color: #0077aa; }
+    .neg { color: #c00; }
+    .pos { color: #070; }
+
+    .exec-summary {
+      background: #f5f8ff;
+      border-color: #ccc;
+      border-left-color: #0077aa;
+    }
+    .exec-summary p, .exec-summary li { color: #333; }
+
+    .quote { background: #fff5f5; border-left-color: #c00; }
+    .quote.blue { background: #f0f8ff; border-left-color: #0077aa; }
+    .quote.amber { background: #fffaf0; border-left-color: #b8860b; }
+    .quote p { color: #222; }
+    .quote .attr { color: #666; }
+
+    .timeline-table th { color: #555; border-bottom-color: #ccc; }
+    .timeline-table td { color: #333; border-bottom-color: #eee; }
+    .timeline-table .day-header td { color: #0077aa; background: #f8fbff; border-bottom-color: #ddd; }
+    .timeline-table .highlight td { color: #c00; }
+    .timeline-table .eng td { color: #0077aa; }
+
+    .info-card { background: #f8f8f8; border-color: #ddd; }
+    .info-card h4 { color: #222; }
+    .info-card p { color: #555; }
+
+    .stat-value { color: #c00; }
+    .stat-value.cyan { color: #0077aa; }
+    .stat-label { color: #666; }
+
+    .section-num { page-break-after: avoid; }
+    h2, h3 { page-break-after: avoid; }
+    .exec-summary { page-break-inside: avoid; }
+    .info-card { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="report-header">
+  <div class="confidential-tag">Confidential — Internal Use Only</div>
+  <h1>MAG Incident Report</h1>
+  <h1 style="font-size: 20px; color: #666; font-weight: 400;">Campaigns Email Failure, 13 March 2026</h1>
+  <div class="meta" style="margin-top: 16px;">
+    <strong>Case Manager:</strong> Gilad Livnat, Product Lead, Campaigns<br>
+    <strong>Date:</strong> 19 March 2026<br>
+    <strong>Customer:</strong> MAG — Motor Auction Group (Account 11265645)<br>
+    <strong>Severity:</strong> Critical<br>
+    <strong>Status:</strong> Active — under investigation and remediation
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 1. EXECUTIVE SUMMARY -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="section-num">Section 1</div>
+<h2>Executive Summary</h2>
+
+<div class="exec-summary">
+  <p>On Friday 13 March 2026, a cascading failure in the campaigns email pipeline sent approximately <strong class="neg">1.6 million duplicate emails</strong> across 35 customer accounts. The most severely impacted customer, MAG (Motor Auction Group), had a campaign intended for 4,290 contacts result in over 1.3 million emails. Some contacts received the same email thousands of times, with one case reaching 24,000 duplicates.</p>
+
+  <p>The technical incident, while serious, was identified and resolved within hours by the engineering team. The larger failure was in the customer experience that followed:</p>
+
+  <ul>
+    <li>MAG received <strong>incorrect information</strong> from support agents, including being told that monday.com could not stop the emails</li>
+    <li>It took <strong>over 13 hours</strong> for the technical support team to acknowledge the issue was a bug</li>
+    <li>The customer opened <strong>two separate support tickets</strong> over 3 days because responses were generic and unhelpful</li>
+    <li>The <strong>campaigns product team was never notified</strong> by support during the crisis</li>
+    <li>MAG's account was <strong>unassigned</strong> with no AM or CSM. The previous AM was providing bridge support voluntarily</li>
+    <li>This follows the <strong>AHA Advising churn</strong> ($59,900 ARR lost, February 2026), where the same support gaps were present</li>
+    <li>The product team had already flagged these gaps to the CSM team in a meeting on 4 March 2026. <strong>No action was taken</strong></li>
+  </ul>
+
+  <p>The customer's business has suffered significant, potentially irreversible damage: 4,000+ subscribers lost, sending domains blocked by major providers, staff taking sick leave due to abuse, and emergency board meetings convened. Legal counsel has been consulted. The customer is considering switching providers and has engaged their own legal team.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 2. HIGH-LEVEL TIMELINE -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="section-num">Section 2</div>
+<h2>High-Level Timeline</h2>
+
+<table class="timeline-table">
+  <thead>
+    <tr><th style="width: 140px;">Date / Time</th><th>Event</th></tr>
+  </thead>
+  <tbody>
+    <tr class="day-header"><td colspan="2">Friday 13 March</td></tr>
+    <tr class="eng"><td>11:00 AM</td><td>Bug deployed causing 2x duplicate emails</td></tr>
+    <tr class="eng"><td>12:52 PM</td><td>System degrades. Duplicates escalate to 300x</td></tr>
+    <tr class="eng"><td>1:25 PM</td><td>Incident declared. Initial fix deployed at 1:30 PM, but system still degraded</td></tr>
+    <tr class="highlight"><td>1:43 PM</td><td>MAG sends their campaign during the active, known incident. No warning mechanism exists</td></tr>
+    <tr><td>2:07 PM</td><td>MAG contacts support. AI bot responds: "no current bugs or incidents reported"</td></tr>
+    <tr><td>2:13 PM</td><td>Human agent joins. Sends screen recordings explaining how campaigns work</td></tr>
+    <tr><td>2:40 PM</td><td>Customer: "THIS IS URGENT, ITS STILL SENDING PLEASE TURN IT OFF"</td></tr>
+    <tr class="eng"><td>3:59 PM</td><td>Email sending disabled across campaigns (2.5 hours after incident declared)</td></tr>
+    <tr><td>9:24 PM</td><td>TSE escalation created (7 hours after customer's first contact)</td></tr>
+    <tr class="eng"><td>9:35 PM</td><td>Root causes addressed. Escalated to Fabio (engineering) and Gilad (product)</td></tr>
+    <tr><td>10:45 PM</td><td>Fabio flags severity to Victoria (previous AM) via Slack</td></tr>
+    <tr class="eng"><td>10:41 PM</td><td>Six fixes deployed. Sending re-enabled</td></tr>
+    <tr><td>10:54 PM</td><td>Product team informs Alessia (GTM). AMs/AEs briefed by 11:40 PM with action items</td></tr>
+
+    <tr class="day-header"><td colspan="2">Saturday 14 March</td></tr>
+    <tr><td>3:20 AM</td><td>TSE (Monica) sends first response to customer: "developers are aware and working on a fix"</td></tr>
+    <tr class="highlight"><td>9:04 AM</td><td>Customer emails urgently. Emails are still being received by their contacts</td></tr>
+
+    <tr class="day-header"><td colspan="2">Sunday 15 March</td></tr>
+    <tr class="highlight"><td>Morning</td><td>Customer sends another urgent email. No response</td></tr>
+
+    <tr class="day-header"><td colspan="2">Monday 16 March</td></tr>
+    <tr><td>9:58 AM</td><td>Customer contacts support again</td></tr>
+    <tr><td>10:19 AM</td><td>Victoria responds to Fabio's Friday night Slack (60-hour gap)</td></tr>
+    <tr class="highlight"><td>10:13 AM</td><td>Customer opens a second support ticket because the first is unanswered</td></tr>
+    <tr><td>2:05 PM</td><td>Customer contacts support a third time</td></tr>
+    <tr><td>3:00 PM</td><td>Campaigns team post-mortem. Work begins on additional safeguards</td></tr>
+    <tr><td>3:53 PM</td><td>#mag-campaigns-bug Slack channel created</td></tr>
+    <tr><td>10:03 PM</td><td>TSE tells customer a fix was deployed, asks to "hard refresh and replicate"</td></tr>
+
+    <tr class="day-header"><td colspan="2">Tuesday 17 March</td></tr>
+    <tr class="eng"><td>9:15 AM</td><td>Cross-team post-mortem with omnichannel</td></tr>
+
+    <tr class="day-header"><td colspan="2">Wednesday 18 March</td></tr>
+    <tr class="eng"><td>All day</td><td>New safeguards deployed to prevent duplicates</td></tr>
+    <tr><td>—</td><td>Legal consultation: ToS covers the incident, focus on relationship repair, potential PR risk noted</td></tr>
+
+    <tr class="day-header"><td colspan="2">Thursday 19 March</td></tr>
+    <tr><td>11:15 AM</td><td>Customer call with Ron, Victoria, Gilad, and MAG team (Lisa, Ruby)</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 3. COMMERCIAL IMPACT & CUSTOMER EXPERIENCE -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="section-num">Section 3</div>
+<h2>Commercial Impact & Customer Experience</h2>
+
+<div class="exec-summary">
+  <p><strong>Section summary:</strong> MAG is an Enterprise customer (~$16.6K ARR) that added campaigns just 6 days before the incident, was forecast to upgrade, and had no assigned AM or CSM. During a crisis that caused severe business damage, the customer received incorrect guidance from support, waited 3+ days for a meaningful response, and had to find senior monday.com staff through LinkedIn. This mirrors the AHA Advising case from one month earlier ($59.9K ARR churned), where the same support gaps were present. The product team had proactively flagged these gaps to the CSM team on 4 March. No action was taken before the MAG incident occurred.</p>
+</div>
+
+<h3>3.1 Customer Profile: MAG (Motor Auction Group)</h3>
+
+<div class="info-card">
+  <div class="two-col">
+    <div>
+      <h4>Account Details</h4>
+      <p><strong>Account ID:</strong> 11265645<br>
+      <strong>Company:</strong> MAG — Motor Auction Group<br>
+      <strong>Industry:</strong> Automotive (multi-brand)<br>
+      <strong>Location:</strong> United Kingdom<br>
+      <strong>Tier:</strong> Enterprise<br>
+      <strong>Customer since:</strong> February 2022</p>
+    </div>
+    <div>
+      <h4>Commercial Position</h4>
+      <p><strong>Total ARR:</strong> ~$16,632 USD<br>
+      <strong>CRM:</strong> $10,102 (Enterprise, 2-10 seats)<br>
+      <strong>Marketing (Campaigns):</strong> $6,530 (Enterprise)<br>
+      <strong>Campaigns added:</strong> 7 March 2026 (6 days before incident)<br>
+      <strong>Renewal forecast:</strong> Upgrade (pre-incident)<br>
+      <strong>AM / CSM:</strong> <span class="neg">Unassigned</span></p>
+    </div>
+  </div>
+</div>
+
+<p>MAG is a UK-based automotive group operating multiple brands. They had been a successful CRM customer since 2022 and were evaluating whether to consolidate their marketing tools into monday campaigns, moving from GoHighLevel. Ruby, who heads their marketing teams, was initially hesitant, but Lisa (a senior leader) persuaded the team based on their positive operational experience with monday.com.</p>
+
+<p>The account is currently <strong>unassigned</strong>. There is no AM, no CSM. Victoria Emily, the previous AM, was providing bridge support voluntarily while the seat remained vacant.</p>
+
+<h3>3.2 Customer Impact</h3>
+
+<div class="stat-row">
+  <div class="stat-item">
+    <div class="stat-value">1.3M</div>
+    <div class="stat-label">Emails sent (vs 225K limit)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">24,000</div>
+    <div class="stat-label">Duplicates to one contact</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value">4,000+</div>
+    <div class="stat-label">Subscribers lost</div>
+  </div>
+</div>
+
+<ul>
+  <li>One recipient received the same email over 24,000 times and posted evidence on social media (23,600 followers)</li>
+  <li>Sending domains blocked by Hotmail, iCloud, and Apple</li>
+  <li>Staff took sick leave due to abusive calls, emails, and social media messages from angry recipients</li>
+  <li>One of MAG's newer brands may not recover: "hundreds of thousands of pounds worth of marketing, staff efforts, and roadshows" destroyed</li>
+  <li>Emergency board meetings called, with another scheduled</li>
+  <li>MAG's legal team engaged due to legal letters and complaints from customers, plus reports to regulatory authorities</li>
+  <li>Lisa and Ruby used LinkedIn to find senior monday.com staff because support was unresponsive</li>
+</ul>
+
+<h3>3.3 The Support Experience: Detailed Timeline</h3>
+
+<p>What follows is a chronological account of the customer's interaction with monday.com support, drawn directly from two Zendesk tickets (#4712714 and #4717041).</p>
+
+<h4>Friday 13 March — First Contact</h4>
+
+<p><strong>2:07 PM</strong> — Melanie Frost (MAG) contacts support via chat. The AI bot (Tim) responds with generic information about monday campaigns, stating: <em>"there are no current bugs or incidents reported that match this specific issue."</em> The bot then suggests Melanie make a screen recording.</p>
+
+<div class="quote">
+  <p>"There are no current bugs or incidents reported that match this specific issue. To address this, I recommend double-checking the contact list settings."</p>
+  <div class="attr">AI bot Tim, 2:10 PM Friday — while 1.3M duplicate emails were actively sending</div>
+</div>
+
+<p><strong>2:13 PM</strong> — Human agent Rushi P joins. He asks basic triage questions and sends screen recordings explaining how campaigns work and how to check campaign settings. At this point, MAG's contacts are receiving hundreds of duplicate emails per minute.</p>
+
+<p><strong>2:29 PM</strong> — Rushi provides incorrect technical guidance:</p>
+
+<div class="quote">
+  <p>"Once a campaign is sent, monday cannot stop it in that travel process, similar to how an email is sent directly from your email account."</p>
+  <div class="attr">Rushi P (support agent), 2:29 PM Friday — incorrect information</div>
+</div>
+
+<p><strong>2:40 PM</strong> — Melanie escalates urgently:</p>
+
+<div class="quote">
+  <p>"THIS IS URGENT, ITS STILL SENDING PLEASE TURN IT OFF. HOW DO YOU STOP IT BEING SENT"</p>
+  <div class="attr">Melanie Frost (MAG), 2:40 PM Friday</div>
+</div>
+
+<p><strong>2:45 PM</strong> — Rushi posts in #cxquestions-advanced on Slack: <em>"sorry about the lack of format, but I have a customer who is feeling pretty panicked as they have sent a campaign to a large number of recipients."</em> The response from a colleague states there is nothing that can be done if emails have already been sent.</p>
+
+<p><strong>2:52 PM</strong> — Melanie highlights the quota breach:</p>
+
+<div class="quote">
+  <p>"We have a limit of 225,000 emails per month it has sent over 1.3 million, how has it allowed that?"</p>
+  <div class="attr">Melanie Frost (MAG), 2:52 PM Friday</div>
+</div>
+
+<p><strong>3:01 PM</strong> — Rushi tells Melanie that disconnecting her email account will stop the sending. It did not.</p>
+
+<p><strong>9:24 PM</strong> — Rushi sends a follow-up email requesting login permissions for the technical team. The TSE escalation is created at this point, <strong>7 hours after the customer's first contact</strong>.</p>
+
+<h4>Saturday 14 March</h4>
+
+<p><strong>3:20 AM</strong> — Monica (TSE) sends the first technical support response, 13 hours after the initial contact: <em>"Our developers are aware of this issue and are working to fix it as soon as possible."</em></p>
+
+<p><strong>9:04 AM</strong> — Lisa emails urgently:</p>
+
+<div class="quote">
+  <p>"Good morning are customers are still receiving these emails THIS IS NOW LOSING US CUSTOMERS AND DAMAGING OUR REPUTATION please let me know when this is resolved."</p>
+  <div class="attr">Lisa Grimsley (MAG), Saturday 9:04 AM</div>
+</div>
+
+<h4>Sunday 15 March</h4>
+
+<p>No response from monday.com support. Lisa sends another urgent email requesting an update.</p>
+
+<h4>Monday 16 March</h4>
+
+<p><strong>9:58 AM</strong> — Lisa contacts support again via the original ticket.</p>
+
+<p><strong>10:13 AM</strong> — Lisa opens a <strong>second support ticket</strong> (#4717041) because the first is unanswered:</p>
+
+<div class="quote">
+  <p>"I need someone in charge to call me urgently please. We have had an issue ongoing since Friday, we have now lost many customers and our reputation has been spoiled all over social media."</p>
+  <div class="attr">Lisa Grimsley (MAG), Monday 10:13 AM — second support ticket</div>
+</div>
+
+<p><strong>2:07 PM</strong> — Lisa tells support agent Jacqueline what needs to happen technically:</p>
+
+<div class="quote">
+  <p>"Your support teams need to flush the queue to stop them. Your support are not responding to my emails."</p>
+  <div class="attr">Lisa Grimsley (MAG), Monday 2:07 PM</div>
+</div>
+
+<p><strong>2:27 PM</strong> — Jacqueline references an unrelated old ticket about HTML formatting, asking Lisa to confirm whether she is experiencing "additional issues" with campaigns:</p>
+
+<div class="quote amber">
+  <p>"In your original ticket with the technical support team, it was about HTML formatting. However, you said that your customers are getting duplicates?"</p>
+  <div class="attr">Jacqueline (support agent), Monday 2:27 PM — referencing an unrelated ticket from weeks prior</div>
+</div>
+
+<p><strong>10:03 PM</strong> — Monica informs the customer that a fix has been deployed and asks her to <em>"perform a hard refresh"</em> and <em>"try again to replicate the issue"</em> — for a bug that had sent 1.3 million emails.</p>
+
+<h3>3.4 Customer Call — 19 March 2026</h3>
+
+<p>A call was held on Thursday 19 March at 11:15 AM with Ron (CRM leader, New York), Victoria, Gilad, and the MAG team (Lisa, Ruby, Mel, Nicky). Ron stated he had come to London specifically after hearing about the case and that the incident had been communicated company-wide.</p>
+
+<p>Key statements from the customer during the call:</p>
+
+<div class="quote">
+  <p>"The company cannot recover from this, especially since one of our newer brands has lost all the momentum it had gained over the past six months."</p>
+  <div class="attr">Lisa Grimsley, MAG</div>
+</div>
+
+<div class="quote">
+  <p>"This has destroyed hundreds of thousands of pounds worth of marketing, staff efforts, and roadshows."</p>
+  <div class="attr">Lisa Grimsley, MAG</div>
+</div>
+
+<div class="quote">
+  <p>"Monday.com's disaster recovery plan is non-existent and terrible."</p>
+  <div class="attr">Lisa Grimsley, MAG</div>
+</div>
+
+<p>Lisa also noted that she and Ruby had to resort to LinkedIn to find senior monday.com staff because no one was responding through support channels. Ron committed to returning with a full internal investigation and initial thoughts by the following week.</p>
+
+<h3>3.5 Legal Consultation — 18 March 2026</h3>
+
+<p>Legal counsel (Aaron) was consulted on 18 March. Key guidance:</p>
+
+<ul>
+  <li>MAG is subject to monday.com's Terms of Service, which generally cover issues of this nature. No formal claims are expected at this stage</li>
+  <li>Focus should be on relationship repair, not compensation framing. Incentives (AI credits, renewal discount) can be offered as a <em>token of good faith</em>, not as compensation for the bug</li>
+  <li>A call with someone senior from the CRO side, alongside R&D, was recommended to address the situation commercially</li>
+  <li>Potential PR risk exists if the incident is made public. Immediate priority: understand customer sentiment and engage constructively</li>
+  <li>Important not to over-apologise to avoid attracting a formal claim</li>
+</ul>
+
+<h3>3.6 Prior Pattern: AHA Advising</h3>
+
+<div class="info-card">
+  <h4>AHA Advising — Account 22010338</h4>
+  <p><strong>Churned:</strong> 19 February 2026<br>
+  <strong>ARR lost:</strong> $59,900 (CRM $29,599 + Marketing $30,301)<br>
+  <strong>Customer since:</strong> March 2025 (339 days)<br>
+  <strong>AE:</strong> Samara Cohen</p>
+</div>
+
+<p>AHA was a warm, enthusiastic prospect referred by the CRM team in March 2025. They had 32,000 subscribers and wanted to consolidate from Mailchimp into monday campaigns. They were never trained on campaigns and never completed setup.</p>
+
+<p>During the CRM-to-Campaigns migration, AHA's contract end date was shifted forward from May to February without clear communication. This coincided with their peak business season (January to March).</p>
+
+<div class="quote amber">
+  <p>"Nobody ever discussed the changing contract. Not in emails. Not in the writing. Nothing."</p>
+  <div class="attr">AHA customer, churn call (11 February 2026)</div>
+</div>
+
+<div class="quote amber">
+  <p>"It's basically tricking your client into signing something that was not at all agreed upon."</p>
+  <div class="attr">AHA customer, churn call (11 February 2026)</div>
+</div>
+
+<p>The campaigns product team first learned about AHA through the <strong>automated churn analysis posted on 20 February</strong>, the day after the account had already churned. There had been no communication from support or CS to the product team during the 11 months AHA was a customer.</p>
+
+<p><strong>The common thread between MAG and AHA:</strong> both customers experienced significant issues, both received inadequate support, and in both cases the campaigns product team was never notified through normal channels. Both customers had to escalate outside the standard process to get help.</p>
+
+<h3>3.7 Product Team's Proactive Efforts</h3>
+
+<p>The product team did not wait for the MAG incident to flag these gaps. A timeline of proactive steps taken:</p>
+
+<ul>
+  <li><strong>Mid-to-late February 2026:</strong> Following the AHA churn, the product team connected with the technical support team to investigate support failures around campaigns customers. Fabio (engineering) worked directly with TSE engineers on active cases in #ask-campaigns</li>
+  <li><strong>2 March 2026:</strong> Gilad shared the February churn report on #campaigns-board, noting that 97% of churned accounts never completed setup and 70% had no account owner. Flagged that the team was "working on an investigation with Technical Support" and "in parallel, working on CS to see what can be done." Proposed four action items including CS/AM owner assignment within 48 hours of purchase</li>
+  <li><strong>3 March 2026:</strong> Ron (CRM leader) responded asking pointed questions about what was being done about the activation and onboarding gap</li>
+  <li><strong>4 March 2026, 14:15:</strong> Gilad held a "CRM Introduction" meeting with John Worm (CSM), Yiftah Shiri (CRM GTM Strategy Director), and Alessia (GTM). The #campaigns-cs channel was created 7 minutes later at 14:22 to formalise collaboration between Product, CS, and GTM on campaigns customers</li>
+</ul>
+
+<p>Despite these efforts, <strong>no structural changes were implemented before the MAG incident on 13 March</strong>. MAG's account remained unassigned with no AM or CSM. No escalation path from support to product was created. The gaps identified after the AHA churn were still fully open when MAG was hit.</p>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 4. TECHNICAL INCIDENT & PRODUCT RESPONSE -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="section-num">Section 4</div>
+<h2>Technical Incident & Product Response</h2>
+
+<div class="exec-summary">
+  <p><strong>Section summary:</strong> A bug deployed on Friday morning caused duplicate email sending across the campaigns pipeline. The issue escalated from 2x to 300x duplicates as the system degraded. On-call engineers were alerted within minutes, declared an incident, and deployed an initial fix within 30 minutes. However, the system remained degraded, and it took 2.5 hours from incident declaration to fully disabling email sending. During this window, MAG and other customers sent campaigns. Six fixes were deployed by 10:41 PM, and sending was restored. Additional safeguards were deployed the following week. The engineering response was fast; the gap was in customer-facing communication and the absence of a mechanism to block sending during an active incident.</p>
+</div>
+
+<h3>4.1 Incident Scope</h3>
+
+<ul>
+  <li>~1.6 million duplicate emails sent</li>
+  <li>~35 customer accounts affected</li>
+  <li>Impact window: 12:52 PM to 3:59 PM (3 hours 7 minutes)</li>
+  <li>Contacts received duplicates ranging from 2x to 24,000x</li>
+  <li>Multiple other affected accounts reported by CX (TAG Hardware, DRNKR, Rotec)</li>
+</ul>
+
+<h3>4.2 Detailed Technical Timeline</h3>
+
+<table class="timeline-table">
+  <thead>
+    <tr><th style="width: 120px;">Time</th><th>Engineering</th><th>Support / CX</th></tr>
+  </thead>
+  <tbody>
+    <tr class="day-header"><td colspan="3">Friday 13 March</td></tr>
+    <tr><td>11:00 AM</td><td class="eng">Initial bug deployed causing 2x duplicate emails</td><td></td></tr>
+    <tr><td>12:52 PM</td><td class="eng">System degrades. Impact worsens to 300x duplicates</td><td></td></tr>
+    <tr><td>1:00 PM</td><td class="eng">On-call engineers alerted</td><td></td></tr>
+    <tr><td>1:25 PM</td><td class="eng">Incident declared</td><td></td></tr>
+    <tr><td>1:30 PM</td><td class="eng">Initial bug fix deployed. System still degraded</td><td></td></tr>
+    <tr class="highlight"><td>1:43 PM</td><td></td><td>MAG sends their campaign</td></tr>
+    <tr><td>2:07 PM</td><td></td><td>MAG contacts support via chat</td></tr>
+    <tr><td>2:45 PM</td><td></td><td>Rushi posts to #cxquestions-advanced</td></tr>
+    <tr><td>2:59 PM</td><td class="eng">On-callers identify duplicates are still being sent</td><td></td></tr>
+    <tr><td>3:59 PM</td><td class="eng">Email sending disabled across campaigns</td><td></td></tr>
+    <tr><td>4:06 PM</td><td></td><td>Veronica D (CEA) posts about TAG Hardware</td></tr>
+    <tr><td>4:25 PM</td><td></td><td>Matt Chu (CEM) posts about DRNKR</td></tr>
+    <tr><td>5:54 PM</td><td></td><td>On-call team acknowledges CX reports. DOW opened for TAG Hardware</td></tr>
+    <tr><td>6:27 PM</td><td class="eng">First round of fixes deployed</td><td></td></tr>
+    <tr><td>7:30 PM</td><td class="eng">Second round of fixes deployed</td><td></td></tr>
+    <tr><td>9:10 PM</td><td class="eng">Third round of fixes deployed</td><td></td></tr>
+    <tr><td>9:35 PM</td><td class="eng">Root causes addressed and stable. Escalated to Fabio & Gilad</td><td></td></tr>
+    <tr><td>9:44 PM</td><td></td><td>Escalated to Monica (TSE)</td></tr>
+    <tr><td>10:20 PM</td><td></td><td>Diana Gutierrez (TSE) posts about Rotec duplicates</td></tr>
+    <tr><td>10:41 PM</td><td class="eng">Email sending re-enabled</td><td></td></tr>
+    <tr><td>10:45 PM</td><td>Fabio flags MAG severity to Victoria</td><td></td></tr>
+    <tr><td>10:54 PM</td><td>Alessia (GTM) informed</td><td></td></tr>
+    <tr><td>11:40 PM</td><td></td><td>All AMs/AEs briefed with action items</td></tr>
+
+    <tr class="day-header"><td colspan="3">Saturday 14 — Monday 16 March</td></tr>
+    <tr><td>Sat 3:20 AM</td><td></td><td>First TSE response to customer</td></tr>
+    <tr><td>Mon 3:00 PM</td><td class="eng">Campaigns team post-mortem</td><td></td></tr>
+    <tr><td>Mon 10:03 PM</td><td></td><td>TSE confirms fix deployed, asks customer to test</td></tr>
+
+    <tr class="day-header"><td colspan="3">Tuesday 17 — Wednesday 18 March</td></tr>
+    <tr><td>Tue 9:15 AM</td><td class="eng">Cross-team post-mortem with omnichannel</td><td></td></tr>
+    <tr><td>Wed all day</td><td class="eng">New safeguards deployed to prevent duplicates</td><td></td></tr>
+  </tbody>
+</table>
+
+<h3>4.3 Fixes Deployed</h3>
+
+<h4>Immediate (Friday evening)</h4>
+<ul>
+  <li>Idempotency guards to prevent duplicate processing</li>
+  <li>Timeout adjustments to prevent cascading retries</li>
+  <li>Load shedding to manage pipeline pressure</li>
+</ul>
+
+<h4>Follow-up (18 March)</h4>
+<ul>
+  <li>Additional safeguards to prevent duplicate email sending</li>
+</ul>
+
+<h4>Planned</h4>
+<ul>
+  <li>Throughput-based alerting to catch anomalies faster</li>
+  <li>Rate limiting across the pipeline</li>
+  <li>Better logging for workflow endpoints</li>
+</ul>
+
+<h3>4.4 Key Technical Gap</h3>
+
+<p>The system was <strong>known to be degraded from 12:52 PM</strong>, and the incident was <strong>declared at 1:25 PM</strong>. Yet email sending was not disabled until <strong>3:59 PM</strong>, a gap of 2 hours and 34 minutes. During this window, MAG (1:43 PM) and other customers sent campaigns into a broken pipeline with no warning.</p>
+
+<p>There is currently no mechanism to:</p>
+<ul>
+  <li>Warn customers that the system is degraded</li>
+  <li>Prevent or block campaign sending during a declared incident</li>
+  <li>Alert the support team that an active incident is in progress so they can inform customers</li>
+</ul>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- 5. ACTIONS & RECOMMENDATIONS -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="section-num">Section 5</div>
+<h2>Actions Taken & Recommendations</h2>
+
+<h3>5.1 Completed Actions</h3>
+
+<ul>
+  <li><span class="pos">✓</span> Six technical fixes deployed same day (idempotency guards, timeout adjustments, load shedding)</li>
+  <li><span class="pos">✓</span> Additional safeguards deployed 18 March (duplicate prevention)</li>
+  <li><span class="pos">✓</span> GTM manager (Alessia) informed Friday 10:54 PM. All AMs and AEs briefed by 11:40 PM with action items and customer communication guidance</li>
+  <li><span class="pos">✓</span> Customer call held 19 March with Ron, Victoria, and Gilad</li>
+  <li><span class="pos">✓</span> Legal consulted (18 March): ToS covers the incident. Focus on relationship repair and commercial goodwill, not compensation framing</li>
+  <li><span class="pos">✓</span> All AMs and AEs briefed to reach out to campaigns on-call for any issue</li>
+  <li><span class="pos">✓</span> Product team joined all CX escalation channels</li>
+</ul>
+
+<h3>5.2 Pending</h3>
+
+<ul>
+  <li>Ron connecting with Natalie Margolin</li>
+  <li>Ron connecting with legal for next steps</li>
+  <li>Legal monitoring for potential PR risk</li>
+</ul>
+
+<h3>5.3 Systemic Gaps Requiring Executive Action</h3>
+
+<ol>
+  <li><strong>Escalation path from support to product teams:</strong> No mechanism exists for support to escalate critical product incidents to product teams in real time. In both the MAG and AHA cases, the product team was not notified. This is the single most important gap</li>
+  <li><strong>Severity-1 SLA:</strong> No defined SLA for critical customer incidents. MAG waited 3+ days for a meaningful response. The support team lacked both the tooling and the authority to treat this as an emergency</li>
+  <li><strong>Emergency tooling for support:</strong> Support agents could not stop active email sending and gave incorrect guidance because they lacked both the tools and the product knowledge. Agents need the ability to escalate directly to engineering for product-critical incidents</li>
+  <li><strong>Incident safeguards:</strong> No mechanism to warn customers or block campaign sending during a declared incident. The 2.5-hour gap between incident declaration and disabling sending allowed MAG and others to send campaigns into a broken pipeline</li>
+  <li><strong>Account coverage:</strong> Enterprise accounts with no AM or CSM create invisible risk. MAG was unassigned. Following the AHA churn, the product team met with the CSM team on 4 March to flag this gap and request action items. No structural changes were made in the 9 days before the MAG incident</li>
+</ol>
+
+<hr>
+
+<div style="text-align: center; color: #444; font-size: 13px; padding: 24px 0;">
+  <p>MAG Incident Report · Case Manager: Gilad Livnat, Product Lead, Campaigns</p>
+  <p>19 March 2026 · Confidential — Internal Use Only</p>
+  <p style="margin-top: 12px; font-size: 12px;">
+    References: <a href="https://monday.monday.com/boards/18403857589" style="color: #00d4ff;">Post-mortem board</a> · <a href="https://monday.monday.com/docs/18403900401" style="color: #00d4ff;">Root cause analysis</a> · Zendesk #4712714 · Zendesk #4717041
+  </p>
+</div>
+
+</body>
+</html>
