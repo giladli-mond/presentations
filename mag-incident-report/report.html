@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
 
   body {
     background: #0a0a0a;
@@ -349,7 +350,7 @@
   <h1>MAG Incident Report</h1>
   <h1 style="font-size: 20px; color: #666; font-weight: 400;">Campaigns Email Failure, 13 March 2026</h1>
   <div class="meta" style="margin-top: 16px;">
-    <strong>Case Manager:</strong> Gilad Livnat, Product Lead, Campaigns<br>
+    <strong>Case Manager:</strong> Gilad Livnat, Product, monday campaigns<br>
     <strong>Date:</strong> 19 March 2026<br>
     <strong>Customer:</strong> MAG — Motor Auction Group (Account 11265645)<br>
     <strong>Severity:</strong> Critical<br>
@@ -357,11 +358,22 @@
   </div>
 </div>
 
+<div class="exec-summary" style="border-left-color: #666;">
+  <p style="color: #e0e0e0; font-weight: 600; margin-bottom: 12px;">In this report</p>
+  <ol style="margin: 0; padding-left: 20px;">
+    <li style="margin-bottom: 4px;"><a href="#exec-summary" style="color: #00d4ff; text-decoration: none;">Executive Summary</a></li>
+    <li style="margin-bottom: 4px;"><a href="#timeline" style="color: #00d4ff; text-decoration: none;">High-Level Timeline</a> — Friday 13 March through Thursday 19 March</li>
+    <li style="margin-bottom: 4px;"><a href="#commercial" style="color: #00d4ff; text-decoration: none;">Commercial Impact & Customer Experience</a> — MAG profile, business damage, support experience, AHA pattern, product team's proactive efforts</li>
+    <li style="margin-bottom: 4px;"><a href="#technical" style="color: #00d4ff; text-decoration: none;">Technical Incident & Product Response</a> — engineering timeline, fixes deployed, key technical gaps</li>
+    <li style="margin-bottom: 4px;"><a href="#actions" style="color: #00d4ff; text-decoration: none;">Actions & Recommendations</a> — what's been done, what needs executive action</li>
+  </ol>
+</div>
+
 <!-- ═══════════════════════════════════════════════ -->
 <!-- 1. EXECUTIVE SUMMARY -->
 <!-- ═══════════════════════════════════════════════ -->
 
-<div class="section-num">Section 1</div>
+<div class="section-num" id="exec-summary">Section 1</div>
 <h2>Executive Summary</h2>
 
 <div class="exec-summary">
@@ -373,10 +385,11 @@
     <li>MAG received <strong>incorrect information</strong> from support agents, including being told that monday.com could not stop the emails</li>
     <li>It took <strong>over 13 hours</strong> for the technical support team to acknowledge the issue was a bug</li>
     <li>The customer opened <strong>two separate support tickets</strong> over 3 days because responses were generic and unhelpful</li>
-    <li>The <strong>campaigns product team was never notified</strong> by support during the crisis</li>
+    <li>The <strong>tech support team did not contact the product team</strong> at any point during the crisis. The product team only became aware through its own internal escalation on Friday evening</li>
     <li>MAG's account was <strong>unassigned</strong> with no AM or CSM. The previous AM was providing bridge support voluntarily</li>
     <li>This follows the <strong>AHA Advising churn</strong> ($59,900 ARR lost, February 2026), where the same support gaps were present</li>
-    <li>The product team had already flagged these gaps to the CSM team in a meeting on 4 March 2026. <strong>No action was taken</strong></li>
+    <li>The product team had already flagged the lack of communication with the tech support team in the last week of February 2026, and raised the account coverage gap with the CSM team on 4 March. <strong>No action was taken on either front</strong></li>
+    <li><strong>Had tech support highlighted this case to the product team on Friday</strong>, one of the engineers would have dealt with it personally, and the customer impact could have been significantly smaller</li>
   </ul>
 
   <p>The customer's business has suffered significant, potentially irreversible damage: 4,000+ subscribers lost, sending domains blocked by major providers, staff taking sick leave due to abuse, and emergency board meetings convened. Legal counsel has been consulted. The customer is considering switching providers and has engaged their own legal team.</p>
@@ -386,7 +399,7 @@
 <!-- 2. HIGH-LEVEL TIMELINE -->
 <!-- ═══════════════════════════════════════════════ -->
 
-<div class="section-num">Section 2</div>
+<div class="section-num" id="timeline">Section 2</div>
 <h2>High-Level Timeline</h2>
 
 <table class="timeline-table">
@@ -405,8 +418,8 @@
     <tr class="eng"><td>3:59 PM</td><td>Email sending disabled across campaigns (2.5 hours after incident declared)</td></tr>
     <tr><td>9:24 PM</td><td>TSE escalation created (7 hours after customer's first contact)</td></tr>
     <tr class="eng"><td>9:35 PM</td><td>Root causes addressed. Escalated to Fabio (engineering) and Gilad (product)</td></tr>
-    <tr><td>10:45 PM</td><td>Fabio flags severity to Victoria (previous AM) via Slack</td></tr>
     <tr class="eng"><td>10:41 PM</td><td>Six fixes deployed. Sending re-enabled</td></tr>
+    <tr><td>10:45 PM</td><td>Fabio flags severity to Victoria (previous AM) via Slack</td></tr>
     <tr><td>10:54 PM</td><td>Product team informs Alessia (GTM). AMs/AEs briefed by 11:40 PM with action items</td></tr>
 
     <tr class="day-header"><td colspan="2">Saturday 14 March</td></tr>
@@ -418,8 +431,8 @@
 
     <tr class="day-header"><td colspan="2">Monday 16 March</td></tr>
     <tr><td>9:58 AM</td><td>Customer contacts support again</td></tr>
-    <tr><td>10:19 AM</td><td>Victoria responds to Fabio's Friday night Slack (60-hour gap)</td></tr>
     <tr class="highlight"><td>10:13 AM</td><td>Customer opens a second support ticket because the first is unanswered</td></tr>
+    <tr><td>10:19 AM</td><td>Victoria responds to Fabio's Friday night Slack (60-hour gap)</td></tr>
     <tr><td>2:05 PM</td><td>Customer contacts support a third time</td></tr>
     <tr><td>3:00 PM</td><td>Campaigns team post-mortem. Work begins on additional safeguards</td></tr>
     <tr><td>3:53 PM</td><td>#mag-campaigns-bug Slack channel created</td></tr>
@@ -443,11 +456,11 @@
 <!-- 3. COMMERCIAL IMPACT & CUSTOMER EXPERIENCE -->
 <!-- ═══════════════════════════════════════════════ -->
 
-<div class="section-num">Section 3</div>
+<div class="section-num" id="commercial">Section 3</div>
 <h2>Commercial Impact & Customer Experience</h2>
 
 <div class="exec-summary">
-  <p><strong>Section summary:</strong> MAG is an Enterprise customer (~$16.6K ARR) that added campaigns just 6 days before the incident, was forecast to upgrade, and had no assigned AM or CSM. During a crisis that caused severe business damage, the customer received incorrect guidance from support, waited 3+ days for a meaningful response, and had to find senior monday.com staff through LinkedIn. This mirrors the AHA Advising case from one month earlier ($59.9K ARR churned), where the same support gaps were present. The product team had proactively flagged these gaps to the CSM team on 4 March. No action was taken before the MAG incident occurred.</p>
+  <p><strong>Section summary:</strong> MAG is an Enterprise customer (~$16.6K ARR) that added campaigns just 6 days before the incident, was forecast to upgrade, and had no assigned AM or CSM. During a crisis that caused severe business damage, the customer received incorrect guidance from support, waited 3+ days for a meaningful response, and had to find senior monday.com staff through LinkedIn. Throughout the incident, the tech support team did not contact the product team — the product team only became aware through its own internal escalation on Friday evening. Had support flagged this to the product team on Friday, an engineer would have dealt with it personally, and the impact could have been significantly smaller. This mirrors the AHA Advising case from one month earlier ($59.9K ARR churned), where the same support gaps were present. The product team had flagged the lack of communication with the tech support team in the last week of February, and raised the account coverage gap with the CSM team on 4 March. No action was taken on either front before the MAG incident occurred.</p>
 </div>
 
 <h3>3.1 Customer Profile: MAG (Motor Auction Group)</h3>
@@ -658,7 +671,7 @@
 <p>The product team did not wait for the MAG incident to flag these gaps. A timeline of proactive steps taken:</p>
 
 <ul>
-  <li><strong>Mid-to-late February 2026:</strong> Following the AHA churn, the product team connected with the technical support team to investigate support failures around campaigns customers. Fabio (engineering) worked directly with TSE engineers on active cases in #ask-campaigns</li>
+  <li><strong>Last week of February 2026:</strong> Following the AHA churn, the product team connected with the technical support team to investigate support failures around campaigns customers. Fabio (engineering) worked directly with TSE engineers on active cases in #ask-campaigns. <strong>During this engagement, the product team explicitly stated the lack of communication between tech support and the product team</strong>, flagging that critical customer issues were not being escalated</li>
   <li><strong>2 March 2026:</strong> Gilad shared the February churn report on #campaigns-board, noting that 97% of churned accounts never completed setup and 70% had no account owner. Flagged that the team was "working on an investigation with Technical Support" and "in parallel, working on CS to see what can be done." Proposed four action items including CS/AM owner assignment within 48 hours of purchase</li>
   <li><strong>3 March 2026:</strong> Ron (CRM leader) responded asking pointed questions about what was being done about the activation and onboarding gap</li>
   <li><strong>4 March 2026, 14:15:</strong> Gilad held a "CRM Introduction" meeting with John Worm (CSM), Yiftah Shiri (CRM GTM Strategy Director), and Alessia (GTM). The #campaigns-cs channel was created 7 minutes later at 14:22 to formalise collaboration between Product, CS, and GTM on campaigns customers</li>
@@ -666,17 +679,19 @@
 
 <p>Despite these efforts, <strong>no structural changes were implemented before the MAG incident on 13 March</strong>. MAG's account remained unassigned with no AM or CSM. No escalation path from support to product was created. The gaps identified after the AHA churn were still fully open when MAG was hit.</p>
 
+<p><strong>Had the tech support team contacted the product team when the MAG case was first raised on Friday afternoon, one of the engineers would have dealt with it personally.</strong> The product team became aware only through its own internal escalation late on Friday evening, by which point most of the damage had already occurred. This is a direct consequence of the communication gap flagged in February — which went unaddressed.</p>
+
 <hr>
 
 <!-- ═══════════════════════════════════════════════ -->
 <!-- 4. TECHNICAL INCIDENT & PRODUCT RESPONSE -->
 <!-- ═══════════════════════════════════════════════ -->
 
-<div class="section-num">Section 4</div>
+<div class="section-num" id="technical">Section 4</div>
 <h2>Technical Incident & Product Response</h2>
 
 <div class="exec-summary">
-  <p><strong>Section summary:</strong> A bug deployed on Friday morning caused duplicate email sending across the campaigns pipeline. The issue escalated from 2x to 300x duplicates as the system degraded. On-call engineers were alerted within minutes, declared an incident, and deployed an initial fix within 30 minutes. However, the system remained degraded, and it took 2.5 hours from incident declaration to fully disabling email sending. During this window, MAG and other customers sent campaigns. Six fixes were deployed by 10:41 PM, and sending was restored. Additional safeguards were deployed the following week. The engineering response was fast; the gap was in customer-facing communication and the absence of a mechanism to block sending during an active incident.</p>
+  <p><strong>Section summary:</strong> A bug deployed on Friday morning caused duplicate email sending across the campaigns pipeline. The issue escalated from 2x to 300x duplicates as the system degraded. On-call engineers were alerted within minutes, declared an incident, and deployed an initial fix within 30 minutes. However, the system remained degraded, and it took 2.5 hours from incident declaration to fully disabling email sending. During this window, MAG and other customers sent campaigns. Six fixes were deployed by 10:41 PM, and sending was restored. Additional safeguards were deployed the following week. The engineering response was fast. The critical gap was that the tech support team did not contact the product team throughout the incident. The product team became aware only through its own internal escalation at 9:35 PM — over 7 hours after the customer's first contact. Had this been flagged earlier, an engineer would have handled it directly.</p>
 </div>
 
 <h3>4.1 Incident Scope</h3>
@@ -770,7 +785,7 @@
 <!-- 5. ACTIONS & RECOMMENDATIONS -->
 <!-- ═══════════════════════════════════════════════ -->
 
-<div class="section-num">Section 5</div>
+<div class="section-num" id="actions">Section 5</div>
 <h2>Actions Taken & Recommendations</h2>
 
 <h3>5.1 Completed Actions</h3>
@@ -796,17 +811,17 @@
 <h3>5.3 Systemic Gaps Requiring Executive Action</h3>
 
 <ol>
-  <li><strong>Escalation path from support to product teams:</strong> No mechanism exists for support to escalate critical product incidents to product teams in real time. In both the MAG and AHA cases, the product team was not notified. This is the single most important gap</li>
+  <li><strong>Escalation path from support to product teams:</strong> No mechanism exists for support to escalate critical product incidents to product teams in real time. In both the MAG and AHA cases, the tech support team did not contact the product team. The product team had explicitly flagged this communication gap in the last week of February. Had support contacted the product team on Friday afternoon, an engineer would have handled the MAG case directly, and the customer impact could have been significantly smaller. This is the single most important gap</li>
   <li><strong>Severity-1 SLA:</strong> No defined SLA for critical customer incidents. MAG waited 3+ days for a meaningful response. The support team lacked both the tooling and the authority to treat this as an emergency</li>
   <li><strong>Emergency tooling for support:</strong> Support agents could not stop active email sending and gave incorrect guidance because they lacked both the tools and the product knowledge. Agents need the ability to escalate directly to engineering for product-critical incidents</li>
   <li><strong>Incident safeguards:</strong> No mechanism to warn customers or block campaign sending during a declared incident. The 2.5-hour gap between incident declaration and disabling sending allowed MAG and others to send campaigns into a broken pipeline</li>
-  <li><strong>Account coverage:</strong> Enterprise accounts with no AM or CSM create invisible risk. MAG was unassigned. Following the AHA churn, the product team met with the CSM team on 4 March to flag this gap and request action items. No structural changes were made in the 9 days before the MAG incident</li>
+  <li><strong>Account coverage:</strong> Enterprise accounts with no AM or CSM create invisible risk. MAG was unassigned. The product team flagged the communication gap with tech support in the last week of February, and met with the CSM team on 4 March to flag the account coverage gap and request action items. No structural changes were made on either front in the 9 days before the MAG incident</li>
 </ol>
 
 <hr>
 
 <div style="text-align: center; color: #444; font-size: 13px; padding: 24px 0;">
-  <p>MAG Incident Report · Case Manager: Gilad Livnat, Product Lead, Campaigns</p>
+  <p>MAG Incident Report · Case Manager: Gilad Livnat, Product, monday campaigns</p>
   <p>19 March 2026 · Confidential — Internal Use Only</p>
   <p style="margin-top: 12px; font-size: 12px;">
     References: <a href="https://monday.monday.com/boards/18403857589" style="color: #00d4ff;">Post-mortem board</a> · <a href="https://monday.monday.com/docs/18403900401" style="color: #00d4ff;">Root cause analysis</a> · Zendesk #4712714 · Zendesk #4717041
