@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Interview Prep — Orange Sky Travel</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0a;
+    color: #d4d4d4;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 40px 20px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .header {
+    border-bottom: 1px solid #222;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+  .card {
+    background: #141414;
+    border: 1px solid #1e1e1e;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 8px;
+  }
+  .card.urgent { border-left: 3px solid #f87171; }
+  .card.highlight { border-left: 3px solid #00d4ff; }
+  .card.success { border-left: 3px solid #4ade80; }
+  .card.warning { border-left: 3px solid #fbbf24; }
+  .card-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 4px;
+  }
+  .card-label.urgent { color: #f87171; }
+  .card-label.highlight { color: #00d4ff; }
+  .card-label.success { color: #4ade80; }
+  .card-label.warning { color: #fbbf24; }
+  .card-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #e5e5e5;
+  }
+  .card-body {
+    font-size: 14px;
+    color: #999;
+    margin-top: 4px;
+  }
+  .card-meta {
+    font-size: 12px;
+    color: #555;
+    margin-top: 6px;
+  }
+  .channel {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #00d4ff;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .person { color: #c084fc; font-weight: 500; }
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .metric-card {
+    background: #141414;
+    border: 1px solid #1e1e1e;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .metric-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+  .metric-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .metric-change {
+    font-size: 13px;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .metric-change.up { color: #4ade80; }
+  .metric-change.down { color: #f87171; }
+  .metric-change.flat { color: #666; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #222;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #1a1a1a;
+    color: #d4d4d4;
+  }
+  tr:hover td { background: #141414; }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .badge.green { background: #052e16; color: #4ade80; }
+  .badge.red { background: #2a0a0a; color: #f87171; }
+  .badge.amber { background: #2a1f00; color: #fbbf24; }
+  .badge.cyan { background: #0a1a2e; color: #00d4ff; }
+  .badge.gray { background: #1a1a1a; color: #888; }
+  .priority-list {
+    list-style: none;
+    padding: 0;
+    counter-reset: priority;
+  }
+  .priority-list li {
+    counter-increment: priority;
+    padding: 12px 0 12px 36px;
+    border-bottom: 1px solid #1a1a1a;
+    position: relative;
+  }
+  .priority-list li:last-child { border-bottom: none; }
+  .priority-list li::before {
+    content: counter(priority);
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 24px;
+    height: 24px;
+    background: #1a1a2e;
+    color: #00d4ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .summary-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #b0b0b0;
+    max-width: 720px;
+  }
+  .quiet { color: #555; font-size: 13px; }
+  .divider {
+    border: none;
+    border-top: 1px solid #1e1e1e;
+    margin: 24px 0;
+  }
+  .footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #1e1e1e;
+    font-size: 12px;
+    color: #444;
+  }
+  @media (max-width: 600px) {
+    body { padding: 20px 16px; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Customer Interview Prep</h1>
+  <div class="subtitle">Orange Sky Travel (orangeskytravel.com) · 30 March 2026</div>
+</div>
+
+<!-- Company Overview -->
+<div class="section">
+  <div class="section-title">Company Overview</div>
+  <div class="card highlight">
+    <div class="card-body">
+      <strong style="color:#e5e5e5">Orange Sky Student Travel</strong> is a US-based educational travel company that organises field trips for schools. They partner with 3,000+ educators annually and take 30,000+ travellers to destinations including Washington DC, New York City, Atlanta, Denver, Nashville, and Charleston.
+      <br><br>
+      Their offering includes educational trips, performing arts trips (band, chorus, orchestra, theatre), and custom travel experiences. They handle everything end-to-end: itineraries, transport, accommodation, meals, on-site staff, and secure online payment collection for families.
+      <br><br>
+      They recently launched <strong style="color:#e5e5e5">Sherbie</strong>, described as the "world's first AI field trip assistant", which helps teachers discover, plan, budget, and promote field trips.
+      <br><br>
+      <strong style="color:#e5e5e5">Key facts:</strong> 10+ years of experience. US-based (NAM region). Education/travel industry. B2B model selling to schools, B2C payment collection from families.
+    </div>
+  </div>
+</div>
+
+<!-- Account Snapshot -->
+<div class="section">
+  <div class="section-title">Account Snapshot</div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-value">Enterprise</div>
+      <div class="metric-label">Campaigns Plan</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">$3,600</div>
+      <div class="metric-label">Campaigns ARR</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">$19,200</div>
+      <div class="metric-label">Total Account ARR</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">25</div>
+      <div class="metric-label">Account Seats</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">27 days</div>
+      <div class="metric-label">Campaigns Tenure</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">US</div>
+      <div class="metric-label">Region</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <strong style="color:#e5e5e5">Account ID:</strong> 24594774 · <strong style="color:#e5e5e5">Account name:</strong> OST · <strong style="color:#e5e5e5">Channel:</strong> Sales (managed by <span class="person">Connor Clapp</span>, NAM) · <strong style="color:#e5e5e5">Billing:</strong> Yearly
+      <br>
+      <strong style="color:#e5e5e5">Secondary account:</strong> 4036843 ("Orange Sky Travel"), CRM + Work OS, $1,440 ARR, 5 seats. Likely their original account before the current one became the primary paying account.
+    </div>
+  </div>
+</div>
+
+<!-- Product Usage -->
+<div class="section">
+  <div class="section-title">Campaigns Usage</div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-value">~50</div>
+      <div class="metric-label">Campaigns created</div>
+      <div class="metric-change up">In 27 days</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">~45</div>
+      <div class="metric-label">Campaigns sent</div>
+      <div class="metric-change up">Extremely active</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">~19,900</div>
+      <div class="metric-label">Total emails sent</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">5.2%</div>
+      <div class="metric-label">Avg unique open rate</div>
+      <div class="metric-change flat">Low side</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">2.6%</div>
+      <div class="metric-label">Avg unique click rate</div>
+      <div class="metric-change up">Decent</div>
+    </div>
+  </div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">Usage pattern</div>
+    <div class="card-body">
+      Orange Sky runs highly segmented, state-by-state campaigns targeting specific performing arts categories. Their naming convention reveals a clear system: <strong style="color:#e5e5e5">"FT250 Contest - {State} {Category}"</strong> (where FT250 = FieldTrip 250, their Semiquincentennial product line). Categories include Dance, Strings, Drama, Band, and Chorus. They also run promotional campaigns ("10% OST Offer") and product intro emails ("Sherbie Intro PA").
+      <br><br>
+      Send volumes per campaign range from 22 to 1,794 recipients, suggesting well-segmented contact lists by state and arts discipline. They are sending almost daily, often multiple campaigns per day.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Recent campaigns (last 5 sent)</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Campaign</th><th>Date</th><th>Sent</th><th>Opens</th><th>Clicks</th></tr></thead>
+        <tbody>
+          <tr><td>FT250 Extended Letter #PAonly</td><td>26 Mar</td><td>110</td><td>4</td><td>1</td></tr>
+          <tr><td>10% OST Offer: FL #PA All</td><td>25 Mar</td><td>1,578</td><td>62</td><td>20</td></tr>
+          <tr><td>10% OST Offer: GA #PA All</td><td>25 Mar</td><td>1,794</td><td>98</td><td>70</td></tr>
+          <tr><td>10% OST Offer: NC #PA All</td><td>25 Mar</td><td>1,440</td><td>43</td><td>17</td></tr>
+          <tr><td>10% OST Offer: OH #PA All</td><td>24 Mar</td><td>1,689</td><td>62</td><td>25</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Campaign type breakdown</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Campaign series</th><th>Count</th><th>Avg recipients</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>FT250 Contest (by state + category)</td><td>~30</td><td>~350</td><td>Core outreach, segmented by state and performing arts discipline</td></tr>
+          <tr><td>10% OST Offer (by state)</td><td>~7</td><td>~1,200</td><td>Promotional discount campaigns, broader audiences</td></tr>
+          <tr><td>FT250 Extended Letter</td><td>~4</td><td>~110</td><td>Follow-up letters, smaller audiences</td></tr>
+          <tr><td>Sherbie Intro PA</td><td>1</td><td>2</td><td>Test send (only 2 recipients)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Other Monday Products -->
+<div class="section">
+  <div class="section-title">Other Monday Products</div>
+  <table>
+    <thead><tr><th>Product</th><th>Installed</th><th>Paying</th><th>First week DAU</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>CRM</td><td>24 Jul 2024</td><td><span class="badge green">Yes</span></td><td>4</td><td>Primary product, ~20 months tenure. Sales channel. $15,600 ARR (account total minus campaigns)</td></tr>
+      <tr><td>Marketing (Campaigns)</td><td>3 Mar 2026</td><td><span class="badge green">Yes</span></td><td>1</td><td>Very new (27 days). Enterprise yearly. Sales-led deal</td></tr>
+      <tr><td>AI Credits</td><td>-</td><td><span class="badge gray">No</span></td><td>0</td><td>Installed but not active</td></tr>
+      <tr><td>Marketplace Apps</td><td>-</td><td><span class="badge gray">No</span></td><td>0</td><td>Installed but not active</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Financial History -->
+<div class="section">
+  <div class="section-title">Financial History</div>
+  <div class="card success">
+    <div class="card-title">Healthy, growing account</div>
+    <div class="card-body">
+      <strong style="color:#e5e5e5">CRM:</strong> Paying since August 2024 (~20 months). First billing ARR date: 12 Aug 2024. Stable, long-tenure customer.
+      <br><br>
+      <strong style="color:#e5e5e5">Campaigns (Marketing):</strong> Brand new, activated 3 March 2026. Enterprise yearly plan at $3,600/year. This was a sales-led expansion. The opportunity appeared in <span class="channel">#campaigns-opportunities</span> on 3 March with $3,600 ARR, 10,000 contacts, assigned to Connor Clapp.
+      <br><br>
+      <strong style="color:#e5e5e5">Total account ARR:</strong> $19,200 (25 seats). No churn signals, no cancellation flags. MAPP = 1 on campaigns (single active user), which is expected for a 27-day-old product with one marketer driving it.
+      <br><br>
+      <strong style="color:#e5e5e5">DAU trend (March):</strong> Active on 21 out of 27 days since purchasing campaigns. Misses are weekends and a few quiet days. Very engaged for a brand new customer.
+    </div>
+  </div>
+</div>
+
+<!-- Customer Voice -->
+<div class="section">
+  <div class="section-title">Customer Voice</div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">campaigns-opportunities</div>
+    <div class="card-body">
+      "Orange Sky Travel is interested in our enterprise tier, talking about a 3600 ARR (10000 of contacts) and it is a [new] type of deal. It is assigned to Connor Clapp from NAM."
+    </div>
+    <div class="card-meta"><a href="https://monday.slack.com/archives/C09MQC1423Z/p1772558040768339" style="color:#555">Slack thread</a> · 3 March 2026</div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:#888">campaigns-user-requests</div>
+    <div class="card-body">
+      Account 24594774 submitted a user request on 4 March 2026, one day after purchasing. The request content was not visible in the search, but the team was notified. Worth asking about their early experience and whether any initial issues arose.
+    </div>
+    <div class="card-meta"><a href="https://monday.slack.com/archives/C09L7V074HG/p1772636393715099" style="color:#555">Slack thread</a> · 4 March 2026</div>
+  </div>
+
+  <div class="card">
+    <div class="card-label" style="color:#888">Other channels</div>
+    <div class="card-body">
+      No mentions found in <span class="channel">#campaigns-stats</span>, <span class="channel">#ask-campaigns</span>, or <span class="channel">#campaigns-churns</span> specifically about Orange Sky Travel. No support tickets found in monday boards.
+    </div>
+  </div>
+</div>
+
+<!-- Suggested Interview Questions -->
+<div class="section">
+  <div class="section-title">Suggested Interview Questions</div>
+  <ol class="priority-list">
+    <li>
+      <div class="card-title">What drove the decision to adopt monday campaigns, and what were you using before?</div>
+      <div class="card-body">They've been on monday CRM since mid-2024 (20 months) but only added campaigns on 3 March 2026. Understanding what triggered the expansion, whether they were using a competitor tool (Mailchimp, Constant Contact, etc.), and what made them choose campaigns over alternatives will reveal what value proposition resonated.</div>
+    </li>
+    <li>
+      <div class="card-title">You send highly segmented campaigns by state and performing arts category. How do you manage your contact lists and segmentation?</div>
+      <div class="card-body">Their naming convention ("FT250 Contest - GA Chorus", "10% OST Offer: VA #PA All") reveals a systematic, state-by-state, category-by-category approach. With 10,000 contacts segmented this finely, understanding their workflow for managing and filtering contacts will reveal friction points and feature needs (e.g., dynamic segments, tags, custom fields).</div>
+    </li>
+    <li>
+      <div class="card-title">You've sent ~45 campaigns in your first month. Is one person running all of this, and could more team members benefit from access?</div>
+      <div class="card-body">MAPP is consistently 1 despite 25 seats on the account. This extraordinary volume from a single user suggests either a power user who could become an internal champion, or a bottleneck that could be relieved by enabling more team members. Either answer is valuable.</div>
+    </li>
+    <li>
+      <div class="card-title">How are you measuring the success of your FT250 campaigns? What does a good result look like for you?</div>
+      <div class="card-body">Open rates are around 5.2% and click rates at 2.6%. For education/travel bulk outreach these are in the expected range, but understanding their benchmarks and KPIs will help identify whether they are satisfied or expect more. Are they tracking bookings back to specific campaigns?</div>
+    </li>
+    <li>
+      <div class="card-title">How does the CRM and campaigns integration work for your team? Are you using CRM contacts for your email audiences?</div>
+      <div class="card-body">They use both CRM (20-month tenure, 25 seats) and campaigns. Understanding whether they are leveraging the CRM-to-campaigns pipeline, or managing contacts separately, will reveal whether they are getting the full monday ecosystem value, which is our key differentiator.</div>
+    </li>
+    <li>
+      <div class="card-title">You launched Sherbie, your AI field trip assistant. Are you interested in AI-powered features for your email marketing?</div>
+      <div class="card-body">They clearly invest in AI (Sherbie is prominent on their website). This makes them a natural fit for AI campaign features (content generation, subject line optimisation, send time optimisation). Understanding their appetite for AI in marketing will inform feature positioning.</div>
+    </li>
+  </ol>
+</div>
+
+<div class="footer">Generated by monday campaigns ops · 30 March 2026</div>
+</body>
+</html>

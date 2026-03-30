@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Interview Prep: The FSE Group</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --brand-cyan: #00D2D3;
+      --brand-dark: #0A0A14;
+      --text-primary: #E8E8EE;
+      --text-secondary: #A0A0B4;
+      --text-muted: #6A6A80;
+      --border: #2A2A3E;
+      --bg-body: #0E0E1A;
+      --bg-surface: #16162A;
+      --bg-elevated: #1E1E34;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-body);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .report-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    /* Header */
+    .report-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 24px;
+      border-bottom: 3px solid var(--brand-cyan);
+      margin-bottom: 32px;
+    }
+
+    .report-header .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+    }
+
+    .report-header .header-text {
+      text-align: right;
+    }
+
+    .report-header .report-type {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--brand-cyan);
+    }
+
+    .report-header .report-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Title */
+    .report-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .report-subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    /* Sections */
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 32px;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--bg-elevated);
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Lists */
+    ul, ol {
+      margin-bottom: 12px;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+
+    li strong {
+      color: var(--text-primary);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+    }
+
+    thead th {
+      background: var(--bg-elevated);
+      color: var(--brand-cyan);
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    thead th:first-child {
+      border-radius: 6px 0 0 0;
+    }
+
+    thead th:last-child {
+      border-radius: 0 6px 0 0;
+    }
+
+    tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:nth-child(even) {
+      background: var(--bg-surface);
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(0, 210, 211, 0.1), rgba(0, 210, 211, 0.04));
+      border-left: 4px solid var(--brand-cyan);
+      padding: 16px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0 24px;
+    }
+
+    .highlight-box p {
+      color: var(--text-primary);
+      margin-bottom: 0;
+    }
+
+    /* Metric cards */
+    .metrics-row {
+      display: flex;
+      gap: 16px;
+      margin: 16px 0 24px;
+      flex-wrap: wrap;
+    }
+
+    .metric-card {
+      flex: 1;
+      min-width: 140px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .metric-card .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .metric-card .metric-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .metric-card .metric-change {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .metric-card .metric-change.up {
+      color: #27AE60;
+    }
+
+    .metric-card .metric-change.down {
+      color: #E74C3C;
+    }
+
+    .metric-card .metric-change.neutral {
+      color: var(--text-muted);
+    }
+
+    /* Status badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-green { background: rgba(46, 125, 50, 0.2); color: #66BB6A; }
+    .badge-yellow { background: rgba(245, 127, 23, 0.2); color: #FFA726; }
+    .badge-red { background: rgba(198, 40, 40, 0.2); color: #EF5350; }
+    .badge-blue { background: rgba(21, 101, 192, 0.2); color: #42A5F5; }
+    .badge-purple { background: rgba(106, 27, 154, 0.2); color: #AB47BC; }
+
+    /* Footer */
+    .report-footer {
+      margin-top: 48px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .report-footer .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .report-footer .footer-brand img {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    .report-footer .footer-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: var(--bg-body); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .report-container { max-width: none; padding: 20px; }
+      .report-header { page-break-after: avoid; }
+      h2 { page-break-after: avoid; }
+      table { page-break-inside: avoid; }
+      .metrics-row { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container">
+
+    <div class="report-header">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCCAYAAAB8GMlFAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAABxNSURBVHgB7d0NcpXXeQfwc6W40zS4iNhx6tQZ5Mxkpp2O+VgBeAWQFYBXAF6B7RVgr8CwgsAKDCsAiaadTjtB7tBmnHGL4riTDwLqfa64tpAl3SvpPe99zzm/34zQB5DYBr3/+5zznPOMUgl+9atz6dmzc2lrazWNRqfHX1l98ZZ2vAdgMTbGz+bN8TN6c/Lx1tbn488fpOXljfRP//QgDdwoDc2jRyvp668j9C6NPzv34m0lAVCqu+O3B+NwvJPeeeduGphhBGGE31dfXR3/R5qGn+ADqNft8dud9Oqrt9Pbb2+mBVtsED58eHFc+V0bf3QxCT+AFt0cF0G3Flkp9h+E0+ovpSvjf/lzCQBibzGlj9KZMzdTz/oNwocPPxhXgNeT6g+AvW2kngOxnyBcX788/vFG0uEJwHw2Uk+BmDcI//VfV9PTp5+m7T1AADis2+mVV95P//iPGymTpZTLw4fXxiF4PwlBAI7u8jhLHk221jLpviJUBQKQx8a4Ony36+qw24ow9gJVgQDkEYXWZy/6TjrTXRBul62/TDpCAchnNUXWdLhU2s3S6D//86fp+fOrCQD683E6c+b9dEzHC8Lte0E/S1tbDsYD0L+43PvEiXePc1Xb0YNQCAIwBMcMw6MFoRAEYEiOEYZHa5YRggAMSWRSZNMRHD4I19dvCEEABieyaX3900P+rkMG4Xa76vUEAMN09bBHK+bfI9w+wPjLBADD94t05szteX7hfEG4fW1arL2uJgAYvs30yivn57mObb6lUSEIQFlWXtx7PdPsINxea11NAFCWi2ltbWZfy8FLo9tLoo8SAJRp5hLpwRXh06c3EgCUa+YS6f5BuL5+NcVARAAo28WDRjcdVBFmmwYMAD3bd4Vz7yDcrgZXEwDUYTWtrX2410/s3Syzvv4oCUIA6rKZXn317d0Xc3+3IlQNAlCnlfTVV1d3f3GvpVF7gwDUaWnpyne+9NJnDx9eTKpBAGoVEyq2s+4bS7t+wZUEADXb2rq289Nvm2Xu319Jy8tPEgDU7aWmmW8rwuVlh+cBaMFLTTM7l0YvJQBowWj0TebtDEIVIQCtOJcePVqJD7aDcFcHDQBUbiV9/fW5+GA7CJ8/Vw0C0JpJ9m0H4Wh0NgFAS7a2Jtk33SO8mACgLZOl0VH61a/OpWfP7icAaM2zZ+eXxj+sJgBo0fLyuaXJvWsA0KKtrdXYI1xNANCi0ej0UvyQAKBNqxGEKwkA2rQae4SCEIBm2SMEoGWrSwkAGiYIAWiaIASgaYIQgKYJQgCaJggBaJogBKBpghCApglCAJomCAFomiAEoGmCEICmCUIAmiYIAWiaIASgaYIQgKYJQgCaJggBaJogBKBpghCApglCAJomCAFomiAEoGmCEICmCUIAmiYIAWiaIASgaYIQgKYJQgCaJggBaJogBKBpghCApglCAJomCAFomiAEoGmCEICmCUIAmiYIAWiaIASgaYIQgKYJQgCaJggBaJogBKBpghCApglCAJomCAFomiAEoGmCEICmCUIAmiYIAWja9xKwp9VXXtl+/1d/9e3XdnxM925/9VXafPYsdencX/91Ovf976dabPz5z+nu//1fojuCkOasLC1NAi0ejivLy+n0OPDi/fTz+Pl4T/9u/8u/pK7d+MlP0sUf/CDV4r3Hj1MShJ0ShFRrZ+CdfVEVxOfTSo9hufv1151Xg6GmEAyqwe4JQqoRAXfxxIl0Yfzgi9CLJTHKcS/DA762EIxl0XijW4KQYkXwXT55chJ88cCznFm2HJXO5b/921QT1WAegpBixFJnVHqXxg+3q6dOCb6KxJJojof8hcoqwjtffZXoniBk0CL8rv7wh5Pwi6VO4VenB3/4Q+parBjU1C0aVIR5CEIGJ8IvljyvjKu+2vZ42FuOSqe6EMzUTIQgZEAi9CL8Yl9H5deWHJXOpcr2B9f++MdEHoKQhYrq79qPfpSuv/aa8GtUdEE+yPCQr2014bb9wWwEIQsRD6lrr79eXVcfh5ejGoz9wZpuAcrVTMQ2QUivIgA/+PGP7f3xjSznB0+cSDXJ0UzEtwQh2U07P6+Nlz/d1clu9gdnc2wiL0FINvb/mCUqnRw3pbhWjcMQhGQR+38fvvGGAORAua5Vq+nvXa5mIr4lCOlUPIQ+festS6DMJUcnZG13zKoG8xOEdEITDEeRo9K5dPJkqsk9QZidIORYYh8w5r3F3Z9wGDluSoklUfuDHJYg5MjsA3IcOSqd2pZFczUT8TJByKHFK+4bb75Z3V2O9MvYpdk0yfRDEDK3WAb94O/+bnIcAo7D2KX5OD/YD0HIXHSD0qV7ma5VM3aJoxCEHEgVSA45jk3Udq2asUv9EYTsK15h//L0aXuBdC7H3Zm1LYs6NtGfpQR7iI7Q+z//uRCkc8YuzceyaH9UhLxkci7w7/8+XV1ZSZDD3UzHJoxd4qgEId+IpdDPfvYzDTFklaMTsrZq0LJovyyNMnHl1KnJUqgQJLccy6IXKmuUMY2+XypCJneExg0xkJuxS/MxiLdfgrBh9gPpm7FLsxm71D9B2ChHI1iE2/YHZ9Ik0z9B2CBNMSxKlmvVKtsf1CjTP0HYmGgzjxA0MYK+xU0pXTN2iS7oGm1IPDCEIIvi2MRsxi4thoqwEXE84uZbbyVYlByVzqXKxi5ZFl0MFWEDhCCLFjel5OiErG0Qr/ODiyEIKycEGQJjl+bj2MRiCMKKCUGGwtil2YxdWhxBWCkhyJDYH5zNNPrFEYQVEoIMSXRB5uiErG1/0LLo4gjCysTD4eM330wwFMYuzWbs0mIJwopMb4xxTpAhcX5wNscmFksQVkIIMlRZ9gdPnkw1cWxisQRhBWKKhLtDGaJcnZC17Q9aFl0sQViBT3/6UyHIIK1laACpceySa9UWSxAWLobqXq6sjZx65Fjyq+3vu2pw8QRhwa69/rrJ8gxWrk7Is5XdJuP84OIJwkJFc4xjEgxZTFLomrFL5CAICzTtEIUhc2xitnix4Fq1xROEBbrxk59ojmHwXKs2m/ODwyAIC6M5hhJEF+SDTB2jNXF+cBgEYUFiSVRzDCW4m2nsUm0rIfYHh0EQFmJ6aB5KkGPJr8axSwyDICyEfUFKYn9wNscmhkMQFuDqqVOTNyhBdELmuCnFsQlyEYQDF/siH9gXpCA5mmTibtHarlUzf3A4BOHARZeoJVFK4vzgbGtCcFAE4YBZEqVExi7N5tjEsAjCgYouUUuilCbX2CX7g+QkCAfq2o9+ZEmU4mQ5NlFZCBq7NDyCcIAcnKdUOSodY5fITRAOUAzahdLkGrt0obKK0PnB4RGEAxPNMbUtBdGGe5muVTtX2fxBFeHwCMKB0SBDqXJcGVZdCGZqJuJ4BOGAxMR5DTKUyrVqszk/OEyCcCBiCej6a68lKJGxS/NxfnCYBOFAXPnhD1WDFCtHNRjXqtX0PZGrmYjjE4QD4LgEpcvRKFPb/mBcRs4wCcIBiPtEoWT2B2dzbGK4BOGCRTXoPlFKZuzSfCyLDpcgXDDVIKXLda2asUv0RRAuUFSDDs9TutvGLs2kGhw2QbhAl0+e1ClK8XJUOhdOnEg1uScIB00QLtA15wYpXI6bUmJJVEVInwThgkSDjGqQ0uXohIzzgzXJ1UxEdwThgrhTlBrkWBatbeySZdHhE4QLEMs+qkFKZ+zSfCyLDp8gXIArzg1SAWOX5iMIh08Q9swBemqR5dhEZd2ixi6VQRD2rLZvdNplWXQ2+4NlEIQ9c2SCGkQXpGvVZrMsWgZB2KNoC69t/4M2Gbs0m7FL5RCEPYoJ9FCDO65Vm8myaDkEYY/cK0otcpwfvHTyZKqJafTlEIQ9cXaQWuS6KaXGG2UogyDsibOD1MLYpdmMXSqLIOyJZVFqYezSbJpkyiIIe1BbNxxty3J+sLLztXfsDxZFEPagtkuEaVfclNK1GscuWRYtiyDswSVBSCUcm5jN2KXyCMLMarxEmHblWBat7YWi84PlEYSZuVuUWuTqhKzt2ITzg+URhJnVdokw7VrLEILGLjEEgjAzxyaohbFLs+VoJiI/QZhRvNp1bIJa2B+czbGJMgnCjOwPUotcY5eq2x/8/e8T5RGEGdkfpBbGLs0Wy6KOTZRJEGZU26td2uX84Gy3NjcTZRKEmcRtGc4PUoss+4MVjV2KSvDmkyeJMgnCTFSD1CKW/GLaetdqqgg/+u1vE+UShJkIQmqR4/xgTSGoGiyfIMzkrGVRKpHj/GBNF9G/9/hxomyCMBPnB6lBLInm2B+s5YXiJ19+6SaZCgjCTCyNUoOYpNC1WsYuxZLo9d/8JlE+QZhBhGB8s0PpHJvYW4Tgu48eJeogCDMQgtTCtWrfFcvFEYIOz9dDEGZgWZQa5Bq7VHJFKATr9L1E5zTKUIMc1WDJF9FPl0OFYH0EYQanBSEVyDFpvdSL6ONSgV/8539muViAxbM0mkG86oXS2R/cXgp9/7//e1IJCsF6qQgzsDRK6eLYRI4lwJL2B6MKfO+//stSaAMEYQa6RildlmXRcQiW8L0RARh3hzoo3w5B2DHVIDXINX9wqKLqu/XkSbq5uakCbJAg7Jj9QWpQ+9ilCLuo/Nb+9KfJ+xzHRCiHICSLeLjc+f3vJw8cTQZliT+vHH9mH33xRfooLc600tt4+jTBToKwY60vjcYlxB+O91eEH7vZc2OoBCGdmLaZxx4LQEkEYcda3SOMmWw55tYB5OZAPccWez9CECiVIORYogEh9gQBSiUIO9Zas0w0xwCUTBByLDoBgdIJQo7FQWSgdIKQI3MVFVADQQhA0wQhRxaNQSZtAKUThBzLkCcKAMxDEHIslwubOA6wmyDsWGsNJFdOnTJ6CiiaIORYYo/w05/+NAGUShB2rMXxQxd/8IP0wY9/nABKJAg7tvn8eWrRh2+8kT596y3LpEBxBCGduTreL/zsZz+bvF9Z8lcLKMMora9vJToTy4QRBmzfQxrNQ5+7gWaw4oq8rkdoxapAvBg6io2nTyd/Z2KLwfV99MVg3o7FNzLb4kVBijcGKwYqd+3iiROd7BlPw/DOOKjvfv21YCQbQdixFptlKFeO6SEXOnrxEx3J8WLq4ov/vagUb25uplv/+79ecNIpGzkdE4SUIoIlx7nXi5lWAeJKv2jKevQP/6Axi04JwgxMZaAEOarBuHKvj+HUsQcpEOmKIMzAsg0luNNxk0y42POecATi/Z//PF1//fUERyUIM9AlSQlyVISXTp5MfYu9xBtvvpl+efq06pAjEYQZWBpl6B784Q9Z9rMXOY0kLoCPo0vCkMMShBlYGmXo7mWoBmNZdNHzKWN/MpZKTUXhMARhBvFqG4bsdob9waGET4RxLJNeOeKhftojCDNQETJ0OfYHz37/+2lIbr71lsqQuQjCDGLvxT4hQxW3tHRtevh9aOJ4xSL3LSmDIMzEdVAMVQ3HJuY1XSZd9N4lwyYIM3GEgqHKcmxiwEuQ0UATYQj7EYSZqAgZoliyz/F3c+jLj1GxOnTPfgRhJjledcNxrWUIwTi3d25gjTJ7+eCNNyyRsidBmMl0phoMSY5jEzF2qQTTG2hgN0GYkaqQoWltf3C3uJtUFym7CcKM7mVoU4ejiosechzrKS1YrtkrZBdBmJGGGYYkV5NMH2OXuhRVob1CdhKEGcWDxz4hQ9HS+cFZrr/2WoIpQZhRhKCqkKGoZexSF9xDyk6CMDP7hAxBXKuWY3Wi1IowlnNL/Wene4IwM52jDEGusUslE4RMCcLMIgjtE7JoOV6QlT7Z4UIh5x/JTxD2IEeTAswrXojlCMILhVdUzhMyJQh7YHmURcoxKDqOH5RwrdpB4t8hrocDQdiD2ypCFsixif2VHuZ0QxD2INfSFMyj9WvVDqIiJAjCntz53e8S9C3X2KVaKkI3zBAEYU9ubm4m6FuOajCqqNKuVduPICQIwp5YHmURspwfrOjYwUlBSBKEvbr15EmCPtkfPNjvnPElCcJeRfeow/X0JdfYpZpuZPH9SBCEPYpvOlUhfcl1rVpN+2qCkCAIe+ZMIX3J8XettttYNp4+TSAIexZ7Njlu+oDdchybKHXs0n5UhARBuADuHiW3HGOXYkm0tokNOrkJgnABPv6f//FKlKxy7A/WtixqZYYpQbgAmmbIzdil2e6pBnlBEC6Im2bIxdil+VgWZUoQLkgsy/hGJId7ma5Vq21Sg+8/pgThAn30xRcJupbj2ERN16qFHM1ElEsQLlC8IvWqlK7laAKpbVnU/iA7CcIFUxXSJWOX5uMFKDsJwgVTFdKlu5mOTdQydimYBMNugnAAVIV0JcdlDbU1yVgWZTdBOACqQrqS5Vq1ys4PRqMM7CQIB0JVyHEZuzQfLzrZTRAOhKqQ4zJ2abZczUSUTRAOiKqQ48hyflA1SAME4YDEN+knX36Z4CiyXKtW2UF6jTLsRRAOzIe//a0bLzi0HA0gxi7RCkE4MBGCqkIO645l0ZlyNRNRPkE4QFEV+oblMBybmM2yKPsRhAP13uPHCeaR66aU2gbx5mgmog6CcKA0zjAvY5fm49gE+xGEA6ZxhnkYuzSbsUscRBAOWHzjWiJlFtPoZ7tjWZQDCMKBi1f79jbYTzRVuVZtNsuiHEQQFiCqQl2k7MXYpdmMXWIWQVgAS6Tsx/nB2RybYBZBWAhdpOwlR6Vz6eTJVBNbC8wiCAsSXaT2OpjK1QlZ2/lBy6LMIggLEg+9X3z+uTZwJtYyvCiqceyS/XVmEYSFiW/q93/zmwQ5lvwu1zaNXjXIHARhgW4+eWK/kCwP+bOV3Sbj/CDzEISFuj6uCr3abZexS/Oxp848BGHBnC9sl2MTsxm7xLwEYcHim1zzTJuyHJswdolGCcLCxdKP5pm2xAugB5k6Rmvi/CDzEoQViOaZj774ItGGHMcmYuxSTdeqBXvozEsQViIO2wvDNhi7NFuOZiLqJQgrEmF4a1wdUjf7g7M5NsFhCMLKXH382JJQxXJ1QrpWjZYJwgpFJ6nzU3XK8eda29ilXM1E1EsQViiOU7z76197GFTI+cHZ1vy955AEYaWEYZ2MXZrNsQkOSxBWTBjWJdfYpdoqQvuDHJYgrJwwrEeOm1JqC0FjlzgKQdgAYViHHJWOsUsgCJsRYXj+3//dOcNCxZ9fjof8hcoqQucHOQpB2Jg4Z+gGmvLkWBaNa9XOVTZ/UEXIUQjCBrmOrTw5rgyrLgQzNRNRP0HYqAhDUyvK4Vq12Zwf5KgEYcM+/vLLyb6hLrthM3ZpPs4PclSCsHHxgH330SNhOGB3M+0P1nStWq5mItogCJmE4Nv/9m/pk3GFyPBkOT9Y2diluIwcjkoQ8o3r4z1D+4bDY39wNscmOA5ByEti3zCqQ0ulw5Br7JJr1eBbgpDviAfv+f/4D0ulA5DrWrWV5eVUC2OXOC5ByJ6i+SCWSt97/Fh1uEA5OiEN4YWXCUIOdPPJk0lXqdb0xchR6dQ2dumeIOSYBCEzRUUYU++jkUZ12J8cN6XEkqj9QXiZIGRu0UgT1aGLu/txx7LoTLmaiWiLIORQ4qETF3fbO8wvx7JobWOXNMnQBUHIkcTeYXSWurw7D2OX5uP8IF0QhBxZPKzj8u44d2i5tFvGLs3H/iBdEIQcm+XS7uXo0q3tWjVjl+iKIKQzsVwa1aFAPL4cd2fWtizq2ARdEYR0TiAej7FL87EsSlcEIdkIxKPJ8YCPYxPGLsHeBCHZCcTDydEJWVs1aFmULglCejMNxLilJhod2FuOZdELlTXKuPKPLglCehcPsbihZnrsQpX4LWOX5mMQL136XoIFmR67CFdPnUpXVlaqa/E/LGOXZjN2ia6pCBmE6ZSLqBJjDmKrVeJt+4MzaZKha4KQQYkAjDmIEYjv/vrXzS2dZrlWrbIqW6MMXbM0ymBFKEyDIdr/Y/k0DoXXdk3YVI4GImOXYDZBSBFiTygqxRDn4eLhfunVVyehWMv5OMcmZjN2iRwEIcWJB+HNeHtx0XdUi9Fkc+Fv/qboYMxR6VyqbOySZVFyEIQUL6rFePv4xecRhBGO8TZdSh1612TclJKjE7K2QbzOD5KDIKQ6UTHG286HZgThJByjYnzllXR6/BaBGW9DCEljl+bj2AQ5CEKaML2bcq/lxwjCCI3J+wjH8cfh9Iv3O5da49fkCM4clU6EYE37aRGCxi6Rwyitr28lAGiUc4QANE0QAtA0QQhA0wQhAE0ThAA0TRAC0DRBCEDTBCEATROEADRNEALQNEEIQNMEIQBNE4QANE0QAtA0QQhA0wQhAE0ThAA0TRAC0DRBCEDTBCEATROEADRNEALQNEEIQNMEIQBNE4QANE0QAtA0QQhA0wQhAE0ThAA0TRAC0DRBCEDTBCEATROEADRNEALQNEEIQNMEIQBNE4QANE0QAtA0QQhA0wQhAE0ThAA0TRAC0DRBCEDTBCEATROEADRNEALQNEEIQNMEIQBNE4QANE0QAtA0QQhA0wQhAE0ThAA0TRAC0DRBCEDTIgg3EgC0aUNFCEC7trY2VYQAtGs0Ggfh1tbnCQDatKEiBKBd42JwaVwWbiQAaNFo9GApLS8/SADQomfPNkaTD9bXn4x/XEkA0JIzZ0bT4xOqQgBaczd+2A7Cra21BAAtGY0m2bcdhEtLtxMAtGWSfdtB+Je/xNLoZgKAVrzzzt14tx2E589HCNonBKANW1t3ph8u7fVFAKjaaPTNluC3Qfj8+c1keRSAFrz66h5BuL08ejcBQN1uprff/qbwe3kM02j0SQKAmo1Gt1769Du/YG3t/vgXnUsAUJutrY109uzbO7+012DeWwkAajQaffSdL33nF92/v5KWlx8ld48CUJM9qsHw3Yowmma2tuwVAlCXParByZf3/Q1ra4/Gv2k1AUDp9qkGw9K+v2k0ej8BQA32qQYnP5UOsr7+2fjHiwkAynU7nTnzi/1+cikd5Nmz95LbZgAo2bNnB65wHhyE589vjNdVP0oAUKLIsMiyAxy8NDpliRSA0hzQILPTUpqHJVIAShIh+Pz5u/P80vmCcLusfC8BQAni5MOMJdGp+YIwnDlz234hAIMXWRWZNaf59gh3Wlu7OU7aKwkAhiamKL3zzvVD/ZZ0FCZUADA0W1sP0tmz59Mhzb80ulNsQMb/IQAMQWTSnM0xux2tIgwxpWJp6TOVIQALNQ3BGBpxBEcPwiAMAVikY4ZgOF4QTq2tfTwOw2sJAPpzK505czUd09H2CHc7e/a6oxUA9Gb7iMTV1IFuKsKp9fXL43+4G+YYApBJLIG+d5hzgrN0G4Th/v3VF/uGqwkAunN3cuXnnDfGzKv7IJxaW/twHIYfJAA4ns3JUujZsx+nDPIFYYjqcHn5xvijywkADi9LFbhT3iCcWl+/Ok7zDyyXAjCXmB4RF2d3uBe4n36CcEogAnCwWAb9ZLwM+mHqSb9BOCUQAdhpNIqD8bfGbzePczj+SP/XaZEePrw4/pe+apoFQJMi8O6+mBhxNy3IYoNwKq5qW16OhppLSWMNQM0i/B6MVwXvLKL628swgnC37Urx8vhVwtnxZxcTAKWaBt9aWlq6nf7ylwdDCL+dhhmEu92/f25cMa6O/0OeG4fj6fFX4uOV8ccrk48BWKSNHe83xs/nz8fP54307FmE3uBH9v0/u5yyWLcifyYAAAAASUVORK5CYII=" alt="monday campaigns" class="logo">
+      <div class="header-text">
+        <div class="report-type">Customer Interview Prep</div>
+        <div class="report-date">30 March 2026</div>
+      </div>
+    </div>
+
+    <h1 class="report-title">Customer Interview Prep: The FSE Group</h1>
+    <p class="report-subtitle">Account 24120745 · Shared Contacts Alpha · Call at 11:00 today</p>
+
+    <h2>Company Overview</h2>
+
+<div class="highlight-box">
+  <p><strong>The FSE Group</strong> is a UK-based SME funding company headquartered in Fleet, Hampshire. They provide business loans and equity investment from £25,000 to £5 million to high-growth businesses. Regional focus spans Scotland, Midlands, Yorkshire & Humber, East of England, London, South West, and South East.</p>
+</div>
+
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-value">£279M</div>
+    <div class="metric-label">Lent / Invested</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">1,066</div>
+    <div class="metric-label">Enterprises Supported</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">£764M</div>
+    <div class="metric-label">Private Investment Leveraged</div>
+  </div>
+</div>
+
+<p><strong>Industry:</strong> Financial services / SME lending<br>
+<strong>Size:</strong> Small (by monday.com classification)<br>
+<strong>Website:</strong> <a href="https://www.thefsegroup.com" style="color: var(--brand-cyan);">thefsegroup.com</a><br>
+<strong>Contact:</strong> Sarah (<a href="mailto:sarah@freelanceseoessex.co.uk" style="color: var(--brand-cyan);">sarah@freelanceseoessex.co.uk</a>)</p>
+
+<h2>Account Snapshot</h2>
+
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-value">Trial</div>
+    <div class="metric-label">Plan (Campaigns)</div>
+    <div class="metric-change neutral">Extended to Jun 30</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">$0</div>
+    <div class="metric-label">Campaigns ARR</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">EU</div>
+    <div class="metric-label">Region</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">Sales</div>
+    <div class="metric-label">Channel</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">4 months</div>
+    <div class="metric-label">Since First Trial</div>
+    <div class="metric-change neutral">Dec 2025</div>
+  </div>
+</div>
+
+<h2>Campaigns Usage</h2>
+
+<div class="highlight-box">
+  <p><strong>Key signal:</strong> This account has not sent a single campaign. They created 3 email drafts on 23 March 2026 (one week ago), but none have been sent. Campaigns engagement is extremely low: only 3 days of activity across 4 months of trial access.</p>
+</div>
+
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-value">3</div>
+    <div class="metric-label">Campaigns Created</div>
+    <div class="metric-change neutral">All drafts</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">0</div>
+    <div class="metric-label">Campaigns Sent</div>
+    <div class="metric-change down">Never sent</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">0</div>
+    <div class="metric-label">Total Emails Sent</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">N/A</div>
+    <div class="metric-label">Open Rate</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">N/A</div>
+    <div class="metric-label">Click Rate</div>
+  </div>
+</div>
+
+<h3>Campaign Details</h3>
+
+<table>
+  <thead>
+    <tr><th>Campaign</th><th>Type</th><th>Status</th><th>Created</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Unlock Growth with Omnichannel Strategies</td>
+      <td>Email</td>
+      <td><span class="badge badge-yellow">Draft</span></td>
+      <td>23 Mar 2026</td>
+    </tr>
+    <tr>
+      <td>New Campaign</td>
+      <td>Email</td>
+      <td><span class="badge badge-yellow">Draft</span></td>
+      <td>23 Mar 2026</td>
+    </tr>
+    <tr>
+      <td>New Campaign</td>
+      <td>Email</td>
+      <td><span class="badge badge-yellow">Draft</span></td>
+      <td>23 Mar 2026</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Activity Timeline</h3>
+
+<table>
+  <thead>
+    <tr><th>Period</th><th>Trial Status</th><th>Active Days</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Dec 1-15, 2025</td>
+      <td><span class="badge badge-blue">Trial</span></td>
+      <td>Unknown (first trial)</td>
+      <td>Initial trial, expired after 14 days</td>
+    </tr>
+    <tr>
+      <td>Jan 25 - Feb 2, 2026</td>
+      <td><span class="badge badge-blue">Trial</span></td>
+      <td>0</td>
+      <td>Trial reactivated, no activity</td>
+    </tr>
+    <tr>
+      <td>Feb 17-24, 2026</td>
+      <td><span class="badge badge-blue">Trial</span></td>
+      <td>1 (Feb 17)</td>
+      <td>Brief login, no campaign activity</td>
+    </tr>
+    <tr>
+      <td>Mar 22 - present</td>
+      <td><span class="badge badge-green">Active Trial</span></td>
+      <td>2 (Mar 23-24)</td>
+      <td>Created 3 drafts, trial extended to Jun 30</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Other monday Products</h2>
+
+<div class="highlight-box">
+  <p><strong>Key signal:</strong> This is primarily a <strong>CRM customer</strong>. They pay for monday CRM Pro (20 seats, $10,039 ARR) and are very active: 7-13 daily active users on weekdays, 16 monthly active users. Installed since June 2024 with 21 months of tenure. CRM is their core product.</p>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Product</th><th>Installed</th><th>Paying</th><th>Plan</th><th>ARR</th><th>First Week DAU</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>CRM</strong></td>
+      <td>25 Jun 2024</td>
+      <td><span class="badge badge-green">Yes</span></td>
+      <td>Pro (Monthly, 20 seats)</td>
+      <td>$10,039</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>Marketing (Campaigns)</td>
+      <td>Dec 2025 (trial)</td>
+      <td><span class="badge badge-red">No</span></td>
+      <td>Trial (extended to Jun 30)</td>
+      <td>$0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Service</td>
+      <td>-</td>
+      <td><span class="badge badge-red">No</span></td>
+      <td>-</td>
+      <td>$0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>AI Credits</td>
+      <td>-</td>
+      <td><span class="badge badge-red">No</span></td>
+      <td>-</td>
+      <td>$0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>Marketplace Apps</td>
+      <td>-</td>
+      <td><span class="badge badge-red">No</span></td>
+      <td>-</td>
+      <td>$0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Financial Summary</h2>
+
+<div class="metrics-row">
+  <div class="metric-card">
+    <div class="metric-value">$10,039</div>
+    <div class="metric-label">Total ARR (CRM)</div>
+    <div class="metric-change up">Paying since Jun 2024</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">Pro</div>
+    <div class="metric-label">CRM Plan</div>
+    <div class="metric-change neutral">Monthly billing</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">20</div>
+    <div class="metric-label">Seats</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-value">16</div>
+    <div class="metric-label">CRM MAPP</div>
+    <div class="metric-change up">Healthy</div>
+  </div>
+</div>
+
+<p>No cancellation signals or churn risk indicators detected on the account. The CRM product is healthy and well-adopted. The campaigns product has not yet activated.</p>
+
+<h2>Internal Context</h2>
+
+<div class="highlight-box">
+  <p><strong>Context for this call:</strong> This is a <strong>Shared Contacts Alpha</strong> call. The account was added to the shared contacts alpha on 23 March by Uras Mutlu. Shannon confirmed that Gilad has been handling comms. Mia Huang created a <a href="https://docs.google.com/presentation/d/1XbqcHWoSFwnTXfrT5zUpOiR3c8VJoyVPFHvD2uPO1O8/edit?usp=sharing" style="color: var(--brand-cyan);">slide deck</a> for the call and extended the trial to Jun 30.</p>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Date</th><th>Event</th><th>Source</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>23 Mar 2026</td>
+      <td>Uras requested shared contacts alpha access for this account</td>
+      <td><a href="https://monday.slack.com/archives/C08D7L0SNRE/p1774280877937559" style="color: var(--brand-cyan);">#campaigns-builders</a></td>
+    </tr>
+    <tr>
+      <td>23 Mar 2026</td>
+      <td>Shannon confirmed Gilad handles comms for alpha customers</td>
+      <td><a href="https://monday.slack.com/archives/C08D7L0SNRE/p1774280877937559" style="color: var(--brand-cyan);">#campaigns-builders</a></td>
+    </tr>
+    <tr>
+      <td>25 Mar 2026</td>
+      <td>Gilad booked the call for Monday 11:00 with Sarah</td>
+      <td><a href="https://monday.slack.com/archives/C09MJA6HBEW/p1774466888203049" style="color: var(--brand-cyan);">#campaigns-epic-shared-contacts</a></td>
+    </tr>
+    <tr>
+      <td>30 Mar 2026</td>
+      <td>Mia created slide deck and extended trial to Jun 30</td>
+      <td><a href="https://monday.slack.com/archives/C09MJA6HBEW/p1774860191581509" style="color: var(--brand-cyan);">#campaigns-epic-shared-contacts</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Customer Voice</h2>
+
+<p style="color: var(--text-muted);">No feedback found in campaigns-stats, ask-campaigns, or campaigns-churns channels. No dedicated support tickets found. The only Slack activity relates to the shared contacts alpha request and call preparation.</p>
+
+<h2>Suggested Interview Topics</h2>
+
+<ol>
+  <li style="margin-bottom: 16px;">
+    <strong>CRM to campaigns journey</strong><br>
+    <span style="color: var(--text-secondary);">They are a heavy CRM user (20 seats, 16 MAPP) but have barely touched campaigns. Understand what triggered their interest in campaigns, and what their current email marketing stack looks like. Are they using another tool? What would make them switch?</span>
+  </li>
+  <li style="margin-bottom: 16px;">
+    <strong>Draft campaigns: what happened?</strong><br>
+    <span style="color: var(--text-secondary);">They created 3 drafts on March 23 (including "Unlock Growth with Omnichannel Strategies") but never sent any. What blocked them? Was it contact import, template design, content confidence, or something else?</span>
+  </li>
+  <li style="margin-bottom: 16px;">
+    <strong>Shared contacts use case</strong><br>
+    <span style="color: var(--text-secondary);">This is a shared contacts alpha call. Understand how they want to use CRM contacts for campaigns. How many contacts do they have in CRM? What segments would they target? This is the key unlock for their campaigns activation.</span>
+  </li>
+  <li style="margin-bottom: 16px;">
+    <strong>Marketing needs for an SME lender</strong><br>
+    <span style="color: var(--text-secondary);">The FSE Group supports 1,000+ enterprises across UK regions. Explore their marketing funnel: do they nurture applicants, communicate with portfolio companies, run regional campaigns, or send investor updates? Understanding their specific use cases will reveal whether campaigns can fit their workflow.</span>
+  </li>
+  <li style="margin-bottom: 16px;">
+    <strong>Conversion potential</strong><br>
+    <span style="color: var(--text-secondary);">They are on a sales-led journey with monthly CRM billing ($10k ARR). If shared contacts solves their activation problem, they could convert to a paid campaigns plan. Gauge willingness to pay and what value they would need to see first.</span>
+  </li>
+</ol>
+
+
+    <div class="report-footer">
+      <div class="footer-brand">
+        <img src="data:image/png;base64,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" alt="monday campaigns">
+        monday campaigns
+      </div>
+      <div class="footer-meta">Generated 30 Mar 2026, 10:57</div>
+    </div>
+
+  </div>
+</body>
+</html>
