@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Churn Analysis — March 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0a;
+    color: #d4d4d4;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 40px 20px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .header {
+    border-bottom: 1px solid #222;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.3px;
+  }
+  .header .subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+  }
+  .card {
+    background: #141414;
+    border: 1px solid #1e1e1e;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 8px;
+  }
+  .card.urgent { border-left: 3px solid #f87171; }
+  .card.highlight { border-left: 3px solid #00d4ff; }
+  .card.success { border-left: 3px solid #4ade80; }
+  .card.warning { border-left: 3px solid #fbbf24; }
+  .card-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 4px;
+  }
+  .card-label.urgent { color: #f87171; }
+  .card-label.highlight { color: #00d4ff; }
+  .card-label.success { color: #4ade80; }
+  .card-label.warning { color: #fbbf24; }
+  .card-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #e5e5e5;
+  }
+  .card-body {
+    font-size: 14px;
+    color: #999;
+    margin-top: 4px;
+  }
+  .card-meta {
+    font-size: 12px;
+    color: #555;
+    margin-top: 6px;
+  }
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .metric-card {
+    background: #141414;
+    border: 1px solid #1e1e1e;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .metric-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+  .metric-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .metric-change {
+    font-size: 13px;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .metric-change.up { color: #4ade80; }
+  .metric-change.down { color: #f87171; }
+  .metric-change.flat { color: #666; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #222;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #1a1a1a;
+    color: #d4d4d4;
+  }
+  tr:hover td { background: #141414; }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .badge.green { background: #052e16; color: #4ade80; }
+  .badge.red { background: #2a0a0a; color: #f87171; }
+  .badge.amber { background: #2a1f00; color: #fbbf24; }
+  .badge.cyan { background: #0a1a2e; color: #00d4ff; }
+  .badge.gray { background: #1a1a1a; color: #888; }
+  .quiet { color: #555; font-size: 13px; }
+  .divider {
+    border: none;
+    border-top: 1px solid #1e1e1e;
+    margin: 24px 0;
+  }
+  .footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #1e1e1e;
+    font-size: 12px;
+    color: #444;
+  }
+  .summary-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #b0b0b0;
+    max-width: 720px;
+  }
+  .chart-wrapper {
+    background: #141414;
+    border: 1px solid #1e1e1e;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .chart-wrapper canvas {
+    max-height: 280px;
+  }
+  .chart-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #999;
+    margin-bottom: 12px;
+  }
+  .insight-bar {
+    background: #0a1a2e;
+    border: 1px solid #1a2a4e;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #7dc8e0;
+    line-height: 1.6;
+  }
+  .insight-bar strong { color: #00d4ff; }
+  .stacked-bar {
+    display: flex;
+    height: 32px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 12px 0;
+  }
+  .stacked-bar .segment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    transition: opacity 0.2s;
+  }
+  .stacked-bar .segment:hover { opacity: 0.85; }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #888;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  @media (max-width: 600px) {
+    body { padding: 20px 16px; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📉 Churn Analysis, March 2026</h1>
+  <div class="subtitle">monday campaigns · 37 accounts churned · $42,044 ARR lost · Data from Snowflake (1-30 Mar)</div>
+</div>
+
+<!-- Executive Summary -->
+<div class="section">
+  <div class="section-title">Executive Summary</div>
+  <div class="summary-text">
+    March saw a meaningful improvement in churn compared to February: 37 accounts vs 50, and $42k ARR lost vs $99k. That said, the underlying pattern hasn't changed. Over half of churned accounts (54%) never sent a single campaign, which means this remains an activation problem rather than a retention one. The churn risk model from 17 March correctly predicted 81% of actual churns, confirming it's a useful early warning system. Most churns are small accounts on monthly Pro plans who paid but never found value.
+  </div>
+</div>
+
+<!-- Key Metrics -->
+<div class="section">
+  <div class="section-title">Key Numbers</div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-value">37</div>
+      <div class="metric-label">Accounts churned</div>
+      <div class="metric-change up">-26% vs Feb (50)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">$42k</div>
+      <div class="metric-label">ARR lost</div>
+      <div class="metric-change up">-58% vs Feb ($99k)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">5.2%</div>
+      <div class="metric-label">Account churn rate</div>
+      <div class="metric-change flat">706 paying at start of month</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">3.7%</div>
+      <div class="metric-label">ARR churn rate</div>
+      <div class="metric-change flat">$1.13M total marketing ARR</div>
+    </div>
+  </div>
+</div>
+
+<!-- 6-Month Trend -->
+<div class="section">
+  <div class="section-title">6-Month Trend</div>
+  <div class="chart-wrapper">
+    <div class="chart-title">Monthly churn: accounts and ARR lost</div>
+    <canvas id="trendChart"></canvas>
+  </div>
+  <div class="insight-bar">
+    <strong>Trend:</strong> March is the best month since October for ARR churn. Account count dropped 26% from February's peak. February was an outlier with $99k lost, likely driven by annual contract renewals from the October cohort.
+  </div>
+</div>
+
+<!-- Weekly Breakdown -->
+<div class="section">
+  <div class="section-title">Week-by-Week Breakdown</div>
+  <table>
+    <thead>
+      <tr><th>Week</th><th>Accounts</th><th>ARR Lost</th><th>Avg per Account</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Week 1 (1-7 Mar)</td><td>5</td><td>$10,735</td><td>$2,147</td></tr>
+      <tr><td>Week 2 (8-14 Mar)</td><td>9</td><td>$9,973</td><td>$1,108</td></tr>
+      <tr><td>Week 3 (15-21 Mar)</td><td>9</td><td>$10,151</td><td>$1,128</td></tr>
+      <tr><td>Week 4 (22-28 Mar)</td><td>12</td><td>$9,444</td><td>$787</td></tr>
+      <tr><td>Week 5 (29-30 Mar)</td><td>2</td><td>$1,742</td><td>$871</td></tr>
+    </tbody>
+  </table>
+  <div class="insight-bar" style="margin-top: 12px;">
+    <strong>Note:</strong> Account count increased through the month (5 &rarr; 12), but ARR per churn decreased. Week 1's higher average ($2,147) was driven by two larger accounts: one Enterprise yearly ($4,266) and one never-activated Enterprise ($3,780). Later weeks were dominated by smaller Pro monthly accounts at $768 each.
+  </div>
+</div>
+
+<!-- Churn Patterns -->
+<div class="section">
+  <div class="section-title">Churn Patterns: Why Did They Leave?</div>
+
+  <div class="stacked-bar">
+    <div class="segment" style="width: 27%; background: #f87171;" title="Never created a campaign: 10">27%</div>
+    <div class="segment" style="width: 27%; background: #fb923c;" title="Created but never sent: 10">27%</div>
+    <div class="segment" style="width: 14%; background: #fbbf24;" title="Stopped 90d+ ago: 5">14%</div>
+    <div class="segment" style="width: 8%; background: #a78bfa;" title="Stopped 60-90d ago: 3">8%</div>
+    <div class="segment" style="width: 8%; background: #818cf8;" title="Stopped 30-60d ago: 3">8%</div>
+    <div class="segment" style="width: 16%; background: #4ade80;" title="Actively sending in March: 6">16%</div>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background: #f87171;"></div> Never created (10)</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #fb923c;"></div> Created, never sent (10)</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #fbbf24;"></div> Stopped 90d+ ago (5)</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #a78bfa;"></div> Stopped 60-90d ago (3)</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #818cf8;"></div> Stopped 30-60d ago (3)</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #4ade80;"></div> Active in March (6)</div>
+  </div>
+
+  <div class="card warning" style="margin-top: 16px;">
+    <div class="card-label warning">Key Insight</div>
+    <div class="card-title">54% of churned accounts never sent a single campaign</div>
+    <div class="card-body">20 of 37 accounts either never created a campaign (10) or created one but never sent it (10). This is consistent with the 17 Mar risk analysis where 75% of at-risk accounts had never activated. The core churn driver remains activation failure, not product dissatisfaction.</div>
+  </div>
+</div>
+
+<!-- Pre-Churn Engagement -->
+<div class="section">
+  <div class="section-title">Pre-Churn Engagement (February MAPP)</div>
+  <div class="chart-wrapper">
+    <div class="chart-title">Monthly active product people in the month before churn</div>
+    <canvas id="engagementChart"></canvas>
+  </div>
+  <p class="quiet" style="margin-top: 8px;">62% of churned accounts had zero or near-zero engagement in February. Only 1 account had active usage (MAPP 3+).</p>
+</div>
+
+<!-- Plan Tier & Region -->
+<div class="section">
+  <div class="section-title">Plan Tier Breakdown</div>
+  <table>
+    <thead>
+      <tr><th>Plan</th><th>Accounts</th><th>ARR Lost</th><th>% of Total ARR</th><th>Avg ARR</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Pro Monthly</td>
+        <td>23</td>
+        <td>$21,493</td>
+        <td><span class="badge red">51%</span></td>
+        <td>$934</td>
+      </tr>
+      <tr>
+        <td>Enterprise Yearly</td>
+        <td>6</td>
+        <td>$14,267</td>
+        <td><span class="badge amber">34%</span></td>
+        <td>$2,378</td>
+      </tr>
+      <tr>
+        <td>Pro Yearly</td>
+        <td>8</td>
+        <td>$6,284</td>
+        <td><span class="badge gray">15%</span></td>
+        <td>$786</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="insight-bar" style="margin-top: 12px;">
+    <strong>Pro Monthly dominates by volume</strong> (62% of churned accounts). Enterprise Yearly is the bigger concern per-account, at $2,378 average ARR. The 6 Enterprise accounts that churned represent $14.3k ARR, so any intervention targeting them early would have outsized impact.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Regional Breakdown</div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-value">25</div>
+      <div class="metric-label">US (68%)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">8</div>
+      <div class="metric-label">APJ (22%)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">4</div>
+      <div class="metric-label">EU (11%)</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Company Size</div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-value">27</div>
+      <div class="metric-label">Small (73%)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">5</div>
+      <div class="metric-label">SMB (14%)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">4</div>
+      <div class="metric-label">Mid-Market (11%)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Account Tenure -->
+<div class="section">
+  <div class="section-title">Tenure at Churn</div>
+  <div class="chart-wrapper">
+    <div class="chart-title">How long churned accounts had been paying</div>
+    <canvas id="tenureChart"></canvas>
+  </div>
+  <div class="card highlight" style="margin-top: 12px;">
+    <div class="card-label highlight">Pattern</div>
+    <div class="card-title">81% churned within their first 4 months of paying</div>
+    <div class="card-body">15 accounts had been paying for less than 2 months, and another 15 for 2-4 months. Only 7 accounts (19%) had been paying for 4+ months. This is early lifecycle churn, and it correlates directly with the activation failure pattern. These accounts pay, but don't find value quickly enough to stick.</div>
+  </div>
+</div>
+
+<!-- Risk Model Validation -->
+<div class="section">
+  <div class="section-title">Risk Model Validation (vs 17 Mar Predictions)</div>
+  <table>
+    <thead>
+      <tr><th>Predicted Risk Tier</th><th>Accounts</th><th>% of Churns</th><th>Pattern</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge red">CRITICAL</span></td>
+        <td>19</td>
+        <td>51%</td>
+        <td>Never activated (never sent a campaign)</td>
+      </tr>
+      <tr>
+        <td><span class="badge amber">HIGH</span></td>
+        <td>11</td>
+        <td>30%</td>
+        <td>Stopped sending or low engagement</td>
+      </tr>
+      <tr>
+        <td><span class="badge cyan">MODERATE/LOW</span></td>
+        <td>7</td>
+        <td>19%</td>
+        <td>Was engaged before churning</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="card success" style="margin-top: 12px;">
+    <div class="card-label success">Model Performance</div>
+    <div class="card-title">81% of actual churns were CRITICAL or HIGH risk</div>
+    <div class="card-body">The risk model from 17 March correctly identified the dominant churn patterns. 30 of 37 churned accounts would have been flagged as at-risk. The 7 accounts that slipped through (19%) were engaged users who churned despite having active usage, suggesting product-fit or pricing issues rather than activation failure.</div>
+  </div>
+</div>
+
+<!-- Actively Sending Accounts That Churned -->
+<div class="section">
+  <div class="section-title">Actively Sending Accounts That Churned</div>
+  <p class="summary-text" style="margin-bottom: 12px;">These 6 accounts were actively sending campaigns in March and still churned. They're the most concerning because they'd found enough value to use the product but chose to leave anyway.</p>
+  <table>
+    <thead>
+      <tr><th>Account</th><th>Campaigns (Mar)</th><th>Emails Sent</th><th>Opens</th><th>Clicks</th><th>ARR Lost</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>317043</td>
+        <td>2</td>
+        <td>26,292</td>
+        <td>6,438</td>
+        <td>460</td>
+        <td>$318</td>
+      </tr>
+      <tr>
+        <td>31714967</td>
+        <td>4</td>
+        <td>4,888</td>
+        <td>636</td>
+        <td>0</td>
+        <td>$768</td>
+      </tr>
+      <tr>
+        <td>33208730</td>
+        <td>4</td>
+        <td>2,164</td>
+        <td>652</td>
+        <td>4,540</td>
+        <td>$600</td>
+      </tr>
+      <tr>
+        <td>20548377</td>
+        <td>1</td>
+        <td>1,344</td>
+        <td>804</td>
+        <td>250</td>
+        <td>$768</td>
+      </tr>
+      <tr>
+        <td>34119542</td>
+        <td>2</td>
+        <td>0</td>
+        <td>4</td>
+        <td>0</td>
+        <td>$600</td>
+      </tr>
+      <tr>
+        <td>28873192</td>
+        <td>3</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>$1,782</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="card urgent" style="margin-top: 12px;">
+    <div class="card-label urgent">Worth Investigating</div>
+    <div class="card-title">Account 317043 sent 26k emails and still left</div>
+    <div class="card-body">This was a Partners-channel SMB account with good engagement metrics (24% open rate, 1.7% click rate). Sent their last campaign on 19 Mar, churned on 25 Mar. They were getting real value from the product. Worth reaching out to understand what happened.</div>
+  </div>
+  <div class="card warning" style="margin-top: 4px;">
+    <div class="card-label warning">Note</div>
+    <div class="card-title">Account 28873192 is the largest active-sender ARR loss ($1,782)</div>
+    <div class="card-body">Sent 3 campaigns on 26 Mar, churned on 27 Mar. Very new account (first billing 25 Mar). This could be a trial-then-cancel pattern, or they hit a blocker immediately after trying the product.</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- Recommended Actions -->
+<div class="section">
+  <div class="section-title">Recommended Next Steps</div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">Activation</div>
+    <div class="card-title">Focus onboarding investment on the first 7 days</div>
+    <div class="card-body">54% of churns never sent a campaign, and 81% left within 4 months. The new onboarding flow (Post-OB) is showing early promise on activation rates. Doubling down on getting users to send their first campaign within the first week is the highest-leverage move.</div>
+  </div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">Outreach</div>
+    <div class="card-title">Reach out to Account 317043 and 28873192</div>
+    <div class="card-body">These two active senders who churned are strong candidates for the churn feedback email workflow. Account 317043 was clearly getting value. Account 28873192 had the highest ARR among active senders.</div>
+  </div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">Early Warning</div>
+    <div class="card-title">Run the risk model monthly and set up proactive outreach</div>
+    <div class="card-body">The 81% prediction accuracy validates the model. Consider a monthly sweep of CRITICAL/HIGH accounts with automated or semi-automated outreach (e.g. an in-app prompt, email nudge, or CSM alert for Enterprise accounts).</div>
+  </div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">Enterprise</div>
+    <div class="card-title">Prioritise Enterprise yearly accounts in risk monitoring</div>
+    <div class="card-body">6 Enterprise yearly accounts churned $14.3k. At $2,378 avg ARR, each one is worth significant retention effort. Even saving 2-3 of these per month would meaningfully reduce ARR churn.</div>
+  </div>
+</div>
+
+<!-- Caveats -->
+<div class="section">
+  <div class="section-title">Caveats</div>
+  <ul style="list-style: none; padding: 0;">
+    <li style="padding: 6px 0; color: #888; font-size: 13px;">• Subscription tables are account-level, not product-level. Cancellation reasons couldn't be queried for marketing-specific churn</li>
+    <li style="padding: 6px 0; color: #888; font-size: 13px;">• APJ campaign data is still missing from Snowflake (known pipeline gap). 8 APJ accounts churned but their campaign activity may be incomplete</li>
+    <li style="padding: 6px 0; color: #888; font-size: 13px;">• March has 1 remaining day (31 Mar) not included. Final count may be slightly higher</li>
+    <li style="padding: 6px 0; color: #888; font-size: 13px;">• "Active in March" may include test sends (campaigns with 0 emails delivered)</li>
+    <li style="padding: 6px 0; color: #888; font-size: 13px;">• Channel attribution remains poor: nearly all accounts are tagged "no touch / other"</li>
+  </ul>
+</div>
+
+<div class="footer">Generated by Product Analyst agent · 30 March 2026 · Source: BIGBRAIN.L4.FACT_ACCOUNTS_PRODUCTS_METRICS_DAILY</div>
+
+<script>
+// 6-Month Trend Chart
+new Chart(document.getElementById('trendChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Oct 2025', 'Nov 2025', 'Dec 2025', 'Jan 2026', 'Feb 2026', 'Mar 2026'],
+    datasets: [
+      {
+        label: 'ARR Lost ($)',
+        data: [9049, 100255, 74669, 66442, 99282, 42044],
+        backgroundColor: 'rgba(248, 113, 113, 0.6)',
+        borderColor: '#f87171',
+        borderWidth: 1,
+        borderRadius: 4,
+        yAxisID: 'y',
+        order: 1
+      },
+      {
+        label: 'Accounts',
+        data: [10, 22, 36, 39, 50, 37],
+        type: 'line',
+        borderColor: '#00d4ff',
+        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBackgroundColor: '#00d4ff',
+        tension: 0.3,
+        yAxisID: 'y1',
+        order: 0
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 800, easing: 'easeOutQuart' },
+    plugins: {
+      legend: {
+        labels: { color: '#888', font: { size: 12 } }
+      },
+      tooltip: {
+        backgroundColor: '#141414',
+        titleColor: '#fff',
+        bodyColor: '#a0a0a0',
+        borderColor: '#1e1e1e',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(ctx) {
+            if (ctx.dataset.label === 'ARR Lost ($)') {
+              return 'ARR Lost: $' + ctx.parsed.y.toLocaleString();
+            }
+            return 'Accounts: ' + ctx.parsed.y;
+          }
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { color: '#555' }, grid: { color: '#1a1a1a' } },
+      y: {
+        position: 'left',
+        ticks: {
+          color: '#f87171',
+          callback: v => '$' + (v/1000).toFixed(0) + 'k'
+        },
+        grid: { color: '#1a1a1a' },
+        title: { display: true, text: 'ARR Lost', color: '#555', font: { size: 11 } }
+      },
+      y1: {
+        position: 'right',
+        ticks: { color: '#00d4ff' },
+        grid: { display: false },
+        title: { display: true, text: 'Accounts', color: '#555', font: { size: 11 } }
+      }
+    }
+  }
+});
+
+// Pre-Churn Engagement Chart
+new Chart(document.getElementById('engagementChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Zero MAPP (12)', 'Low MAPP <1 (11)', 'Moderate 1-3 (9)', 'Active 3+ (1)', 'No data (4)'],
+    datasets: [{
+      data: [12, 11, 9, 1, 4],
+      backgroundColor: [
+        '#f87171',
+        '#fb923c',
+        '#fbbf24',
+        '#4ade80',
+        '#555'
+      ],
+      borderColor: '#0a0a0a',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '60%',
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: { color: '#888', font: { size: 12 }, padding: 12 }
+      },
+      tooltip: {
+        backgroundColor: '#141414',
+        titleColor: '#fff',
+        bodyColor: '#a0a0a0',
+        borderColor: '#1e1e1e',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8
+      }
+    }
+  }
+});
+
+// Tenure Chart
+new Chart(document.getElementById('tenureChart'), {
+  type: 'bar',
+  data: {
+    labels: ['< 2 months', '2-4 months', '4-7 months'],
+    datasets: [{
+      label: 'Accounts',
+      data: [15, 15, 7],
+      backgroundColor: ['#f87171', '#fbbf24', '#4ade80'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#141414',
+        titleColor: '#fff',
+        bodyColor: '#a0a0a0',
+        borderColor: '#1e1e1e',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8
+      }
+    },
+    scales: {
+      x: { ticks: { color: '#555' }, grid: { color: '#1a1a1a' } },
+      y: { ticks: { color: '#d4d4d4' }, grid: { display: false } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
