@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Prep · LCSNW · 31 March 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0a;
+    color: #d4d4d4;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 40px 20px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .header { border-bottom: 1px solid #222; padding-bottom: 20px; margin-bottom: 32px; }
+  .header h1 { font-size: 22px; font-weight: 600; color: #ffffff; letter-spacing: -0.3px; }
+  .header .subtitle { font-size: 13px; color: #666; margin-top: 4px; }
+  .section { margin-bottom: 32px; }
+  .section-title { font-size: 13px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+  .card { background: #141414; border: 1px solid #1e1e1e; border-radius: 8px; padding: 16px 20px; margin-bottom: 8px; }
+  .card.urgent { border-left: 3px solid #f87171; }
+  .card.highlight { border-left: 3px solid #00d4ff; }
+  .card.success { border-left: 3px solid #4ade80; }
+  .card.warning { border-left: 3px solid #fbbf24; }
+  .card-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+  .card-label.urgent { color: #f87171; }
+  .card-label.highlight { color: #00d4ff; }
+  .card-label.success { color: #4ade80; }
+  .card-label.warning { color: #fbbf24; }
+  .card-title { font-size: 15px; font-weight: 500; color: #e5e5e5; }
+  .card-body { font-size: 14px; color: #999; margin-top: 4px; }
+  .card-meta { font-size: 12px; color: #555; margin-top: 6px; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 8px; }
+  .metric-card { background: #141414; border: 1px solid #1e1e1e; border-radius: 8px; padding: 16px; text-align: center; }
+  .metric-value { font-size: 28px; font-weight: 600; color: #ffffff; line-height: 1.2; }
+  .metric-label { font-size: 12px; color: #666; margin-top: 4px; }
+  .metric-change { font-size: 13px; margin-top: 6px; font-weight: 500; }
+  .metric-change.up { color: #4ade80; }
+  .metric-change.down { color: #f87171; }
+  .metric-change.flat { color: #666; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .badge.green { background: #052e16; color: #4ade80; }
+  .badge.red { background: #2a0a0a; color: #f87171; }
+  .badge.amber { background: #2a1f00; color: #fbbf24; }
+  .badge.cyan { background: #0a1a2e; color: #00d4ff; }
+  .badge.gray { background: #1a1a1a; color: #888; }
+  .person { color: #c084fc; font-weight: 500; }
+  .channel { display: inline-block; background: #1a1a2e; color: #00d4ff; font-size: 12px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; border-bottom: 1px solid #222; }
+  td { padding: 10px 12px; border-bottom: 1px solid #1a1a1a; color: #d4d4d4; }
+  tr:hover td { background: #141414; }
+  .priority-list { list-style: none; padding: 0; counter-reset: priority; }
+  .priority-list li { counter-increment: priority; padding: 12px 0 12px 36px; border-bottom: 1px solid #1a1a1a; position: relative; }
+  .priority-list li:last-child { border-bottom: none; }
+  .priority-list li::before { content: counter(priority); position: absolute; left: 0; top: 12px; width: 24px; height: 24px; background: #1a1a2e; color: #00d4ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+  .quiet { color: #555; font-size: 13px; }
+  .divider { border: none; border-top: 1px solid #1e1e1e; margin: 24px 0; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #1e1e1e; font-size: 12px; color: #444; }
+  @media (max-width: 600px) { body { padding: 20px 16px; } .metric-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Customer Interview Prep</h1>
+  <div class="subtitle">Lutheran Community Services Northwest (LCSNW) · 31 March 2026 · Trial Check In at 16:00</div>
+</div>
+
+<!-- Meeting Context -->
+<div class="section">
+  <div class="section-title">Meeting Context</div>
+  <div class="card highlight">
+    <div class="card-label highlight">Campaigns Trial Check In</div>
+    <div class="card-title">16:00 BST · Zoom</div>
+    <div class="card-body">
+      <strong>External:</strong> bmcnurlin@lcsnw.org, jruehrwein@lcsnw.org, eerickson@lcsnw.org<br>
+      <strong>Internal:</strong> <span class="person">Liesel Schiffhauer</span> (organiser), <span class="person">Paula Parlade</span> (account owner), <span class="person">Alessia Cavalli</span>, <span class="person">Shannon Klett</span>
+    </div>
+  </div>
+</div>
+
+<!-- Company Overview -->
+<div class="section">
+  <div class="section-title">Company Overview</div>
+  <div class="card">
+    <div class="card-body">
+      <strong>Lutheran Community Services Northwest</strong> is a large non-profit social services organisation based in the US Pacific Northwest. They provide behavioural health services, refugee and immigrant resettlement, child welfare programmes, family support, aging and independent living services, and crime victim services.<br><br>
+      In January 2026, they merged with <strong>Compass Housing Alliance</strong>, expanding their housing division. They serve communities across Washington, Oregon, Idaho, and Montana.<br><br>
+      <strong>Company size:</strong> Mid-market (MM). 140 monday.com seats suggests a substantial organisation.<br>
+      <strong>Website:</strong> <a href="https://lcsnw.org" style="color: #00d4ff;">lcsnw.org</a><br>
+      <strong>Marketing context:</strong> As a non-profit, their campaigns will likely focus on donor engagement, volunteer recruitment, event promotion, and community awareness. Their draft campaigns confirm this (child welfare awareness, housing support appeals).
+    </div>
+  </div>
+</div>
+
+<!-- Account Snapshot -->
+<div class="section">
+  <div class="section-title">Account Snapshot</div>
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-value">Enterprise</div>
+      <div class="metric-label">Core plan</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">$52.4k</div>
+      <div class="metric-label">Core ARR</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">140</div>
+      <div class="metric-label">Seats</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">~3 yrs</div>
+      <div class="metric-label">Tenure</div>
+      <div class="metric-change flat">Since Nov 2022</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">US</div>
+      <div class="metric-label">Region</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">Sales</div>
+      <div class="metric-label">Channel</div>
+    </div>
+  </div>
+</div>
+
+<!-- Campaigns Usage -->
+<div class="section">
+  <div class="section-title">Campaigns Usage</div>
+
+  <div class="card warning">
+    <div class="card-label warning">Early testing phase</div>
+    <div class="card-title">Not yet on a paid plan or trial. Setup not completed.</div>
+    <div class="card-body">They've been exploring campaigns for about a week (24-27 March). All sends are test campaigns to ~2 recipients. They have 5+ draft campaigns with real content ready to go.</div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-value">~10</div>
+      <div class="metric-label">Campaigns created</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">3</div>
+      <div class="metric-label">Sent (test only)</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">4</div>
+      <div class="metric-label">Total emails sent</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">1</div>
+      <div class="metric-label">Failed campaign</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Recent campaigns</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Campaign</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          <tr><td>Campaign Test (Copy) (Copy) (Copy)</td><td><span class="badge green">Sent</span></td><td>27 Mar</td></tr>
+          <tr><td>Campaign Test (Copy) (Copy)</td><td><span class="badge green">Sent</span></td><td>26 Mar</td></tr>
+          <tr><td>Campaign Test (Copy)</td><td><span class="badge red">Failed</span></td><td>25 Mar</td></tr>
+          <tr><td>Expanding Housing Hope: New Support for Northwest Neighbors</td><td><span class="badge gray">Draft</span></td><td>25 Mar</td></tr>
+          <tr><td>Stand With Treasure Valley Kids This April</td><td><span class="badge gray">Draft</span></td><td>25 Mar</td></tr>
+          <tr><td>Help Keep Children Safe This April</td><td><span class="badge gray">Draft</span></td><td>25 Mar</td></tr>
+          <tr><td>Help Protect Children: Join Safe Families This April</td><td><span class="badge gray">Draft</span></td><td>25 Mar</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Other Monday Products -->
+<div class="section">
+  <div class="section-title">Other Monday Products</div>
+  <table>
+    <thead><tr><th>Product</th><th>Status</th><th>Paying</th><th>Since</th></tr></thead>
+    <tbody>
+      <tr><td>Core (Work Management)</td><td><span class="badge green">Active</span></td><td>Yes · Enterprise · $52.4k ARR</td><td>Nov 2022</td></tr>
+      <tr><td>CRM</td><td><span class="badge green">Active</span></td><td>Yes</td><td>Feb 2025</td></tr>
+      <tr><td>Marketing (Campaigns)</td><td><span class="badge amber">Testing</span></td><td>No</td><td>~Mar 2026</td></tr>
+      <tr><td>Software</td><td><span class="badge gray">Installed</span></td><td>No</td><td>-</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card highlight">
+    <div class="card-body">Strong ecosystem customer: paying for Core (Enterprise) and CRM. Adding Campaigns would make them a <strong>3-product customer</strong>, deepening platform lock-in and increasing lifetime value.</div>
+  </div>
+</div>
+
+<!-- Sales Pipeline -->
+<div class="section">
+  <div class="section-title">Sales Pipeline</div>
+
+  <div class="card success">
+    <div class="card-label success">Active opportunity</div>
+    <div class="card-title">Enterprise tier · $12,600 ARR · 35,000 contacts</div>
+    <div class="card-body">
+      Expansion deal, assigned to <span class="person">Paula Parlade</span> (NAM). Created 26 March 2026.<br>
+      Previous opportunity (10 Feb 2026) was $3,600 ARR / 10,000 contacts. The bump to $12,600 / 35,000 contacts suggests they've scoped a larger deployment.
+    </div>
+    <div class="card-meta">Source: #campaigns-opportunities</div>
+  </div>
+</div>
+
+<!-- Financial Context -->
+<div class="section">
+  <div class="section-title">Financial Context</div>
+
+  <div class="card">
+    <div class="card-title">Core account health</div>
+    <div class="card-body">
+      Enterprise yearly plan, 140 seats, $52,416 ARR. Active usage: 48 DAU on weekdays, 101 MAPP. Healthy engagement for a non-profit of this size. Customer since May 2023 (paying).<br><br>
+      <strong>Campaigns potential:</strong> If they close at $12,600, total monday ARR would be ~$65k+, making them a significant mid-market account.
+    </div>
+  </div>
+</div>
+
+<!-- Customer Voice -->
+<div class="section">
+  <div class="section-title">Customer Voice</div>
+  <p class="quiet">No mentions found in ask-campaigns, campaigns-churns, or campaigns-stats channels. This is their first direct engagement with the campaigns team.</p>
+</div>
+
+<hr class="divider">
+
+<!-- Key Signals -->
+<div class="section">
+  <div class="section-title">Key Signals for the Call</div>
+
+  <div class="card warning">
+    <div class="card-label warning">Watch</div>
+    <div class="card-title">One campaign failed during testing</div>
+    <div class="card-body">"Campaign Test (Copy)" failed on 25 March. Worth asking if they encountered issues and whether it's resolved. Could be a blocker to their confidence in the platform.</div>
+  </div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">Positive signal</div>
+    <div class="card-title">Real content already drafted</div>
+    <div class="card-body">They've created multiple draft campaigns with genuine content (child welfare awareness, housing support appeals). This suggests they're past the "exploring" phase and actively planning to send real campaigns.</div>
+  </div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">Positive signal</div>
+    <div class="card-title">Deal size increased 3.5x</div>
+    <div class="card-body">From $3,600 / 10k contacts (Feb) to $12,600 / 35k contacts (Mar). They're planning a significantly larger deployment than initially discussed.</div>
+  </div>
+
+  <div class="card highlight">
+    <div class="card-label highlight">Ecosystem depth</div>
+    <div class="card-title">Already paying for Core + CRM</div>
+    <div class="card-body">3-year customer with 140 seats. Adding campaigns makes the platform stickier. The CRM integration story should resonate strongly since they're already invested in monday CRM.</div>
+  </div>
+</div>
+
+<!-- Suggested Questions -->
+<div class="section">
+  <div class="section-title">Suggested Talking Points</div>
+  <ol class="priority-list">
+    <li>
+      <div class="card-title">How did testing go? Any issues with the failed campaign?</div>
+      <div class="card-body">One of their test campaigns failed. Understanding what happened and whether they need support to troubleshoot shows we're paying attention.</div>
+    </li>
+    <li>
+      <div class="card-title">What's the plan for the 35,000 contacts?</div>
+      <div class="card-body">The deal scope tripled. Ask about their contact sources, how they're organised, and whether they need help with import/segmentation.</div>
+    </li>
+    <li>
+      <div class="card-title">How are they planning to use campaigns alongside CRM?</div>
+      <div class="card-body">They're already paying for CRM. The integration story (contact sync, engagement data flowing back) is a key differentiator. Explore their current CRM workflows.</div>
+    </li>
+    <li>
+      <div class="card-title">What's their current email marketing setup?</div>
+      <div class="card-body">As a large non-profit, they likely have an existing tool (Mailchimp, Constant Contact, etc.). Understanding their migration path and timeline helps set expectations.</div>
+    </li>
+    <li>
+      <div class="card-title">Who will be the primary campaign operators?</div>
+      <div class="card-body">With 140 seats, only a subset will use campaigns. Understanding the marketing team size and skill level helps tailor onboarding.</div>
+    </li>
+  </ol>
+</div>
+
+<div class="footer">Generated by monday campaigns ops · 31 March 2026 · Account ID: 14222206</div>
+
+</body>
+</html>
