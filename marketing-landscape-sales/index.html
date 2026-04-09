@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Problems &amp; trends · monday campaigns · Sales &amp; AMs · April 2026</title>
+<meta name="description" content="Sales and AM briefing: SMB marketing landscape, credibility vs catalogue knowledge, and how monday campaigns fits — April 2026.">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="canonical" href="https://giladli-mond.github.io/presentations/marketing-landscape-sales/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Problems &amp; trends · monday campaigns · Sales &amp; AMs">
+<meta property="og:description" content="SMB marketing landscape, what reps should know, and how we position campaigns — April 2026.">
+<meta property="og:url" content="https://giladli-mond.github.io/presentations/marketing-landscape-sales/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Problems &amp; trends · monday campaigns · Sales &amp; AMs">
+<meta name="twitter:description" content="SMB marketing landscape and positioning for Sales &amp; AMs — April 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-slide: #0a0a0a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #555555;
+    --accent: #00d4ff;
+    --accent-dim: #0a1a2e;
+    --positive: #4ade80;
+    --negative: #f87171;
+    --warning: #fbbf24;
+    --border: #1e1e1e;
+    --card-bg: #141414;
+    --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Fills Cursor’s embedded browser / side panel where % height chain is often zero */
+  .deck {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    z-index: 1;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 100px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    background: var(--bg-slide);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .slide.active [data-animate] {
+    animation-play-state: running;
+  }
+
+  .slide h1 {
+    font-family: var(--font-display);
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+
+  .slide h2 {
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+
+  .slide h3 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .slide p {
+    font-size: 20px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 720px;
+  }
+
+  .slide ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .slide ul li {
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    padding: 10px 0 10px 28px;
+    position: relative;
+  }
+
+  .slide ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 18px;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .accent { color: var(--accent); }
+  .muted { color: var(--text-muted); font-size: 14px; }
+  .source { color: var(--text-muted); font-size: 12px; margin-top: 16px; }
+  .center { text-align: center; align-items: center; }
+
+  .stat {
+    font-size: 80px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    font-size: 18px;
+    color: var(--text-secondary);
+  }
+
+  .stat-group {
+    display: flex;
+    gap: 64px;
+    margin-top: 24px;
+  }
+
+  .stat-sm {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    height: 340px;
+    margin-top: 24px;
+  }
+
+  .chart-container.wide {
+    max-width: 840px;
+    height: 400px;
+  }
+
+  .diagram {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 24px;
+  }
+
+  .diagram svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+    width: 100%;
+  }
+
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+
+  .card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .card .card-stat {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+    width: 100%;
+  }
+
+  .metric-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .metric-item {
+    text-align: center;
+  }
+
+  .slide .metric-row .metric-item {
+    text-align: left;
+    flex: 1;
+    min-width: 240px;
+    max-width: 380px;
+  }
+
+  .metric-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .metric-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .metric-change {
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 4px;
+  }
+
+  .metric-change.up { color: var(--positive); }
+  .metric-change.down { color: var(--negative); }
+  .metric-change.flat { color: var(--text-muted); }
+
+  .slide table {
+    width: 100%;
+    max-width: 900px;
+    border-collapse: collapse;
+    font-size: 15px;
+    margin-top: 20px;
+  }
+
+  .slide th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .slide td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #111;
+    color: var(--text-secondary);
+  }
+
+  .slide td.name {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    padding: 16px 24px;
+    margin-top: 24px;
+    background: var(--accent-dim);
+    border-radius: 0 8px 8px 0;
+    max-width: 780px;
+  }
+
+  .callout p {
+    font-size: 22px;
+    font-style: italic;
+    color: var(--text-primary);
+    max-width: none;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .tag-accent { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+  .tag-positive { background: rgba(74,222,128,0.1); color: var(--positive); border: 1px solid rgba(74,222,128,0.2); }
+  .tag-warning { background: rgba(251,191,36,0.1); color: var(--warning); border: 1px solid rgba(251,191,36,0.2); }
+  .tag-negative { background: rgba(248,113,113,0.1); color: var(--negative); border: 1px solid rgba(248,113,113,0.2); }
+
+  [data-animate="fade-up"] {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.6s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="fade-in"] {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="scale-in"] {
+    opacity: 0;
+    transform: scale(0.92);
+    animation: scaleIn 0.5s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="slide-left"] {
+    opacity: 0;
+    transform: translateX(30px);
+    animation: slideLeft 0.6s ease forwards;
+    animation-play-state: paused;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes scaleIn {
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes slideLeft {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  [data-delay="1"] { animation-delay: 0.15s; }
+  [data-delay="2"] { animation-delay: 0.3s; }
+  [data-delay="3"] { animation-delay: 0.45s; }
+  [data-delay="4"] { animation-delay: 0.6s; }
+  [data-delay="5"] { animation-delay: 0.75s; }
+  [data-delay="6"] { animation-delay: 0.9s; }
+
+  /* If animations don’t run (embedded browser, reduced motion), content must still show */
+  @media (prefers-reduced-motion: reduce) {
+    [data-animate] {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+    }
+  }
+
+  .progress-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    z-index: 100;
+    opacity: 0.7;
+  }
+
+  .slide-counter {
+    position: fixed;
+    bottom: 14px; right: 24px;
+    font-size: 13px;
+    color: var(--text-muted);
+    z-index: 100;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.6;
+  }
+
+  .slide-number {
+    position: fixed;
+    top: 28px; right: 36px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    z-index: 100;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.5;
+    letter-spacing: 1px;
+  }
+
+  .notes-panel {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.94);
+    border-top: 1px solid var(--border);
+    padding: 20px 48px;
+    max-height: 30vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 200;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  .notes-panel.visible {
+    transform: translateY(0);
+  }
+
+  .notes-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .slide aside.notes {
+    display: none;
+  }
+
+  /* ── Title slide aurora ── */
+
+  .slide-hero {
+    overflow: hidden;
+  }
+
+  .slide-hero .aurora {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .slide-hero .aurora-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0;
+    animation: auroraPulse 8s ease-in-out infinite, auroraDrift 20s ease-in-out infinite;
+  }
+
+  .slide-hero.active .aurora-blob {
+    opacity: 1;
+  }
+
+  .slide-hero .aurora-blob:nth-child(1) {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.35) 0%, transparent 70%);
+    top: -15%; left: -10%;
+    animation-delay: 0s;
+  }
+
+  .slide-hero .aurora-blob:nth-child(2) {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+    top: 30%; right: -8%;
+    animation-delay: 2s;
+    animation-duration: 10s, 24s;
+  }
+
+  .slide-hero .aurora-blob:nth-child(3) {
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, transparent 70%);
+    bottom: -10%; left: 25%;
+    animation-delay: 4s;
+    animation-duration: 12s, 18s;
+  }
+
+  .slide-hero .aurora-blob:nth-child(4) {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+    top: 10%; right: 30%;
+    animation-delay: 3s;
+    animation-duration: 9s, 22s;
+  }
+
+  .slide-hero .aurora-blob:nth-child(5) {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+    bottom: 5%; right: 10%;
+    animation-delay: 1.5s;
+    animation-duration: 11s, 16s;
+  }
+
+  @keyframes auroraPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.15); }
+  }
+
+  @keyframes auroraDrift {
+    0% { translate: 0 0; }
+    25% { translate: 60px -40px; }
+    50% { translate: -30px 50px; }
+    75% { translate: 40px 20px; }
+    100% { translate: 0 0; }
+  }
+
+  .slide-hero .particles-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Canvas is z-index:1; every foreground node must beat it (not only h3/h1/p — .stat-big is a div). */
+  .slide-hero > :not(.aurora):not(.particles-canvas) {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media print {
+    .slide { position: relative; opacity: 1; pointer-events: all; page-break-after: always; }
+    .progress-bar, .slide-counter, .notes-panel { display: none; }
+    [data-animate] { opacity: 1 !important; transform: none !important; animation: none !important; }
+    .aurora, .particles-canvas { display: none; }
+  }
+
+  .slide p.insight-line {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    max-width: 780px;
+    margin-bottom: 8px;
+  }
+  .slide .callout p { font-size: 18px; line-height: 1.5; }
+  .slide-hero.centered { text-align: center; align-items: center; }
+
+  .slide-hero .hero-lede {
+    font-size: 22px;
+    margin-top: 16px;
+    max-width: 520px;
+    line-height: 1.5;
+    color: var(--accent);
+  }
+
+  /* Evidence-first slides: number + source + quote */
+  .stat-big {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+    margin: 14px 0 6px 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-big .suffix {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+  /*
+   * Footnotes: `.slide p` is 20px — plain `.cite-line` loses the cascade, so cites looked like body copy.
+   * Use `.slide p.cite-line` so size wins. Same sans as the deck (no monospace).
+   */
+  .slide p.cite-line,
+  .slide .cite-line {
+    font-size: 9px;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-style: normal;
+    color: var(--text-muted);
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+    max-width: 720px;
+    margin: 2px 0 10px 0;
+    opacity: 0.82;
+  }
+  .slide.center .cite-line,
+  p.cite-line[style*="text-align:center"] {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .cohort-label {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    margin: 0 0 8px 0;
+  }
+  .quote-compact {
+    font-size: 17px;
+    font-style: italic;
+    color: var(--text-primary);
+    border-left: 3px solid var(--accent);
+    padding: 8px 0 8px 18px;
+    margin: 12px 0;
+    max-width: 760px;
+    line-height: 1.45;
+  }
+  .quote-by {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: normal;
+    margin: 6px 0 0 18px;
+  }
+  .callout-plain p {
+    font-style: normal;
+    font-size: 17px;
+  }
+
+  /* Distinct from quote-compact (no left accent bar; card + label) */
+  .callout.callout-in-call {
+    border-left: none;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+  .callout-in-call .in-call-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .callout-in-call p {
+    font-style: normal;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <section class="slide slide-hero active" data-slide="1">
+    <div class="aurora">
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+    </div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+    <h3 data-animate="fade-in">MONDAY CAMPAIGNS</h3>
+    <h1 data-animate="fade-up" data-delay="1">Problems, trends, and where we fit</h1>
+    <p data-animate="fade-up" data-delay="2">Sales &amp; Account Managers · April 2026</p>
+    <p class="insight-line" data-animate="fade-up" data-delay="3" style="margin-top:12px;max-width:640px;">Market pain: siloed teams, tool sprawl, AI bolted on the side. monday connects work, contacts, and execution in one place.</p>
+    <aside class="notes">Frame: you are not pitching features first. You are naming pains buyers already feel, then mapping monday campaigns + CRM + WM.</aside>
+  </section>
+
+  <section class="slide" data-slide="2">
+    <h3 data-animate="fade-in">PROBLEM</h3>
+    <h2 data-animate="fade-up" data-delay="1">Sales and marketing: one topic, two perspectives</h2>
+    <p class="insight-line" data-animate="fade-up" data-delay="2">Forrester asked <strong>different cohorts</strong> (C-level leaders vs sales and marketing practitioners) about alignment. Those are not two answers to one pooled survey; they are <strong>two groups describing what they see</strong>.</p>
+    <div class="metric-row" data-animate="fade-up" data-delay="3">
+      <div class="metric-item">
+        <p class="cohort-label">C-level respondents</p>
+        <div class="stat-sm">82%</div>
+        <p class="insight-line" style="margin-top:0;font-size:17px;">said sales and marketing were aligned.</p>
+      </div>
+      <div class="metric-item">
+        <p class="cohort-label">Sales &amp; marketing professionals</p>
+        <div class="stat-sm">35%</div>
+        <p class="insight-line" style="margin-top:0;font-size:17px;">reported <strong>true</strong> alignment in their organisation.</p>
+      </div>
+    </div>
+    <p class="insight-line" data-animate="fade-up" data-delay="4" style="margin-top:8px;">The gap matters: strategy can look &ldquo;aligned&rdquo; on paper while day-to-day teams still feel separate systems and unclear impact.</p>
+    <p class="cite-line">Source: Forrester, &ldquo;The Truth About B2B Sales And Marketing Alignment&rdquo; (blog). Self-reported; directional. Verify wording against the primary article before external use.</p>
+    <div class="callout callout-in-call" data-animate="fade-up" data-delay="5">
+      <div class="in-call-label">On customer calls</div>
+      <p>&ldquo;Do you feel marketing and sales are aligned?&rdquo;</p>
+    </div>
+    <aside class="notes">82% and 35% are not meant to sum to 100%; they describe different groups. If challenged, open the Forrester post and read how each cohort was defined.</aside>
+  </section>
+
+  <section class="slide" data-slide="3">
+    <h3 data-animate="fade-in">PROBLEM</h3>
+    <h2 data-animate="fade-up" data-delay="1">The martech stack keeps growing</h2>
+    <div class="stat-big" data-animate="fade-up" data-delay="2">62%</div>
+    <p class="insight-line" data-animate="fade-up" data-delay="2" style="margin-top:0;">of marketers report using <strong>more</strong> martech tools than they did two years ago.</p>
+    <p class="cite-line">Martech.org / State of the Stack 2025 survey (directional).</p>
+    <p class="insight-line" data-animate="fade-up" data-delay="3" style="margin-top:8px;">More tools often means more handoffs, more sync jobs, and fewer people who see the full picture of what is working.</p>
+    <p class="cite-line">Gartner and industry follow-on: marketing organisations often use a minority of their stack&rsquo;s capability; exact % varies by survey wave (directional).</p>
+    <aside class="notes">Next slide names the three-surface pattern without repeating the 62%.</aside>
+  </section>
+
+  <section class="slide" data-slide="4">
+    <h3 data-animate="fade-in">PROBLEM</h3>
+    <h2 data-animate="fade-up" data-delay="1">Three surfaces: ops, execution, AI</h2>
+    <p class="insight-line" data-animate="fade-up" data-delay="2">A common pattern: marketing <strong>ops</strong> and tasks live in one place, <strong>campaign execution</strong> in another, and <strong>AI</strong> in a third tab. That split makes it harder to learn what works end to end.</p>
+    <div class="card-grid cols-3" data-animate="fade-up" data-delay="3">
+      <div class="card"><h4>Marketing ops</h4><p>Tasks, planning, approvals, calendars.</p></div>
+      <div class="card"><h4>Execution</h4><p>Sends, journeys, assets, reporting.</p></div>
+      <div class="card"><h4>AI (often siloed)</h4><p>Research and drafts disconnected from boards and contacts.</p></div>
+    </div>
+    <aside class="notes">Three-surface pattern is a narrative frame for Sales / AMs, not a single third-party %. Pairs with slide 3: sprawl + structure. Sets up monday as one ecosystem.</aside>
+  </section>
+
+  <section class="slide" data-slide="5">
+    <h3 data-animate="fade-in">TREND</h3>
+    <h2 data-animate="fade-up" data-delay="1">AI belongs in research, creation, and analysis</h2>
+    <div class="stat-big" data-animate="fade-up" data-delay="2">63%</div>
+    <p class="insight-line" data-animate="fade-up" data-delay="2" style="margin-top:0;">of marketers already use generative AI in marketing; many more evaluating (vendor survey, n=500+).</p>
+    <p class="cite-line">Jasper: State of AI in Marketing 2025. Self-reported; directional.</p>
+    <div class="quote-compact" data-animate="fade-up" data-delay="3">&ldquo;The question is no longer whether to use AI, but how deeply it is embedded in workflows.&rdquo;</div>
+    <p class="cite-line">Industry commentary (2024-25); synthesis, not a single author quote.</p>
+    <ul data-animate="fade-up" data-delay="4" style="margin-top:8px;">
+      <li><strong>🔍 Research:</strong> segments, angles, competitive scans.</li>
+      <li><strong>✍️ Creation:</strong> drafts, variants, brand-safe templates.</li>
+      <li><strong>📊 Analysis:</strong> what resonated, what to try next.</li>
+    </ul>
+    <aside class="notes">Tie to monday on later slides: AI next to boards and contacts, not only in a standalone chat tool.</aside>
+  </section>
+
+  <section class="slide" data-slide="6">
+    <h3 data-animate="fade-in">MONDAY</h3>
+    <h2 data-animate="fade-up" data-delay="1">Harness ops, execution, and AI in one ecosystem</h2>
+    <p class="insight-line" data-animate="fade-up" data-delay="2">monday campaigns sits inside monday.com so marketing work, customer context, and sends stay connected. Fewer exports, clearer ownership, faster iteration.</p>
+    <div class="card-grid cols-2" data-animate="fade-up" data-delay="3">
+      <div class="card"><h4>Single customer context</h4><p>CRM records, boards, and campaigns reference the same reality.</p></div>
+      <div class="card"><h4>AI with guardrails</h4><p>Brand and approvals live next to generation, not in a separate silo.</p></div>
+    </div>
+    <aside class="notes">Pivot from market pain to monday. Confirm any customer-facing numbers or named capabilities with Product Marketing before external decks. Adjust examples for enterprise vs SMB accounts.</aside>
+  </section>
+
+  <section class="slide" data-slide="7">
+    <h3 data-animate="fade-in">CRM + MARKETING</h3>
+    <h2 data-animate="fade-up" data-delay="1">Shared contacts, full timeline, triggers that react</h2>
+    <div class="stat-big" data-animate="fade-up" data-delay="2">80%+</div>
+    <p class="insight-line" data-animate="fade-up" data-delay="2" style="margin-top:0;">of email marketers saw better results when personalisation used real data (segments, dynamic content), per Litmus survey reporting.</p>
+    <p class="cite-line">Litmus: The 2024 State of Email Trends. Personalisation needs trustworthy CRM and activity data.</p>
+    <ul data-animate="fade-up" data-delay="3">
+      <li><strong>Shared contacts board:</strong> sales and marketing see the same people and companies.</li>
+      <li><strong>Emails &amp; activities:</strong> campaigns visible on the contact timeline, not only in an ESP export.</li>
+      <li><strong>Workflows:</strong> board and CRM events can trigger the next campaign step.</li>
+      <li><strong>Collaborative insights:</strong> messaging and segmentation insight from the CRM, available to marketing in one place.</li>
+    </ul>
+    <aside class="notes">If the account uses monday CRM + campaigns, walk through one concrete journey (e.g. stage change to nurture). If not, keep this as the vision slide.</aside>
+  </section>
+
+  <section class="slide" data-slide="8">
+    <h3 data-animate="fade-in">AI AT THE CORE</h3>
+    <h2 data-animate="fade-up" data-delay="1">From setup to send, inside the product</h2>
+    <p class="insight-line" data-animate="fade-up" data-delay="2">monday campaigns builds AI into the workflow: onboarding, brand extraction, campaign creation, and continuous improvement. The roadmap extends that with deeper AI: research drawn from your industry and CRM data, and landing pages generated in-product.</p>
+    <ul data-animate="fade-up" data-delay="3">
+      <li>Account setup and guided flows.</li>
+      <li>Brand extraction and consistent voice.</li>
+      <li>Campaign creation and optimisation.</li>
+      <li>AI researching for insights from the industry and your CRM.</li>
+      <li>AI building landing pages.</li>
+    </ul>
+    <div class="callout callout-in-call" data-animate="fade-up" data-delay="4">
+      <div class="in-call-label">What you can say</div>
+      <p>&ldquo;Campaigns lets marketing and sales work from the same contacts and boards, with AI for setup and sends in one place, so you are not juggling a separate AI tool on the side.&rdquo;</p>
+    </div>
+    <aside class="notes">Do not promise a ship date unless PMM has published it. The in-call line is positioning, not a feature checklist.</aside>
+  </section>
+
+  <section class="slide" data-slide="9">
+    <h3 data-animate="fade-in">WORK MANAGEMENT + CAMPAIGNS</h3>
+    <h2 data-animate="fade-up" data-delay="1">Ops on Work Management; execution on Campaigns</h2>
+    <div class="two-col" data-animate="fade-up" data-delay="2">
+      <div>
+        <p class="insight-line" style="margin-bottom:12px;"><strong>Work Management</strong></p>
+        <p>Planning, requests, cross-team work, GTM calendars, approvals. Marketing ops lives where the rest of the company already plans work.</p>
+      </div>
+      <div>
+        <p class="insight-line" style="margin-bottom:12px;"><strong>monday campaigns</strong></p>
+        <p>Building, sending, and measuring campaigns where contacts and boards already live.</p>
+      </div>
+    </div>
+    <div class="quote-compact" data-animate="fade-up" data-delay="3">Context switching between apps is a major drag on knowledge work; integration and shared context reduce rework.</div>
+    <p class="cite-line">McKinsey and related workplace research on context switching (directional hours vary by study).</p>
+    <aside class="notes">Pair with slides 3-4: sprawl and three surfaces map to two coordinated surfaces inside monday, plus embedded AI.</aside>
+  </section>
+
+  <section class="slide" data-slide="10">
+    <h3 data-animate="fade-in">WITH CUSTOMERS</h3>
+    <h2 data-animate="fade-up" data-delay="1">Credible, helpful, ready to bring experts</h2>
+    <div class="stat-big" data-animate="fade-up" data-delay="2">49%</div>
+    <p class="insight-line" data-animate="fade-up" data-delay="2" style="margin-top:0;">of marketers measured ROI on AI investments in one 2025 survey; many still building the business case.</p>
+    <p class="cite-line">Jasper State of AI in Marketing 2025.</p>
+    <div class="callout callout-in-call" data-animate="fade-up" data-delay="3">
+      <div class="in-call-label">On customer calls</div>
+      <p>&ldquo;monday campaigns is how your marketing and sales teams stay on the same contacts and timeline, with fewer disconnected tools and AI built into the workflow, not bolted on elsewhere.&rdquo;</p>
+    </div>
+    <aside class="notes">49% shows AI measurement maturity is mixed. The in-call line is value framing, not a specialist handoff.</aside>
+  </section>
+
+  <section class="slide slide-hero" data-slide="11" style="text-align:center; align-items:center;">
+    <div class="aurora">
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+    </div>
+    <h1 data-animate="fade-up" data-delay="1" style="position:relative;z-index:2;">Questions</h1>
+    <p class="insight-line" style="text-align:center;max-width:620px;margin-left:auto;margin-right:auto;" data-animate="fade-up" data-delay="2">Three anchors: <span class="accent">alignment</span> (same truth for sales and marketing) · <span class="accent">AI</span> in the workflow, not only in a side tool · <span class="accent">one ecosystem</span> (WM + CRM + campaigns).</p>
+    <p class="cite-line" style="text-align:center;max-width:480px;margin-left:auto;margin-right:auto;">Product Marketing / Campaigns GTM for customer-ready stats and roadmap detail.</p>
+    <aside class="notes">Close with curiosity. Offer follow-up in your usual channel.</aside>
+  </section>
+
+</div>
+
+<div class="progress-bar" id="progress"></div>
+<div class="slide-number" id="slideNum"></div>
+<div class="slide-counter" id="counter"></div>
+<div class="notes-panel" id="notesPanel">
+  <div class="notes-label">Speaker Notes</div>
+  <div id="notesContent"></div>
+</div>
+
+<script>
+(() => {
+  const deck = document.getElementById('deck');
+  const slides = deck.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const slideNum = document.getElementById('slideNum');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesContent = document.getElementById('notesContent');
+  let current = 0;
+  let notesVisible = false;
+
+  function resetAnimations(slide) {
+    slide.querySelectorAll('[data-animate]').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length) return;
+    /* Do not strip .active when already on this slide (e.g. init). Removing it resets
+       [data-animate] to opacity 0; in some embedded browsers animations never recover → blank slide. */
+    if (index !== current) {
+      slides[current].classList.remove('active');
+      resetAnimations(slides[current]);
+      current = index;
+      slides[current].classList.add('active');
+    } else {
+      current = index;
+    }
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+    slideNum.textContent = String(current + 1).padStart(2, '0');
+    const notes = slides[current].querySelector('aside.notes');
+    notesContent.textContent = notes ? notes.textContent : '';
+    if (typeof Chart !== 'undefined') {
+      slides[current].querySelectorAll('canvas[data-chart]').forEach(canvas => {
+        const chart = Chart.getChart(canvas);
+        if (chart) chart.update('active');
+      });
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        e.preventDefault();
+        goTo(current + 1);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault();
+        goTo(current - 1);
+        break;
+      case 'n':
+      case 'N':
+        notesVisible = !notesVisible;
+        notesPanel.classList.toggle('visible', notesVisible);
+        break;
+    }
+  });
+
+  goTo(0);
+
+  /* Embedded browsers sometimes never run keyframe animations; avoid permanent opacity: 0 */
+  function ensureAnimatedVisible() {
+    document.querySelectorAll('.slide.active [data-animate]').forEach((el) => {
+      const op = parseFloat(window.getComputedStyle(el).opacity);
+      if (op < 0.05) {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      }
+    });
+  }
+  function scheduleEnsure() {
+    setTimeout(ensureAnimatedVisible, 1200);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleEnsure);
+  } else {
+    scheduleEnsure();
+  }
+})();
+</script>
+
+<script>
+(() => {
+  const canvas = document.getElementById('particlesCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles, connDist = 140;
+
+  const colours = [
+    'rgba(0, 212, 255, ',
+    'rgba(139, 92, 246, ',
+    'rgba(59, 130, 246, ',
+    'rgba(236, 72, 153, ',
+    'rgba(6, 182, 212, ',
+  ];
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    w = canvas.width = rect.width;
+    h = canvas.height = rect.height;
+  }
+
+  function createParticles() {
+    const count = Math.floor((w * h) / 12000);
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 2 + 1,
+        col: colours[Math.floor(Math.random() * colours.length)],
+        alpha: Math.random() * 0.5 + 0.3,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.02 + 0.005,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.pulse += p.pulseSpeed;
+      if (p.x < -10) p.x = w + 10;
+      if (p.x > w + 10) p.x = -10;
+      if (p.y < -10) p.y = h + 10;
+      if (p.y > h + 10) p.y = -10;
+      const glow = p.alpha + Math.sin(p.pulse) * 0.15;
+      for (let j = i + 1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x;
+        const dy = p.y - q.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < connDist) {
+          const lineAlpha = (1 - dist / connDist) * 0.15;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = p.col + lineAlpha + ')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.col + glow + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  createParticles();
+  draw();
+  window.addEventListener('resize', () => { resize(); createParticles(); });
+})();
+</script>
+
+</body>
+</html>
