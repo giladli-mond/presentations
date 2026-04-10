@@ -40,7 +40,7 @@
     }
 
     .report-container {
-      max-width: 960px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 40px;
     }
@@ -153,6 +153,27 @@
     .ind-advertising { background: rgba(255, 87, 34, 0.22); color: #FFAB91; border: 1px solid rgba(255, 138, 101, 0.35); }
     .ind-nonprofit { background: rgba(0, 200, 83, 0.2); color: #A5D6A7; border: 1px solid rgba(102, 187, 106, 0.35); }
     .ind-default { background: rgba(158, 158, 158, 0.22); color: #E0E0E0; border: 1px solid rgba(189, 189, 189, 0.35); }
+
+    .owner-line {
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--bg-surface);
+      border-left: 3px solid var(--brand-cyan);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .owner-line strong { color: var(--text-primary); }
+
+    td.owner-col {
+      font-size: 12px;
+      color: var(--text-secondary);
+      max-width: 220px;
+      vertical-align: top;
+      line-height: 1.35;
+    }
 
     /* Sections */
     h2 {
@@ -372,6 +393,7 @@
     <div class="highlight-box">
   <p><strong>Key insight:</strong> Shortlist accounts combine monday CRM with paying Campaigns — a strong ecosystem narrative for case studies. Industry labels come from <code>BIGBRAIN.L4.DIM_ACCOUNTS</code> (ENRICHED_INDUSTRY / INDUSTRY). Names and slugs: verify in Salesforce before outreach.</p>
   <p style="margin-top: 12px;"><strong>How this list was built (20):</strong> Snowflake — paying Marketing product, CRM still installed, ranked by volume of sent campaigns (plus diversity of sector and US/EU infra regions). Figures below use product metrics snapshots; enrich with Salesforce for legal names and contacts.</p>
+  <p style="margin-top: 12px;"><strong>Sales / AM column:</strong> Main Salesforce owner and AE names from <code>BIGBRAIN.L3.FACT_ACCOUNTS_OWNERS_DAILY</code> (latest day) joined to <code>DIM_SALESFORCE_USERS</code>, plus monday CRO role/product when present. There is no separate “Campaigns-only” field — overlay reps often sit on CRM or Work Management in SF; confirm the right contact in Salesforce before outreach.</p>
 </div>
 
 <h2>Recommended outreach priority</h2>
@@ -381,141 +403,163 @@
       <th>Priority</th>
       <th>Company</th>
       <th>Industry</th>
+      <th>Sales / AM (SF)</th>
       <th>BigBrain</th>
       <th>Region</th>
       <th>Angle</th>
     </tr>
   </thead>
   <tbody>
-    <tr><td>1</td><td>Promiseland Insurance</td><td><span class="ind-tag ind-insurance" title="Insurance Services">Insurance Services</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/17036591/profile" target="_blank" rel="noopener noreferrer">17036591</a></td><td>US</td><td>Highest campaign count on list</td></tr>
-    <tr><td>2</td><td>Aligner Dental Academy</td><td><span class="ind-tag ind-health" title="Health Care Providers">Health Care Providers</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/13362132/profile" target="_blank" rel="noopener noreferrer">13362132</a></td><td>US</td><td>Engagement + full platform story</td></tr>
-    <tr><td>3</td><td>DRNKR</td><td><span class="ind-tag ind-food" title="Food &amp; Beverages Industries">Food &amp; Beverages</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/30457791/profile" target="_blank" rel="noopener noreferrer">30457791</a></td><td>US</td><td>Very high send cadence</td></tr>
-    <tr><td>4</td><td>Investor Friendly CPA</td><td><span class="ind-tag ind-finance" title="Finance Industries">Finance Industries</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/10252134/profile" target="_blank" rel="noopener noreferrer">10252134</a></td><td>US</td><td>Team-wide marketing ops</td></tr>
-    <tr><td>5</td><td>The Rosenblum Companies</td><td><span class="ind-tag ind-realestate" title="Real Estate Industries">Real Estate Industries</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/14308148/profile" target="_blank" rel="noopener noreferrer">14308148</a></td><td>US</td><td>Heavy campaign usage, property narrative</td></tr>
-    <tr><td>6</td><td>CRP Affordable</td><td><span class="ind-tag ind-realestate" title="Real Estate Industries">Real Estate Industries</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/5516445/profile" target="_blank" rel="noopener noreferrer">5516445</a></td><td>US</td><td>Scale + strong ARR</td></tr>
-    <tr><td>7</td><td>MUSC</td><td><span class="ind-tag ind-edu" title="Educational Support &amp; E-Learning">Educational Support</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/11984595/profile" target="_blank" rel="noopener noreferrer">11984595</a></td><td>US</td><td>Institutional / education</td></tr>
-    <tr><td>8</td><td>Platinumfoodpartners</td><td><span class="ind-tag ind-food" title="Food &amp; Beverages Industries">Food &amp; Beverages</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/16586806/profile" target="_blank" rel="noopener noreferrer">16586806</a></td><td>EU</td><td>Fast EU adoption</td></tr>
-    <tr><td>9</td><td>GenesisElevator</td><td><span class="ind-tag ind-engineering" title="Engineering Services">Engineering Services</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/16731943/profile" target="_blank" rel="noopener noreferrer">16731943</a></td><td>US</td><td>Industrial / field services angle</td></tr>
-    <tr><td>10</td><td>FOG-QCS</td><td><span class="ind-tag ind-consumer" title="Consumer &amp; Personal Services">Consumer &amp; Personal</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/24993034/profile" target="_blank" rel="noopener noreferrer">24993034</a></td><td>US</td><td>Strong MAPP relative to ARR</td></tr>
-    <tr><td>11</td><td>Asp Health</td><td><span class="ind-tag ind-health" title="Health Care Providers">Health Care Providers</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/27872400/profile" target="_blank" rel="noopener noreferrer">27872400</a></td><td>US</td><td>Growing health usage</td></tr>
-    <tr><td>12</td><td>Bofronts</td><td><span class="ind-tag ind-retail" title="Specialty Retail">Specialty Retail</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/14815162/profile" target="_blank" rel="noopener noreferrer">14815162</a></td><td>US</td><td>Retail + campaigns</td></tr>
-    <tr><td>13</td><td>OST (Orange Sky Travel)</td><td><span class="ind-tag ind-travel" title="Travel &amp; Event Services">Travel &amp; Event</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/24594774/profile" target="_blank" rel="noopener noreferrer">24594774</a></td><td>US</td><td>Travel / CRM data story</td></tr>
-    <tr><td>14</td><td>DickBailey</td><td><span class="ind-tag ind-consumer" title="Consumer &amp; Personal Services">Consumer &amp; Personal</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/13836633/profile" target="_blank" rel="noopener noreferrer">13836633</a></td><td>US</td><td>Consistent multi-campaign use</td></tr>
-    <tr><td>15</td><td>Purple Plum Consulting</td><td><span class="ind-tag ind-software" title="Software Development &amp; Applications">Software Development</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/3311055/profile" target="_blank" rel="noopener noreferrer">3311055</a></td><td>US</td><td>High MAPP — power users</td></tr>
-    <tr><td>16</td><td>The River Group</td><td><span class="ind-tag ind-media" title="Media Production &amp; Distribution">Media Production</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/9176232/profile" target="_blank" rel="noopener noreferrer">9176232</a></td><td>US</td><td>Agency-style workflows</td></tr>
-    <tr><td>17</td><td>Asset Liquidity</td><td><span class="ind-tag ind-prof" title="Specialized Professional Services">Specialized Professional</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/32791408/profile" target="_blank" rel="noopener noreferrer">32791408</a></td><td>US</td><td>Strong ARR + B2B services</td></tr>
-    <tr><td>18</td><td>Rotec</td><td><span class="ind-tag ind-health" title="Health Care Providers">Health Care Providers</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/29404053/profile" target="_blank" rel="noopener noreferrer">29404053</a></td><td>US</td><td>CRM → Campaigns data flow</td></tr>
-    <tr><td>19</td><td>ACISO CONSULTING GmbH</td><td><span class="ind-tag ind-it" title="IT Services &amp; Infrastructure">IT Services</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/21686922/profile" target="_blank" rel="noopener noreferrer">21686922</a></td><td>EU</td><td>EU B2B / consulting</td></tr>
-    <tr><td>20</td><td>Sevenc</td><td><span class="ind-tag ind-software" title="Software Development &amp; Applications">Software Development</span></td><td><a class="bb-link" href="https://bigbrain.me/accounts/15667991/profile" target="_blank" rel="noopener noreferrer">15667991</a></td><td>EU</td><td>Long-tenure EU loyalty</td></tr>
+    <tr><td>1</td><td>Promiseland Insurance</td><td><span class="ind-tag ind-insurance" title="Insurance Services">Insurance Services</span></td><td class="owner-col">People Manager · Work Management (no named SF contact)</td><td><a class="bb-link" href="https://bigbrain.me/accounts/17036591/profile" target="_blank" rel="noopener noreferrer">17036591</a></td><td>US</td><td>Highest campaign count on list</td></tr>
+    <tr><td>2</td><td>Aligner Dental Academy</td><td><span class="ind-tag ind-health" title="Health Care Providers">Health Care Providers</span></td><td class="owner-col"><strong>Hana Upton</strong> — Commercial AM · Work Management</td><td><a class="bb-link" href="https://bigbrain.me/accounts/13362132/profile" target="_blank" rel="noopener noreferrer">13362132</a></td><td>US</td><td>Engagement + full platform story</td></tr>
+    <tr><td>3</td><td>DRNKR</td><td><span class="ind-tag ind-food" title="Food &amp; Beverages Industries">Food &amp; Beverages</span></td><td class="owner-col">Not in ownership snapshot — check Salesforce</td><td><a class="bb-link" href="https://bigbrain.me/accounts/30457791/profile" target="_blank" rel="noopener noreferrer">30457791</a></td><td>US</td><td>Very high send cadence</td></tr>
+    <tr><td>4</td><td>Investor Friendly CPA</td><td><span class="ind-tag ind-finance" title="Finance Industries">Finance Industries</span></td><td class="owner-col"><strong>Tanner Camp</strong> — AE · CRM</td><td><a class="bb-link" href="https://bigbrain.me/accounts/10252134/profile" target="_blank" rel="noopener noreferrer">10252134</a></td><td>US</td><td>Team-wide marketing ops</td></tr>
+    <tr><td>5</td><td>The Rosenblum Companies</td><td><span class="ind-tag ind-realestate" title="Real Estate Industries">Real Estate Industries</span></td><td class="owner-col"><strong>Jacob Waldman</strong> — AE · CRM</td><td><a class="bb-link" href="https://bigbrain.me/accounts/14308148/profile" target="_blank" rel="noopener noreferrer">14308148</a></td><td>US</td><td>Heavy campaign usage, property narrative</td></tr>
+    <tr><td>6</td><td>CRP Affordable</td><td><span class="ind-tag ind-realestate" title="Real Estate Industries">Real Estate Industries</span></td><td class="owner-col"><strong>Phillip Blecher</strong> — AE · CRM</td><td><a class="bb-link" href="https://bigbrain.me/accounts/5516445/profile" target="_blank" rel="noopener noreferrer">5516445</a></td><td>US</td><td>Scale + strong ARR</td></tr>
+    <tr><td>7</td><td>MUSC</td><td><span class="ind-tag ind-edu" title="Educational Support &amp; E-Learning">Educational Support</span></td><td class="owner-col"><strong>Brendan Higgins</strong> — Territory AE · Work Management</td><td><a class="bb-link" href="https://bigbrain.me/accounts/11984595/profile" target="_blank" rel="noopener noreferrer">11984595</a></td><td>US</td><td>Institutional / education</td></tr>
+    <tr><td>8</td><td>Platinumfoodpartners</td><td><span class="ind-tag ind-food" title="Food &amp; Beverages Industries">Food &amp; Beverages</span></td><td class="owner-col">Not in ownership snapshot — check Salesforce</td><td><a class="bb-link" href="https://bigbrain.me/accounts/16586806/profile" target="_blank" rel="noopener noreferrer">16586806</a></td><td>EU</td><td>Fast EU adoption</td></tr>
+    <tr><td>9</td><td>GenesisElevator</td><td><span class="ind-tag ind-engineering" title="Engineering Services">Engineering Services</span></td><td class="owner-col"><strong>Tanner Camp</strong> — AE · CRM</td><td><a class="bb-link" href="https://bigbrain.me/accounts/16731943/profile" target="_blank" rel="noopener noreferrer">16731943</a></td><td>US</td><td>Industrial / field services angle</td></tr>
+    <tr><td>10</td><td>FOG-QCS</td><td><span class="ind-tag ind-consumer" title="Consumer &amp; Personal Services">Consumer &amp; Personal</span></td><td class="owner-col">Not in ownership snapshot — check Salesforce</td><td><a class="bb-link" href="https://bigbrain.me/accounts/24993034/profile" target="_blank" rel="noopener noreferrer">24993034</a></td><td>US</td><td>Strong MAPP relative to ARR</td></tr>
+    <tr><td>11</td><td>Asp Health</td><td><span class="ind-tag ind-health" title="Health Care Providers">Health Care Providers</span></td><td class="owner-col">Not in ownership snapshot — check Salesforce</td><td><a class="bb-link" href="https://bigbrain.me/accounts/27872400/profile" target="_blank" rel="noopener noreferrer">27872400</a></td><td>US</td><td>Growing health usage</td></tr>
+    <tr><td>12</td><td>Bofronts</td><td><span class="ind-tag ind-retail" title="Specialty Retail">Specialty Retail</span></td><td class="owner-col">CPM · Work Management (no named SF contact)</td><td><a class="bb-link" href="https://bigbrain.me/accounts/14815162/profile" target="_blank" rel="noopener noreferrer">14815162</a></td><td>US</td><td>Retail + campaigns</td></tr>
+    <tr><td>13</td><td>OST (Orange Sky Travel)</td><td><span class="ind-tag ind-travel" title="Travel &amp; Event Services">Travel &amp; Event</span></td><td class="owner-col"><strong>Connor Clapp</strong> — AE · Work Management</td><td><a class="bb-link" href="https://bigbrain.me/accounts/24594774/profile" target="_blank" rel="noopener noreferrer">24594774</a></td><td>US</td><td>Travel / CRM data story</td></tr>
+    <tr><td>14</td><td>DickBailey</td><td><span class="ind-tag ind-consumer" title="Consumer &amp; Personal Services">Consumer &amp; Personal</span></td><td class="owner-col"><strong>Bruno Lins</strong> — AE · Work Management</td><td><a class="bb-link" href="https://bigbrain.me/accounts/13836633/profile" target="_blank" rel="noopener noreferrer">13836633</a></td><td>US</td><td>Consistent multi-campaign use</td></tr>
+    <tr><td>15</td><td>Purple Plum Consulting</td><td><span class="ind-tag ind-software" title="Software Development &amp; Applications">Software Development</span></td><td class="owner-col">CPM · Work Management (no named SF contact)</td><td><a class="bb-link" href="https://bigbrain.me/accounts/3311055/profile" target="_blank" rel="noopener noreferrer">3311055</a></td><td>US</td><td>High MAPP — power users</td></tr>
+    <tr><td>16</td><td>The River Group</td><td><span class="ind-tag ind-media" title="Media Production &amp; Distribution">Media Production</span></td><td class="owner-col"><strong>Luke Murphy</strong> — Commercial AM · Work Management</td><td><a class="bb-link" href="https://bigbrain.me/accounts/9176232/profile" target="_blank" rel="noopener noreferrer">9176232</a></td><td>US</td><td>Agency-style workflows</td></tr>
+    <tr><td>17</td><td>Asset Liquidity</td><td><span class="ind-tag ind-prof" title="Specialized Professional Services">Specialized Professional</span></td><td class="owner-col">Not in ownership snapshot — check Salesforce</td><td><a class="bb-link" href="https://bigbrain.me/accounts/32791408/profile" target="_blank" rel="noopener noreferrer">32791408</a></td><td>US</td><td>Strong ARR + B2B services</td></tr>
+    <tr><td>18</td><td>Rotec</td><td><span class="ind-tag ind-health" title="Health Care Providers">Health Care Providers</span></td><td class="owner-col"><strong>Eleanor Brewer</strong> — AE · Work Management</td><td><a class="bb-link" href="https://bigbrain.me/accounts/29404053/profile" target="_blank" rel="noopener noreferrer">29404053</a></td><td>US</td><td>CRM → Campaigns data flow</td></tr>
+    <tr><td>19</td><td>ACISO CONSULTING GmbH</td><td><span class="ind-tag ind-it" title="IT Services &amp; Infrastructure">IT Services</span></td><td class="owner-col"><strong>Elisa Capano</strong> — Territory AE · Work Management</td><td><a class="bb-link" href="https://bigbrain.me/accounts/21686922/profile" target="_blank" rel="noopener noreferrer">21686922</a></td><td>EU</td><td>EU B2B / consulting</td></tr>
+    <tr><td>20</td><td>Sevenc</td><td><span class="ind-tag ind-software" title="Software Development &amp; Applications">Software Development</span></td><td class="owner-col">CPM · Work Management (no named SF contact)</td><td><a class="bb-link" href="https://bigbrain.me/accounts/15667991/profile" target="_blank" rel="noopener noreferrer">15667991</a></td><td>EU</td><td>Long-tenure EU loyalty</td></tr>
   </tbody>
 </table>
 
 <h2>1. Promiseland Insurance <span class="badge badge-blue">US</span> <span class="ind-tag ind-insurance">Insurance Services</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> People Manager · Work Management — no named Salesforce user on the account row in this snapshot.</p>
 <p><strong>Slug:</strong> promiselandinsurance-company &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/17036591/profile" target="_blank" rel="noopener noreferrer">17036591</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $3,600 &nbsp;|&nbsp; <strong>MAPP:</strong> 2</p>
 <p><strong>Usage (warehouse):</strong> 368+ sent campaigns recorded — top of this shortlist by volume.</p>
 <p><strong>Why interview:</strong> Insurance vertical + extreme send cadence — strong quantitative proof for GTM.</p>
 
 <h2>2. Aligner Dental Academy <span class="badge badge-blue">US</span> <span class="ind-tag ind-health">Health Care Providers</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Hana Upton</strong> — Commercial AM · Work Management (main Salesforce owner).</p>
 <p><strong>Slug:</strong> alignerconsulting-team &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/13362132/profile" target="_blank" rel="noopener noreferrer">13362132</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $4,216 &nbsp;|&nbsp; <strong>MAPP:</strong> 4</p>
 <p><strong>Usage (prior deep-dive):</strong> 131 real campaigns, 15,454 emails, 82.9% open, 5.5% click — sustained engagement.</p>
 <p><strong>Products:</strong> Core, CRM, Marketing, Service.</p>
 <p><strong>Why interview:</strong> Flagship narrative — full lifecycle (CRM, Campaigns, Service) with exceptional engagement.</p>
 
 <h2>3. DRNKR <span class="badge badge-blue">US</span> <span class="ind-tag ind-food">Food &amp; Beverages Industries</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> No row in BigBrain ownership fact for this account — confirm owner in Salesforce.</p>
 <p><strong>Slug:</strong> drnkr &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/30457791/profile" target="_blank" rel="noopener noreferrer">30457791</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $498 &nbsp;|&nbsp; <strong>MAPP:</strong> 1</p>
 <p><strong>Usage (warehouse):</strong> 226+ sent campaigns — very high activity vs. ARR band.</p>
 <p><strong>Why interview:</strong> Food &amp; bev brand story; “punches above weight” on usage.</p>
 
 <h2>4. Investor Friendly CPA <span class="badge badge-blue">US</span> <span class="ind-tag ind-finance">Finance Industries</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Tanner Camp</strong> — AE · CRM (main owner and AE).</p>
 <p><strong>Slug:</strong> investorfriendlycpa &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/10252134/profile" target="_blank" rel="noopener noreferrer">10252134</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $3,132 &nbsp;|&nbsp; <strong>MAPP:</strong> 6</p>
 <p><strong>Usage (prior deep-dive):</strong> 69 campaigns, 145,399 emails — validate click metrics (scanners).</p>
 <p><strong>Why interview:</strong> Finance / CPA firm with large active team on Campaigns — credible professional-services marketing ops.</p>
 
 <h2>5. The Rosenblum Companies <span class="badge badge-blue">US</span> <span class="ind-tag ind-realestate">Real Estate Industries</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Jacob Waldman</strong> — AE · CRM.</p>
 <p><strong>Slug:</strong> rosenblumcompanies &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/14308148/profile" target="_blank" rel="noopener noreferrer">14308148</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $600 &nbsp;|&nbsp; <strong>MAPP:</strong> 4</p>
 <p><strong>Usage (warehouse):</strong> 166+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Real estate + high campaign throughput — good sector diversity next to CRP.</p>
 
 <h2>6. CRP Affordable <span class="badge badge-blue">US</span> <span class="ind-tag ind-realestate">Real Estate Industries</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Phillip Blecher</strong> — AE · CRM.</p>
 <p><strong>Slug:</strong> crp-affordable-team &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/5516445/profile" target="_blank" rel="noopener noreferrer">5516445</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $4,450 &nbsp;|&nbsp; <strong>MAPP:</strong> 2</p>
 <p><strong>Usage (prior deep-dive):</strong> 40 campaigns, 177,325 emails — among highest ARR on earlier shortlist.</p>
 <p><strong>Why interview:</strong> Scale proof — large sends + enterprise commercial relationship.</p>
 
 <h2>7. MUSC <span class="badge badge-blue">US</span> <span class="ind-tag ind-edu">Educational Support &amp; E-Learning</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Brendan Higgins</strong> — Territory AE · Work Management.</p>
 <p><strong>Slug:</strong> musc736718 &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/11984595/profile" target="_blank" rel="noopener noreferrer">11984595</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $3,600 &nbsp;|&nbsp; <strong>MAPP:</strong> 5</p>
 <p><strong>Usage (warehouse):</strong> 162+ sent campaigns; MAPP 5.</p>
 <p><strong>Why interview:</strong> Education / institutional use case — different buyer from typical SMB retail.</p>
 
 <h2>8. Platinumfoodpartners <span class="badge badge-purple">EU</span> <span class="ind-tag ind-food">Food &amp; Beverages Industries</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> No row in BigBrain ownership fact for this account — confirm owner in Salesforce.</p>
 <p><strong>Slug:</strong> platinumfoodpartners-team &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/16586806/profile" target="_blank" rel="noopener noreferrer">16586806</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $1,417 &nbsp;|&nbsp; <strong>MAPP:</strong> 5</p>
 <p><strong>Usage (prior deep-dive):</strong> 129 campaigns, 38,700 emails in-window — very high cadence.</p>
 <p><strong>Why interview:</strong> EU food vertical; fast time-to-value story.</p>
 
 <h2>9. GenesisElevator <span class="badge badge-blue">US</span> <span class="ind-tag ind-engineering">Engineering Services</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Tanner Camp</strong> — AE · CRM.</p>
 <p><strong>Slug:</strong> genesiselevator-squad &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/16731943/profile" target="_blank" rel="noopener noreferrer">16731943</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $600 &nbsp;|&nbsp; <strong>MAPP:</strong> 1</p>
 <p><strong>Usage (warehouse):</strong> 144+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Field / engineering services — distinct from desk-based SaaS buyers.</p>
 
 <h2>10. FOG-QCS <span class="badge badge-blue">US</span> <span class="ind-tag ind-consumer">Consumer &amp; Personal Services</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> No row in BigBrain ownership fact for this account — confirm owner in Salesforce.</p>
 <p><strong>Slug:</strong> fog-qcs &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/24993034/profile" target="_blank" rel="noopener noreferrer">24993034</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $180 &nbsp;|&nbsp; <strong>MAPP:</strong> 4</p>
 <p><strong>Usage (warehouse):</strong> 130+ sent campaigns — high MAPP for the ARR tier.</p>
 <p><strong>Why interview:</strong> Shows sticky product usage on a smaller contract — good “efficiency” story.</p>
 
 <h2>11. Asp Health <span class="badge badge-blue">US</span> <span class="ind-tag ind-health">Health Care Providers</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> No row in BigBrain ownership fact for this account — confirm owner in Salesforce.</p>
 <p><strong>Slug:</strong> asp-health-company &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/27872400/profile" target="_blank" rel="noopener noreferrer">27872400</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $600 &nbsp;|&nbsp; <strong>MAPP:</strong> 0</p>
 <p><strong>Usage (warehouse):</strong> 116+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Another health vertical datapoint; confirm activation narrative with CSM.</p>
 
 <h2>12. Bofronts <span class="badge badge-blue">US</span> <span class="ind-tag ind-retail">Specialty Retail</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> CPM routing · Work Management — no named Salesforce user on the account row.</p>
 <p><strong>Slug:</strong> bofronts &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/14815162/profile" target="_blank" rel="noopener noreferrer">14815162</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $1,540 &nbsp;|&nbsp; <strong>MAPP:</strong> 3</p>
 <p><strong>Usage (warehouse):</strong> 100+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Retail — relatable for ecommerce and catalogue-style sends.</p>
 
 <h2>13. OST (Orange Sky Travel) <span class="badge badge-blue">US</span> <span class="ind-tag ind-travel">Travel &amp; Event Services</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Connor Clapp</strong> — AE · Work Management.</p>
 <p><strong>Slug:</strong> crmorangeskytravel &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/24594774/profile" target="_blank" rel="noopener noreferrer">24594774</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $3,600 &nbsp;|&nbsp; <strong>MAPP:</strong> 1</p>
 <p><strong>Usage (warehouse):</strong> 98+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Travel + CRM naming in slug — natural “contacts to journeys” storyline.</p>
 
 <h2>14. DickBailey <span class="badge badge-blue">US</span> <span class="ind-tag ind-consumer">Consumer &amp; Personal Services</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Bruno Lins</strong> — AE · Work Management.</p>
 <p><strong>Slug:</strong> dickbailey-squad &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/13836633/profile" target="_blank" rel="noopener noreferrer">13836633</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $2,412 &nbsp;|&nbsp; <strong>MAPP:</strong> 2</p>
 <p><strong>Usage (warehouse):</strong> 94+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Steady mid-list usage — good backup if top targets decline.</p>
 
 <h2>15. Purple Plum Consulting <span class="badge badge-blue">US</span> <span class="ind-tag ind-software">Software Development &amp; Applications</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> CPM routing · Work Management — no named Salesforce user on the account row.</p>
 <p><strong>Slug:</strong> purpleplum &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/3311055/profile" target="_blank" rel="noopener noreferrer">3311055</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $1,800 &nbsp;|&nbsp; <strong>MAPP:</strong> 5</p>
 <p><strong>Usage (warehouse):</strong> 92+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Software vertical with MAPP 5 — credible technical buyer.</p>
 
 <h2>16. The River Group <span class="badge badge-blue">US</span> <span class="ind-tag ind-media">Media Production &amp; Distribution</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Luke Murphy</strong> — Commercial AM · Work Management.</p>
 <p><strong>Slug:</strong> the-river-group-team &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/9176232/profile" target="_blank" rel="noopener noreferrer">9176232</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $707 &nbsp;|&nbsp; <strong>MAPP:</strong> 1</p>
 <p><strong>Usage (warehouse):</strong> 86+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Media / content shop profile — strong fit for campaign-heavy workflows.</p>
 
 <h2>17. Asset Liquidity <span class="badge badge-blue">US</span> <span class="ind-tag ind-prof">Specialized Professional Services</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> No owner fields populated in this snapshot — confirm in Salesforce.</p>
 <p><strong>Slug:</strong> asset-liquidity &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/32791408/profile" target="_blank" rel="noopener noreferrer">32791408</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $4,608 &nbsp;|&nbsp; <strong>MAPP:</strong> 2</p>
 <p><strong>Usage (warehouse):</strong> 82+ sent campaigns.</p>
 <p><strong>Why interview:</strong> Higher ARR B2B services — good for exec-facing case study.</p>
 
 <h2>18. Rotec <span class="badge badge-blue">US</span> <span class="ind-tag ind-health">Health Care Providers</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Eleanor Brewer</strong> — AE · Work Management.</p>
 <p><strong>Slug:</strong> rotec-gang &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/29404053/profile" target="_blank" rel="noopener noreferrer">29404053</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $3,579 &nbsp;|&nbsp; <strong>MAPP:</strong> 2</p>
 <p><strong>Usage (prior deep-dive):</strong> 21 campaigns, 110,099 emails — large list sends.</p>
 <p><strong>Why interview:</strong> CRM / contact data feeding campaigns — “data flows into sends” proof.</p>
 
 <h2>19. ACISO CONSULTING GmbH <span class="badge badge-purple">EU</span> <span class="ind-tag ind-it">IT Services &amp; Infrastructure</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> <strong>Elisa Capano</strong> — Territory AE · Work Management.</p>
 <p><strong>Slug:</strong> aciso-consulting-gmbh &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/21686922/profile" target="_blank" rel="noopener noreferrer">21686922</a> &nbsp;|&nbsp; <strong>Plan:</strong> Enterprise &nbsp;|&nbsp; <strong>ARR:</strong> $3,355 &nbsp;|&nbsp; <strong>MAPP:</strong> 3</p>
 <p><strong>Usage (prior deep-dive):</strong> 55 campaigns, 22,112 emails — strong opens.</p>
 <p><strong>Why interview:</strong> EU GmbH + IT services — clean European case study.</p>
 
 <h2>20. Sevenc <span class="badge badge-purple">EU</span> <span class="ind-tag ind-software">Software Development &amp; Applications</span></h2>
+<p class="owner-line"><strong>Sales / account owner (Salesforce snapshot):</strong> CPM routing · Work Management — no named Salesforce user on the account row.</p>
 <p><strong>Slug:</strong> sevenc-squad &nbsp;|&nbsp; <strong>BigBrain:</strong> <a href="https://bigbrain.me/accounts/15667991/profile" target="_blank" rel="noopener noreferrer">15667991</a> &nbsp;|&nbsp; <strong>Plan:</strong> Pro &nbsp;|&nbsp; <strong>ARR:</strong> $1,536 &nbsp;|&nbsp; <strong>MAPP:</strong> 3</p>
 <p><strong>Usage (prior deep-dive):</strong> 47 campaigns, 14,766 emails — steady long-term EU use.</p>
 <p><strong>Why interview:</strong> Loyal EU software account — credible written case study.</p>
 
 <h2>GTM notes</h2>
 <ul style="color: var(--text-secondary); margin-left: 1.25rem;">
+  <li>Align with the listed AE/AM in Salesforce before customer outreach; they may cover CRM or Work Management — clarify Campaigns involvement on the account.</li>
   <li>Enrich account IDs in Salesforce; confirm legal names and primary contacts.</li>
   <li>Prefer accounts with sends in the last 7 days for higher response rates.</li>
-  <li>Route outreach via CSM/AM where Enterprise Yearly relationships exist.</li>
+  <li>Route coordination via CSM/AM where Enterprise relationships exist.</li>
 </ul>
 
 
