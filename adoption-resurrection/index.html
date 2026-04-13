@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adoption &amp; resurrection — team kickoff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-slide: #0a0a0a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #555555;
+    --accent: #00d4ff;
+    --accent-dim: #0a1a2e;
+    --positive: #4ade80;
+    --negative: #f87171;
+    --warning: #fbbf24;
+    --border: #1e1e1e;
+    --card-bg: #141414;
+    --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: var(--bg);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+  .deck { width: 100%; height: 100%; position: relative; }
+  .slide {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 48px 88px 72px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.45s ease;
+    background: var(--bg-slide);
+    overflow: hidden;
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+  .slide.active [data-animate] { animation-play-state: running; }
+  .slide h1 {
+    font-family: var(--font-display);
+    font-size: 48px; font-weight: 700;
+    letter-spacing: -1.2px; line-height: 1.12;
+    color: var(--text-primary); margin-bottom: 20px;
+  }
+  .slide h2 {
+    font-family: var(--font-display);
+    font-size: 34px; font-weight: 600;
+    letter-spacing: -0.4px; line-height: 1.2;
+    color: var(--text-primary); margin-bottom: 18px;
+    max-width: 900px;
+  }
+  .slide.slide-dense h2 { font-size: 28px; margin-bottom: 14px; }
+  .slide h3 {
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .slide p, .slide li {
+    font-size: 18px; line-height: 1.58;
+    color: var(--text-secondary); max-width: 820px;
+  }
+  .slide.slide-dense p, .slide.slide-dense li { font-size: 15px; line-height: 1.45; }
+  .slide ul { list-style: none; padding: 0; }
+  .slide ul li {
+    padding: 8px 0 8px 26px; position: relative;
+  }
+  .slide ul li::before {
+    content: ''; position: absolute; left: 0; top: 16px;
+    width: 7px; height: 7px; background: var(--accent); border-radius: 50%;
+  }
+  .accent { color: var(--accent); }
+  .muted { color: var(--text-muted); font-size: 13px; }
+  .source { color: var(--text-muted); font-size: 11px; margin-top: 12px; }
+  .card-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; margin-top: 18px; width: 100%; max-width: 960px;
+  }
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; max-width: 880px; }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 22px;
+  }
+  .card h4 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .card p { font-size: 14px; line-height: 1.5; max-width: none; }
+  .card .num { font-size: 26px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    align-items: start; width: 100%; max-width: 920px; margin-top: 8px;
+  }
+  .slide table {
+    width: 100%; max-width: 720px; border-collapse: collapse;
+    font-size: 14px; margin-top: 12px;
+  }
+  .slide.slide-dense table { font-size: 12px; max-width: 100%; }
+  .slide th {
+    text-align: left; font-size: 11px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.4px; padding: 8px 10px; border-bottom: 1px solid var(--border);
+  }
+  .slide td { padding: 8px 10px; border-bottom: 1px solid #111; color: var(--text-secondary); }
+  .callout {
+    border-left: 3px solid var(--accent); padding: 12px 18px;
+    margin-top: 14px; background: var(--accent-dim);
+    border-radius: 0 8px 8px 0; max-width: 820px;
+  }
+  .callout p { font-size: 15px; max-width: none; }
+  .flow-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-top: 14px; font-size: 15px; color: var(--text-secondary);
+  }
+  .flow-box {
+    background: var(--card-bg); border: 1px solid var(--border);
+    padding: 8px 14px; border-radius: 8px; font-size: 14px;
+  }
+  .flow-arrow { color: var(--accent); font-weight: 600; }
+  .journey-svg { width: 100%; max-width: 880px; height: auto; margin-top: 16px; }
+  .metric-row { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 16px; }
+  .metric-item { text-align: center; min-width: 120px; }
+  .metric-value { font-size: 32px; font-weight: 700; color: var(--accent); }
+  .metric-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  [data-animate="fade-up"] {
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.55s ease forwards; animation-play-state: paused;
+  }
+  [data-animate="fade-in"] {
+    opacity: 0; animation: fadeIn 0.45s ease forwards; animation-play-state: paused;
+  }
+  [data-animate="scale-in"] {
+    opacity: 0; transform: scale(0.94);
+    animation: scaleIn 0.5s ease forwards; animation-play-state: paused;
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { to { opacity: 1; } }
+  @keyframes scaleIn { to { opacity: 1; transform: scale(1); } }
+  [data-delay="1"] { animation-delay: 0.12s; }
+  [data-delay="2"] { animation-delay: 0.24s; }
+  [data-delay="3"] { animation-delay: 0.36s; }
+  [data-delay="4"] { animation-delay: 0.48s; }
+  [data-delay="5"] { animation-delay: 0.6s; }
+  [data-delay="6"] { animation-delay: 0.72s; }
+  .progress-bar {
+    position: fixed; bottom: 0; left: 0; height: 3px;
+    background: var(--accent); transition: width 0.35s ease;
+    z-index: 100; opacity: 0.75;
+  }
+  .slide-counter {
+    position: fixed; bottom: 12px; right: 22px;
+    font-size: 12px; color: var(--text-muted); z-index: 100;
+    font-variant-numeric: tabular-nums; opacity: 0.55;
+  }
+  .notes-panel {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background: rgba(0,0,0,0.94); border-top: 1px solid var(--border);
+    padding: 16px 40px; max-height: 28vh; overflow-y: auto;
+    transform: translateY(100%); transition: transform 0.28s ease;
+    z-index: 200; font-size: 14px; line-height: 1.55; color: var(--text-secondary);
+  }
+  .notes-panel.visible { transform: translateY(0); }
+  .notes-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--accent); margin-bottom: 6px;
+  }
+  aside.notes { display: none; }
+  .slide-hero { overflow: hidden; }
+  .slide-hero .aurora { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .slide-hero .aurora-blob {
+    position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0;
+    animation: auroraPulse 8s ease-in-out infinite;
+  }
+  .slide-hero.active .aurora-blob { opacity: 0.55; }
+  .slide-hero .aurora-blob:nth-child(1) {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,212,255,0.35) 0%, transparent 70%);
+    top: -12%; left: -8%;
+  }
+  .slide-hero .aurora-blob:nth-child(2) {
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(139,92,246,0.28) 0%, transparent 70%);
+    top: 25%; right: -6%;
+  }
+  @keyframes auroraPulse {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(1.08); }
+  }
+  .slide-hero .particles-canvas { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .slide-hero h1, .slide-hero h3, .slide-hero p { position: relative; z-index: 2; }
+  .ga-svg { width: 100%; max-width: 820px; margin-top: 14px; }
+  @media (max-width: 1100px) {
+    .slide { padding: 40px 48px 64px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <section class="slide slide-hero active" data-slide="1">
+    <div class="aurora"><div class="aurora-blob"></div><div class="aurora-blob"></div></div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+    <h3 data-animate="fade-in">monday campaigns</h3>
+    <h1 data-animate="fade-up" data-delay="1">Adoption &amp; resurrection</h1>
+    <p data-animate="fade-up" data-delay="2">Team kickoff · Q2 (April–June) · 9 April 2026</p>
+    <aside class="notes">Internal session only. Aligns the team on growth after strong PMF signals. Arrow keys to navigate. Press N for speaker notes.</aside>
+  </section>
+
+  <section class="slide" data-slide="2">
+    <h2 data-animate="fade-up">How we organise the customer journey</h2>
+    <svg class="journey-svg" viewBox="0 0 880 120" xmlns="http://www.w3.org/2000/svg" data-animate="fade-up" data-delay="1">
+      <rect x="10" y="30" width="250" height="64" rx="10" fill="#141414" stroke="#1e1e1e"/>
+      <text x="135" y="58" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="14" font-weight="600">First value</text>
+      <text x="135" y="78" text-anchor="middle" fill="#a0a0a0" font-family="Inter,sans-serif" font-size="12">Adoption</text>
+      <text x="280" y="68" fill="#00d4ff" font-size="20">→</text>
+      <rect x="310" y="30" width="250" height="64" rx="10" fill="#141414" stroke="#1e1e1e"/>
+      <text x="435" y="58" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="14" font-weight="600">Sustained engagement</text>
+      <text x="435" y="78" text-anchor="middle" fill="#a0a0a0" font-family="Inter,sans-serif" font-size="12">TS + CS</text>
+      <text x="580" y="68" fill="#00d4ff" font-size="20">→</text>
+      <rect x="610" y="30" width="250" height="64" rx="10" fill="#141414" stroke="#1e1e1e"/>
+      <text x="735" y="58" text-anchor="middle" fill="#fff" font-family="Inter,sans-serif" font-size="14" font-weight="600">Churn &amp; resurrection</text>
+      <text x="735" y="78" text-anchor="middle" fill="#a0a0a0" font-family="Inter,sans-serif" font-size="12">Early warning · TS + CS</text>
+    </svg>
+    <ul>
+      <li data-animate="fade-up" data-delay="2"><span class="accent">Adoption:</span> purchase to first meaningful send.</li>
+      <li data-animate="fade-up" data-delay="3"><span class="accent">Sustained engagement:</span> keep sending; catch stalls. Tech Support and Customer Success are central.</li>
+      <li data-animate="fade-up" data-delay="4"><span class="accent">Churn &amp; resurrection:</span> see risk early, intervene, win back. Same cross-functional spine.</li>
+    </ul>
+    <aside class="notes">Sets up chapters 1 to 3. Slide 3 explains why this quarter.</aside>
+  </section>
+
+  <section class="slide" data-slide="3">
+    <h2 data-animate="fade-up">Why this focus in Q2</h2>
+    <div class="two-col">
+      <div data-animate="fade-up" data-delay="1">
+        <h3>Product–market fit</h3>
+        <p>The product works. Customers buy. Onboarding and Guided Setup are moving the numbers (chapter 1).</p>
+      </div>
+      <div data-animate="fade-up" data-delay="2">
+        <h3>Growth</h3>
+        <p>We shift from proving the core idea to growing usage, revenue, and trust in a structured way.</p>
+      </div>
+    </div>
+    <div class="callout" data-animate="fade-up" data-delay="3">
+      <p><strong>Two growth dimensions:</strong> (1) <span class="accent">product capabilities</span> (flows, reliability, AI, and more) and (2) the <span class="accent">customer lifecycle</span> from activation through engagement to save and resurrect.</p>
+    </div>
+    <aside class="notes">Calibrate PMF wording to how you say it internally. Confident, not complacent.</aside>
+  </section>
+
+  <section class="slide" data-slide="4">
+    <h2 data-animate="fade-up">Adoption — Guided Setup and onboarding moved the numbers</h2>
+    <p data-animate="fade-up" data-delay="1">From the 9 Apr cohort report.</p>
+    <div class="card-grid" style="grid-template-columns: repeat(4, 1fr); max-width: 960px;" data-animate="fade-up" data-delay="2">
+      <div class="card"><div class="num">363</div><p>Post-OB sample (9 Apr)</p></div>
+      <div class="card"><div class="num">~51%</div><p>Creation vs ~38% Pre-GS</p></div>
+      <div class="card"><div class="num">~2.78%</div><p>Pay 14d+ vs ~0.59% Pre-GS</p></div>
+      <div class="card"><div class="num">0.133</div><p>Wk2 DAU (14d+ mature) vs 0.075</p></div>
+    </div>
+    <p class="source" data-animate="fade-up" data-delay="3">Caveats: regional mix, Part B validation, AU pipeline gaps.</p>
+    <ul>
+      <li data-animate="fade-up" data-delay="4"><strong>Not done.</strong> Near term: push adoption with <span class="accent">email</span> programmes while product keeps shipping flows.</li>
+    </ul>
+    <aside class="notes">Align with GTM on which email plays are approved.</aside>
+  </section>
+
+  <section class="slide slide-dense" data-slide="5">
+    <h2 data-animate="fade-up">After first value — keep people successful</h2>
+    <p data-animate="fade-up" data-delay="1"><span class="accent">Tech Support:</span> correct triage and a path to product (no tickets correlates with much higher churn). <span class="accent">Customer Success:</span> coverage rules for Campaigns where we agree them.</p>
+    <div class="callout" data-animate="fade-up" data-delay="2">
+      <p><strong>MAG (Motor Auction Group) · 13 Mar 2026</strong> · confidential. ~1.6M duplicate emails across 35 accounts; MAG ~1.3M sends from 4,290 scoped contacts. TS did not loop in product; ~13h to acknowledge bug; no AM/CSM. Parallels AHA; gaps were flagged before the incident.</p>
+    </div>
+    <p data-animate="fade-up" data-delay="3" style="margin-top:12px;">Lesson: sustained engagement needs <strong>joined-up TS + CS + product</strong>, not product alone.</p>
+    <aside class="notes">Do not share MAG detail externally. Trim if time is short. Full report: mag-incident-report in Output.</aside>
+  </section>
+
+  <section class="slide slide-dense" data-slide="6">
+    <h2 data-animate="fade-up">Churn — see it coming, then act</h2>
+    <p class="muted" data-animate="fade-in">A · Risk snapshot (churn-risk-analysis 9 Apr 2026 vs 17 Mar 2026)</p>
+    <table data-animate="fade-up" data-delay="1">
+      <thead><tr><th>Metric</th><th>17 Mar</th><th>8 Apr snapshot</th><th>Delta</th></tr></thead>
+      <tbody>
+        <tr><td>Paying accounts</td><td>770</td><td>869</td><td style="color:var(--warning);">+99</td></tr>
+        <tr><td>CRITICAL + HIGH (count)</td><td>568</td><td>656</td><td style="color:var(--warning);">+88</td></tr>
+        <tr><td>CRITICAL + HIGH (% paying)</td><td>73.8%</td><td>75.4%</td><td>+1.6 pp</td></tr>
+        <tr><td>PRODUCT_ARR in CRIT+HIGH</td><td>~$880k</td><td>~$1.16M</td><td>read with base growth</td></tr>
+        <tr><td>CR+HIGH, zero sends in 30d</td><td>—</td><td>642 / 656 (~$1.13M ARR)</td><td>activation-shaped risk</td></tr>
+      </tbody>
+    </table>
+    <p class="muted" data-animate="fade-up" data-delay="2" style="margin-top:14px;">B · Operating model</p>
+    <div class="flow-row" data-animate="fade-up" data-delay="3">
+      <span class="flow-box">Signals</span><span class="flow-arrow">→</span>
+      <span class="flow-box">Prioritise</span><span class="flow-arrow">→</span>
+      <span class="flow-box">Product + GTM + TS</span><span class="flow-arrow">→</span>
+      <span class="flow-box">Resurrection &amp; stories</span>
+    </div>
+    <p style="margin-top:12px;font-size:14px;" data-animate="fade-up" data-delay="4">Recurring risk runs · Analyst alignment · success stories as proof · deep dive for context.</p>
+    <aside class="notes">138 product churn rows YTD to snapshot is not the same window as 106 Jan to Mar in the March deck. See full HTML for methodology.</aside>
+  </section>
+
+  <section class="slide" data-slide="7">
+    <h2 data-animate="fade-up">Growth accounting</h2>
+    <p data-animate="fade-up" data-delay="1">Agree how we describe <strong>movement</strong> in the base: new, expansion, reactivation, contraction, churn (or the Finance-approved variant). Chapters and initiatives should tie to numbers, not funnel % alone.</p>
+    <svg class="ga-svg" viewBox="0 0 800 100" xmlns="http://www.w3.org/2000/svg" data-animate="fade-up" data-delay="2">
+      <text x="40" y="55" fill="#a0a0a0" font-family="Inter,sans-serif" font-size="13">New</text>
+      <text x="140" y="55" fill="#4ade80" font-family="Inter,sans-serif" font-size="13">+ Expansion</text>
+      <text x="280" y="55" fill="#4ade80" font-family="Inter,sans-serif" font-size="13">+ Reactivation</text>
+      <text x="450" y="55" fill="#f87171" font-family="Inter,sans-serif" font-size="13">− Contraction</text>
+      <text x="600" y="55" fill="#f87171" font-family="Inter,sans-serif" font-size="13">− Churn</text>
+      <line x1="20" y1="75" x2="780" y2="75" stroke="#333" stroke-width="1"/>
+    </svg>
+    <p class="muted" data-animate="fade-up" data-delay="3">Definitions with Analyst and Finance: TBD.</p>
+    <aside class="notes">Placeholder visual. Replace with your waterfall if Finance provides a template.</aside>
+  </section>
+
+  <section class="slide" data-slide="8">
+    <h2 data-animate="fade-up">Q2 execution · three initiatives</h2>
+    <div class="card-grid" data-animate="fade-up" data-delay="1">
+      <div class="card">
+        <h4>1 · Improving adoption</h4>
+        <p>Product plus email-led pushes.</p>
+      </div>
+      <div class="card">
+        <h4>2 · Sustained engagement</h4>
+        <p>Health after first value. <strong>TS + CS are core enablers</strong>, not a separate pillar.</p>
+      </div>
+      <div class="card">
+        <h4>3 · Resurrection</h4>
+        <p>At-risk, dormant, win-back. Success-story programme. TS + CS for escalation and repair.</p>
+      </div>
+    </div>
+    <p class="source" data-animate="fade-up" data-delay="2">Tech Support and Customer Success sit inside initiatives 2 and 3 (and touch 1 where relevant).</p>
+    <aside class="notes">Explicitly not four initiatives.</aside>
+  </section>
+
+  <section class="slide" data-slide="9">
+    <h2 data-animate="fade-up">Initiative · Improving adoption</h2>
+    <ul>
+      <li data-animate="fade-up" data-delay="1"><strong>Epics (draft):</strong> product flows (onboarding, send path, domain auth); email with GTM; measurement with Analyst.</li>
+      <li data-animate="fade-up" data-delay="2"><strong>Metric (pick one):</strong> paying activation rate, create-to-send, or Post-OB send rate.</li>
+    </ul>
+    <aside class="notes">Patric and Engineering per Q2 strategy where relevant.</aside>
+  </section>
+
+  <section class="slide" data-slide="10">
+    <h2 data-animate="fade-up">Initiative · Sustained engagement</h2>
+    <div class="two-col">
+      <div data-animate="fade-up" data-delay="1">
+        <h3>Product</h3>
+        <p>Health signals, nudges, re-engage before stall.</p>
+      </div>
+      <div data-animate="fade-up" data-delay="2">
+        <h3>TS / CS</h3>
+        <p>Campaigns-aware triage, escalation to product, post-MAG safeguards. CS coverage model TBD. Joint playbooks days 1 to 30.</p>
+      </div>
+    </div>
+    <p style="margin-top:16px;" data-animate="fade-up" data-delay="3"><strong>Metric ideas:</strong> engagement after first send, ticket resolution quality, churn in healthy-engagement cohorts.</p>
+    <aside class="notes">MAG shows why TS and CS must sit inside this initiative.</aside>
+  </section>
+
+  <section class="slide" data-slide="11">
+    <h2 data-animate="fade-up">Initiative · Resurrection</h2>
+    <ul>
+      <li data-animate="fade-up" data-delay="1"><strong>Epics (draft):</strong> risk-tier reviews, dormant and win-back, churn feedback.</li>
+      <li data-animate="fade-up" data-delay="2"><strong>Success stories:</strong> tailored proof from candidates report.</li>
+      <li data-animate="fade-up" data-delay="3"><strong>TS / CS:</strong> crisis and deliverability; strategic accounts and renewal risk.</li>
+      <li data-animate="fade-up" data-delay="4"><strong>Metric ideas:</strong> reactivations, resurrection pipeline, ARR moving out of CR/HIGH.</li>
+    </ul>
+    <aside class="notes">success-story-candidates-2026-04-08.html for the shortlist.</aside>
+  </section>
+
+  <section class="slide" data-slide="12">
+    <h2 data-animate="fade-up">Who leads what · what we agree today</h2>
+    <table data-animate="fade-up" data-delay="1">
+      <thead><tr><th>Initiative</th><th>Lead</th><th>Next actions</th></tr></thead>
+      <tbody>
+        <tr><td>Improving adoption</td><td></td><td></td></tr>
+        <tr><td>Sustained engagement</td><td></td><td></td></tr>
+        <tr><td>Resurrection</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+    <p class="muted" data-animate="fade-up" data-delay="2" style="margin-top:12px;">Add TS/CS contributors under rows 2 and 3 if useful.</p>
+    <aside class="notes">Fill live in the session.</aside>
+  </section>
+
+  <section class="slide" data-slide="13">
+    <h2 data-animate="fade-up">Open questions · dependencies</h2>
+    <ul>
+      <li data-animate="fade-up" data-delay="1">Cross-team dependencies</li>
+      <li data-animate="fade-up" data-delay="2">Data definitions and Part B validation</li>
+      <li data-animate="fade-up" data-delay="3">MAG follow-through and escalation paths</li>
+    </ul>
+    <aside class="notes">Reserve ~10 minutes.</aside>
+  </section>
+
+</div>
+
+<div class="progress-bar" id="progress"></div>
+<div class="slide-counter" id="counter"></div>
+<div class="notes-panel" id="notesPanel">
+  <div class="notes-label">Speaker notes</div>
+  <div id="notesContent"></div>
+</div>
+
+<script>
+(() => {
+  const deck = document.getElementById('deck');
+  const slides = deck.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesContent = document.getElementById('notesContent');
+  let current = 0;
+  let notesVisible = false;
+
+  function resetAnimations(slide) {
+    slide.querySelectorAll('[data-animate]').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[current].classList.remove('active');
+    resetAnimations(slides[current]);
+    current = index;
+    slides[current].classList.add('active');
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+    const notes = slides[current].querySelector('aside.notes');
+    notesContent.textContent = notes ? notes.textContent.trim() : '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    } else if (e.key === 'n' || e.key === 'N') {
+      notesVisible = !notesVisible;
+      notesPanel.classList.toggle('visible', notesVisible);
+    }
+  });
+
+  goTo(0);
+})();
+</script>
+
+<script>
+(() => {
+  const canvas = document.getElementById('particlesCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles;
+  const connDist = 130;
+  const colours = ['rgba(0,212,255,', 'rgba(139,92,246,', 'rgba(59,130,246,'];
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    w = canvas.width = rect.width;
+    h = canvas.height = rect.height;
+  }
+
+  function createParticles() {
+    const count = Math.floor((w * h) / 14000);
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 2 + 0.8,
+        col: colours[Math.floor(Math.random() * colours.length)],
+        alpha: Math.random() * 0.4 + 0.25
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+      for (let j = i + 1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < connDist) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = p.col + (0.12 * (1 - dist / connDist)) + ')';
+          ctx.lineWidth = 0.4;
+          ctx.stroke();
+        }
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.col + p.alpha + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  createParticles();
+  draw();
+  window.addEventListener('resize', () => { resize(); createParticles(); });
+})();
+</script>
+
+</body>
+</html>
