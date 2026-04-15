@@ -550,9 +550,117 @@
       #minimap { width: 160px; bottom: 12px; right: 12px; }
       .map-svg { height: 152px; }
     }
+
+    /* ── SPLASH SCREEN ── */
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: radial-gradient(ellipse at 50% 30%, #193d1c 0%, #0a1a0c 70%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+      overflow: hidden;
+    }
+    #splash.dismissed { transform: translateY(-100%); }
+
+    .splash-trees {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      pointer-events: none;
+    }
+
+    .splash-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      animation: fadeUp 1s ease 0.4s both;
+    }
+
+    .splash-phones {
+      font-size: 80px;
+      line-height: 1;
+      margin-bottom: 28px;
+      animation: phonePulse 2.4s ease-in-out infinite;
+      filter: drop-shadow(0 0 24px rgba(245, 200, 66, 0.5));
+    }
+    @keyframes phonePulse {
+      0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 20px rgba(245,200,66,0.4)); }
+      50%       { transform: scale(1.06); filter: drop-shadow(0 0 36px rgba(245,200,66,0.7)); }
+    }
+
+    .splash-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(36px, 7vw, 64px);
+      font-weight: 700;
+      color: #f0ede8;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .splash-sub {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: clamp(16px, 2.5vw, 22px);
+      color: var(--text-secondary);
+      margin-bottom: 52px;
+    }
+
+    .splash-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      user-select: none;
+    }
+    .splash-cta:hover { color: var(--gold); }
+    .splash-cta:hover .splash-arr { border-color: var(--gold); }
+
+    .splash-arr {
+      width: 18px; height: 18px;
+      border-right: 1.5px solid var(--text-muted);
+      border-bottom: 1.5px solid var(--text-muted);
+      transform: rotate(45deg);
+      animation: arrowBounce 2s ease-in-out infinite;
+      transition: border-color 0.2s;
+    }
   </style>
 </head>
 <body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splash">
+    <div id="splash-stars"></div>
+    <div class="splash-inner">
+      <div class="splash-phones">🎧</div>
+      <h1 class="splash-title">Headphones on.</h1>
+      <p class="splash-sub">Your adventure is about to begin.</p>
+      <div class="splash-cta" onclick="dismissSplash()">
+        <span>Scroll down when you're ready</span>
+        <div class="splash-arr"></div>
+      </div>
+    </div>
+    <!-- Trees at bottom -->
+    <div class="splash-trees">
+      <svg viewBox="0 0 1440 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#0c1e0e"><polygon points="0,160 55,50 110,160"/><polygon points="90,160 160,30 230,160"/><polygon points="210,160 275,58 340,160"/><polygon points="360,160 445,18 530,160"/><polygon points="520,160 600,44 680,160"/><polygon points="700,160 775,34 850,160"/><polygon points="870,160 945,22 1020,160"/><polygon points="1060,160 1145,40 1230,160"/><polygon points="1260,160 1345,28 1430,160"/><polygon points="1400,160 1440,56 1440,160"/></g>
+        <g fill="#111e12"><polygon points="30,160 95,68 160,160"/><polygon points="155,160 220,44 285,160"/><polygon points="295,160 360,64 425,160"/><polygon points="460,160 545,38 630,160"/><polygon points="650,160 725,54 800,160"/><polygon points="820,160 895,28 970,160"/><polygon points="995,160 1075,48 1155,160"/><polygon points="1170,160 1245,42 1320,160"/><polygon points="1345,160 1410,60 1440,160"/><polygon points="0,160 38,74 76,160"/></g>
+        <g fill="#0a1a0c"><polygon points="0,160 48,88 96,160"/><polygon points="95,160 175,58 255,160"/><polygon points="265,160 350,78 435,160"/><polygon points="455,160 540,52 625,160"/><polygon points="645,160 740,74 835,160"/><polygon points="855,160 950,56 1045,160"/><polygon points="1070,160 1165,68 1260,160"/><polygon points="1280,160 1375,54 1440,160"/><rect x="0" y="152" width="1440" height="8" fill="#0a1a0c"/></g>
+      </svg>
+    </div>
+  </div>
 
   <!-- HUD -->
   <nav class="hud">
@@ -1033,183 +1141,187 @@
       tog.textContent = map.classList.contains('collapsed') ? '+' : '−';
     }
 
-    // ── AMBIENT FOREST AUDIO ──
-    let audioCtx = null;
-    let masterGain = null;
+    // ── SPLASH ──
+    function splashStars() {
+      const el = document.getElementById('splash-stars');
+      if (!el) return;
+      for (let i = 0; i < 60; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const sz = 1 + Math.random() * 2;
+        s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*65}%;width:${sz}px;height:${sz}px;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;opacity:${0.1+Math.random()*0.5};`;
+        el.appendChild(s);
+      }
+    }
+    splashStars();
+
+    let splashDone = false;
+    function dismissSplash() {
+      if (splashDone) return;
+      splashDone = true;
+      const sp = document.getElementById('splash');
+      sp.classList.add('dismissed');
+      document.body.style.overflow = '';
+      startForestAudio();
+      sp.addEventListener('transitionend', () => sp.remove(), { once: true });
+    }
+
+    // Block scroll until splash dismissed
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('wheel',     () => dismissSplash(), { once: true, passive: true });
+    window.addEventListener('touchmove', () => dismissSplash(), { once: true, passive: true });
+
+    // ── CHEERFUL NATURE AUDIO ──
+    let audioCtx    = null;
+    let masterGain  = null;
     let soundActive = false;
-    let chimeTimeout = null;
+    const timers    = [];
 
     function buildForest(ctx) {
       const master = ctx.createGain();
       master.gain.setValueAtTime(0, ctx.currentTime);
-      master.gain.linearRampToValueAtTime(0.72, ctx.currentTime + 3.5);
+      master.gain.linearRampToValueAtTime(0.78, ctx.currentTime + 2.8);
       master.connect(ctx.destination);
 
-      // ── REVERB (simple feedback delay for space) ──
-      function makeReverb(ctx) {
-        const delay  = ctx.createDelay(0.08);
-        const fb     = ctx.createGain();
-        const filter = ctx.createBiquadFilter();
-        delay.delayTime.value = 0.065;
-        fb.gain.value = 0.38;
-        filter.type = 'lowpass';
-        filter.frequency.value = 1800;
-        delay.connect(filter);
-        filter.connect(fb);
-        fb.connect(delay);
-        return { input: delay, output: fb };
-      }
-      const reverb = makeReverb(ctx);
-      reverb.output.connect(master);
+      // ── BRIGHT REVERB (short room, airy) ──
+      const revDelay  = ctx.createDelay(0.055);
+      const revFB     = ctx.createGain();
+      const revFilter = ctx.createBiquadFilter();
+      revDelay.delayTime.value = 0.048;
+      revFB.gain.value         = 0.32;
+      revFilter.type           = 'highpass';
+      revFilter.frequency.value = 600;     // only reflect mids/highs → airy
+      revDelay.connect(revFilter); revFilter.connect(revFB); revFB.connect(revDelay);
+      revDelay.connect(master);
 
-      // ── BASS DRONE (two slightly detuned sines for warmth) ──
-      [55, 55.3, 82.4, 110].forEach((freq, i) => {
-        const osc  = ctx.createOscillator();
-        const gain = ctx.createGain();
-        const filt = ctx.createBiquadFilter();
+      // ── WARM LIGHT BASS (C major: C2, G2, C3) ──
+      [65.4, 98, 130.8].forEach((freq, i) => {
+        const osc = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
+        osc.type = 'sine'; osc.frequency.value = freq;
+        f.type = 'lowpass'; f.frequency.value = 280;
+        g.gain.value = [0.14, 0.08, 0.05][i];
+        osc.connect(f); f.connect(g); g.connect(master);
+        osc.start();
+      });
+
+      // ── BRIGHT PAD (C major pentatonic: C4–E5, triangle waves) ──
+      // C major pentatonic: C, D, E, G, A
+      [261.6, 293.7, 329.6, 392, 440, 523.3, 587.3].forEach((freq, i) => {
+        const osc = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
+        osc.type = 'triangle'; osc.frequency.value = freq;
+        osc.detune.value = (Math.random() - 0.5) * 6;
+        f.type = 'lowpass'; f.frequency.value = 2200;
+        g.gain.value = 0.048 / (i * 0.4 + 1);
+        // Gentle tremolo
+        const lfo = ctx.createOscillator(), lg = ctx.createGain();
+        lfo.frequency.value = 0.22 + i * 0.05; lg.gain.value = g.gain.value * 0.28;
+        lfo.connect(lg); lg.connect(g.gain); lfo.start();
+        osc.connect(f); f.connect(g); g.connect(master); g.connect(revDelay);
+        osc.start();
+      });
+
+      // ── GENTLE BREEZE (light noise, brighter band) ──
+      const bLen = 3 * ctx.sampleRate;
+      const bBuf = ctx.createBuffer(1, bLen, ctx.sampleRate);
+      const bDat = bBuf.getChannelData(0);
+      let b0=0,b1=0,b2=0,b3=0;
+      for (let i = 0; i < bLen; i++) {
+        const w = Math.random()*2-1;
+        b0=0.99*b0+w*0.06; b1=0.97*b1+w*0.14; b2=0.87*b2+w*0.28; b3=0.55*b3+w*0.42;
+        bDat[i] = (b0+b1+b2+b3) * 0.08;
+      }
+      const breeze = ctx.createBufferSource(); breeze.buffer = bBuf; breeze.loop = true;
+      const bFilt  = ctx.createBiquadFilter(); bFilt.type = 'bandpass'; bFilt.frequency.value = 900; bFilt.Q.value = 0.5;
+      const bGain  = ctx.createGain(); bGain.gain.value = 0.055;
+      const bLFO   = ctx.createOscillator(), bLFOg = ctx.createGain();
+      bLFO.frequency.value = 0.09; bLFOg.gain.value = 0.025;
+      bLFO.connect(bLFOg); bLFOg.connect(bGain.gain); bLFO.start();
+      breeze.connect(bFilt); bFilt.connect(bGain); bGain.connect(master);
+      breeze.start();
+
+      // ── SPARKLING CHIMES (C major, bright and frequent) ──
+      // Two tiers: high sparkle + mid warmth
+      const hiChimes  = [1046.5, 1174.7, 1318.5, 1568, 1760]; // C6,D6,E6,G6,A6
+      const midChimes = [523.3, 587.3, 659.3, 783.9, 880];    // C5,D5,E5,G5,A5
+
+      function playChime(pitches, vol, decay) {
+        const freq = pitches[Math.floor(Math.random() * pitches.length)];
+        const now  = ctx.currentTime;
+        // Two partials for a bell-like quality
+        [[freq, vol], [freq * 2.75, vol * 0.35]].forEach(([f, v]) => {
+          const osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.value = f;
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(v, now + 0.006);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+          osc.connect(g); g.connect(revDelay); g.connect(master);
+          osc.start(now); osc.stop(now + decay + 0.05);
+        });
+      }
+
+      function scheduleHiChime() {
+        playChime(hiChimes, 0.07, 1.6);
+        const t = setTimeout(scheduleHiChime, 800 + Math.random() * 2800);
+        timers.push(t);
+      }
+      function scheduleMidChime() {
+        playChime(midChimes, 0.1, 2.4);
+        const t = setTimeout(scheduleMidChime, 1800 + Math.random() * 3800);
+        timers.push(t);
+      }
+      timers.push(setTimeout(scheduleHiChime,  400 + Math.random() * 800));
+      timers.push(setTimeout(scheduleMidChime, 1200 + Math.random() * 1600));
+
+      // ── BIRD CALLS (ascending whistles, happy and light) ──
+      function birdCall() {
+        const now  = ctx.currentTime;
+        const base = 900 + Math.random() * 600;
+        // Short two-note tweet: up then slightly down
+        const osc = ctx.createOscillator(), g = ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.value = freq;
-        osc.detune.value = (i % 2 === 0 ? 1 : -1) * (i * 2.5);
-        filt.type = 'lowpass';
-        filt.frequency.value = 320;
-        gain.gain.value = 0.28 / 4;
-        osc.connect(filt); filt.connect(gain); gain.connect(master);
-        osc.start();
-      });
-
-      // ── SOFT PAD (triangle waves, mid-range harmonics) ──
-      // A minor pentatonic: A3, C4, D4, E4, G4
-      [220, 261.6, 293.7, 329.6, 392].forEach((freq, i) => {
-        const osc  = ctx.createOscillator();
-        const gain = ctx.createGain();
-        const filt = ctx.createBiquadFilter();
-        osc.type = 'triangle';
-        osc.frequency.value = freq;
-        osc.detune.value = (Math.random() - 0.5) * 8;
-        filt.type = 'lowpass';
-        filt.frequency.value = 900;
-        gain.gain.value = 0.055 / (i + 1);
-        // Slow tremolo via LFO
-        const lfo  = ctx.createOscillator();
-        const lfoG = ctx.createGain();
-        lfo.frequency.value = 0.18 + i * 0.04;
-        lfoG.gain.value = gain.gain.value * 0.35;
-        lfo.connect(lfoG); lfoG.connect(gain.gain);
-        lfo.start();
-        osc.connect(filt); filt.connect(gain);
-        gain.connect(master);
-        gain.connect(reverb.input);
-        osc.start();
-      });
-
-      // ── WIND (shaped pink noise) ──
-      const bufLen = 4 * ctx.sampleRate;
-      const buf    = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-      const data   = buf.getChannelData(0);
-      let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0;
-      for (let i = 0; i < bufLen; i++) {
-        const w = Math.random() * 2 - 1;
-        b0 = 0.99886*b0 + w*0.0555179; b1 = 0.99332*b1 + w*0.0750759;
-        b2 = 0.96900*b2 + w*0.1538520; b3 = 0.86650*b3 + w*0.3104856;
-        b4 = 0.55000*b4 + w*0.5329522; b5 = -0.7616*b5 - w*0.0168980;
-        data[i] = (b0+b1+b2+b3+b4+b5+w*0.5362) * 0.11;
+        osc.frequency.setValueAtTime(base,          now);
+        osc.frequency.linearRampToValueAtTime(base * 1.35, now + 0.09);
+        osc.frequency.linearRampToValueAtTime(base * 1.18, now + 0.18);
+        osc.frequency.linearRampToValueAtTime(base * 1.42, now + 0.26);
+        g.gain.setValueAtTime(0,    now);
+        g.gain.linearRampToValueAtTime(0.055, now + 0.02);
+        g.gain.setValueAtTime(0.055, now + 0.12);
+        g.gain.linearRampToValueAtTime(0.04, now + 0.19);
+        g.gain.linearRampToValueAtTime(0,    now + 0.32);
+        osc.connect(g); g.connect(master);
+        osc.start(now); osc.stop(now + 0.35);
+        const t = setTimeout(birdCall, 3500 + Math.random() * 9000);
+        timers.push(t);
       }
-      const noise    = ctx.createBufferSource();
-      noise.buffer   = buf;
-      noise.loop     = true;
-      const windFilt = ctx.createBiquadFilter();
-      windFilt.type  = 'bandpass';
-      windFilt.frequency.value = 380;
-      windFilt.Q.value = 0.7;
-      const windGain  = ctx.createGain();
-      windGain.gain.value = 0.09;
-      // Gentle wind swell LFO
-      const windLFO  = ctx.createOscillator();
-      const windLFOG = ctx.createGain();
-      windLFO.frequency.value = 0.07;
-      windLFOG.gain.value = 0.04;
-      windLFO.connect(windLFOG); windLFOG.connect(windGain.gain);
-      windLFO.start();
-      noise.connect(windFilt); windFilt.connect(windGain);
-      windGain.connect(master);
-      noise.start();
-
-      // ── MAGIC CHIMES (random pentatonic notes, like fireflies) ──
-      const chimePitches = [523.3, 659.3, 783.9, 1046.5, 1318.5]; // C5,E5,G5,C6,E6
-      function ringChime() {
-        const freq  = chimePitches[Math.floor(Math.random() * chimePitches.length)];
-        const osc   = ctx.createOscillator();
-        const gain  = ctx.createGain();
-        const now   = ctx.currentTime;
-        osc.type    = 'sine';
-        osc.frequency.value = freq;
-        // Harmonic overtone
-        const osc2  = ctx.createOscillator();
-        osc2.type   = 'sine';
-        osc2.frequency.value = freq * 2.76; // inharmonic partial for bell quality
-        const gain2 = ctx.createGain();
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(0.09, now + 0.008);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
-        gain2.gain.setValueAtTime(0, now);
-        gain2.gain.linearRampToValueAtTime(0.035, now + 0.006);
-        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
-        osc.connect(gain);   gain.connect(reverb.input);  gain.connect(master);
-        osc2.connect(gain2); gain2.connect(reverb.input); gain2.connect(master);
-        osc.start(now);  osc.stop(now + 3);
-        osc2.start(now); osc2.stop(now + 2);
-        chimeTimeout = setTimeout(ringChime, 2800 + Math.random() * 6000);
-      }
-      chimeTimeout = setTimeout(ringChime, 1800 + Math.random() * 3000);
+      timers.push(setTimeout(birdCall, 2000 + Math.random() * 3000));
 
       return master;
     }
 
+    function startForestAudio() {
+      if (audioCtx) return;
+      audioCtx   = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = buildForest(audioCtx);
+      soundActive = true;
+      const btn = document.getElementById('sound-btn');
+      btn.textContent = '♫'; btn.classList.add('playing');
+    }
+
     function toggleSound() {
       const btn = document.getElementById('sound-btn');
-
-      if (!audioCtx) {
-        audioCtx  = new (window.AudioContext || window.webkitAudioContext)();
-        masterGain = buildForest(audioCtx);
-        soundActive = true;
-        btn.textContent = '♫';
-        btn.classList.add('playing');
-        return;
-      }
+      if (!audioCtx) { startForestAudio(); return; }
 
       if (soundActive) {
-        // Fade out then suspend
         masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
         masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.2);
         setTimeout(() => audioCtx.suspend(), 1300);
-        clearTimeout(chimeTimeout);
-        soundActive = false;
-        btn.textContent = '♪';
-        btn.classList.remove('playing');
+        timers.forEach(clearTimeout); timers.length = 0;
+        soundActive = false; btn.textContent = '♪'; btn.classList.remove('playing');
       } else {
         audioCtx.resume();
         masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(0.72, audioCtx.currentTime + 1.5);
-        soundActive = true;
-        btn.textContent = '♫';
-        btn.classList.add('playing');
-        // Restart chimes
-        const chimePitches = [523.3, 659.3, 783.9, 1046.5, 1318.5];
-        function ringChime() {
-          const freq = chimePitches[Math.floor(Math.random() * chimePitches.length)];
-          const osc  = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          const now  = audioCtx.currentTime;
-          osc.type   = 'sine';
-          osc.frequency.value = freq;
-          gain.gain.setValueAtTime(0, now);
-          gain.gain.linearRampToValueAtTime(0.09, now + 0.008);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
-          osc.connect(gain); gain.connect(masterGain);
-          osc.start(now); osc.stop(now + 3);
-          chimeTimeout = setTimeout(ringChime, 2800 + Math.random() * 6000);
-        }
-        chimeTimeout = setTimeout(ringChime, 800 + Math.random() * 2000);
+        masterGain.gain.linearRampToValueAtTime(0.78, audioCtx.currentTime + 1.4);
+        soundActive = true; btn.textContent = '♫'; btn.classList.add('playing');
       }
     }
   </script>
