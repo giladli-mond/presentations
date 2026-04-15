@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 1 · The Campaigns Adventure</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: #0a1a0c;
+      color: #f0ede8;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    :root {
+      --forest-deep: #0a1a0c;
+      --forest-mid: #0d2010;
+      --card-bg: rgba(16, 36, 18, 0.88);
+      --card-border: rgba(74, 222, 128, 0.1);
+      --gold: #f5c842;
+      --gold-dim: rgba(245, 200, 66, 0.25);
+      --teal: #00d4ff;
+      --green-light: #4ade80;
+      --text-primary: #f0ede8;
+      --text-secondary: #a8c5ab;
+      --text-muted: #5a7a5c;
+    }
+
+    /* ── FIREFLIES ── */
+    .firefly {
+      position: fixed;
+      border-radius: 50%;
+      background: var(--gold);
+      pointer-events: none;
+      z-index: 10;
+      animation: ffDrift linear infinite, ffPulse ease-in-out infinite;
+    }
+    @keyframes ffDrift {
+      0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.7; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0.6); opacity: 0; }
+    }
+    @keyframes ffPulse {
+      0%, 100% { box-shadow: 0 0 4px 2px rgba(245, 200, 66, 0.7); }
+      50%       { box-shadow: 0 0 10px 5px rgba(245, 200, 66, 0.2); }
+    }
+
+    /* ── HUD ── */
+    .hud {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 28px;
+      background: linear-gradient(to bottom, rgba(10,26,12,0.96) 0%, transparent 100%);
+    }
+    .hud-badge {
+      background: var(--gold);
+      color: #0a1a0c;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .hud-chapter {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .hud-progress {
+      flex: 1;
+      height: 2px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .hud-fill {
+      height: 100%;
+      width: 10%;
+      background: linear-gradient(to right, var(--gold), var(--teal));
+      border-radius: 2px;
+    }
+    .hud-logo {
+      height: 24px;
+      opacity: 0.55;
+      flex-shrink: 0;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 25%, #193d1c 0%, #0a1a0c 65%);
+      padding: 100px 24px 160px;
+    }
+
+    /* Stars layer */
+    #stars { position: absolute; inset: 0; pointer-events: none; }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.15; transform: scale(1); }
+      50%       { opacity: 0.85; transform: scale(1.6); }
+    }
+
+    .hero-inner { position: relative; z-index: 3; }
+
+    .chapter-tag {
+      display: inline-block;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 20px;
+      margin-bottom: 32px;
+      animation: fadeUp 1s ease 0.3s both;
+    }
+
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(44px, 9vw, 88px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 14px;
+      background: linear-gradient(140deg, #e8f5e9 0%, #81c784 45%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeUp 1s ease 0.5s both;
+    }
+
+    .hero-sub {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: clamp(18px, 3vw, 26px);
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      animation: fadeUp 1s ease 0.7s both;
+    }
+
+    .date-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 200, 66, 0.08);
+      border: 1px solid var(--gold-dim);
+      border-radius: 30px;
+      padding: 9px 22px;
+      font-size: 14px;
+      color: var(--gold);
+      animation: fadeUp 1s ease 0.9s both;
+    }
+    .date-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: ffPulse 2.5s ease-in-out infinite;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      animation: fadeUp 1s ease 1.2s both;
+    }
+    .scroll-arr {
+      width: 16px;
+      height: 16px;
+      border-right: 1.5px solid var(--text-muted);
+      border-bottom: 1.5px solid var(--text-muted);
+      transform: rotate(45deg);
+      animation: arrowBounce 2s ease-in-out infinite;
+    }
+    @keyframes arrowBounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50%       { transform: rotate(45deg) translateY(5px); }
+    }
+
+    /* Tree silhouette */
+    .trees {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 24px 0;
+    }
+
+    /* ── CLEARING (scroll sections) ── */
+    .clearing {
+      padding: 72px 0;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.85s ease, transform 0.85s ease;
+    }
+    .clearing.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .q-marker {
+      width: 24px; height: 24px;
+      background: var(--gold);
+      color: #0a1a0c;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+      flex-shrink: 0;
+    }
+    .q-marker.teal   { background: var(--teal); }
+    .q-marker.ghost  { background: rgba(245,200,66,0.1); color: var(--gold); border: 1px solid var(--gold-dim); }
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    h2.st {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px 36px;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.3s;
+    }
+    .card:hover { border-color: rgba(74, 222, 128, 0.2); }
+    .card p { color: var(--text-secondary); margin-bottom: 16px; }
+    .card p:last-child { margin-bottom: 0; }
+
+    /* Gilad's note card */
+    .gilad-note {
+      border-left: 3px solid var(--gold);
+      position: relative;
+      padding-top: 38px;
+    }
+    .gilad-note-label {
+      position: absolute;
+      top: -11px; left: 32px;
+      background: var(--gold);
+      color: #0a1a0c;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    /* Owl */
+    .owl-wrap {
+      float: right;
+      width: 68px;
+      margin: 0 0 10px 20px;
+      animation: creatureFloat 4.5s ease-in-out infinite;
+    }
+    @keyframes creatureFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    /* ── QUEST LOG ── */
+    .quest-list { display: flex; flex-direction: column; gap: 12px; }
+    .quest-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px 22px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+    .quest-item:hover { border-color: rgba(74,222,128,0.22); background: rgba(20,46,22,0.9); }
+    .quest-item.done  { opacity: 0.45; }
+    .quest-item.done .qchk { background: var(--green-light); border-color: var(--green-light); }
+    .quest-item.done .qchk::after { display: block; }
+
+    .qchk {
+      width: 20px; height: 20px;
+      border: 2px solid var(--text-muted);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 3px;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .qchk::after {
+      content: '';
+      display: none;
+      position: absolute;
+      top: 2px; left: 5px;
+      width: 6px; height: 9px;
+      border-right: 2px solid #0a1a0c;
+      border-bottom: 2px solid #0a1a0c;
+      transform: rotate(45deg);
+    }
+    .qi-icon { font-size: 20px; flex-shrink: 0; }
+    .qi-body strong { display: block; color: var(--text-primary); font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .qi-body span { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+    /* Setup checklist (sub-card) */
+    .setup-card {
+      margin-top: 14px;
+      padding: 24px 28px;
+    }
+    .setup-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .setup-list { display: flex; flex-direction: column; gap: 8px; }
+    .setup-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .setup-item:hover { background: rgba(26,58,30,0.5); }
+    .setup-item.done  { opacity: 0.4; }
+    .setup-item.done .qchk { background: var(--green-light); border-color: var(--green-light); }
+    .setup-item.done .qchk::after { display: block; }
+    .setup-item span { font-size: 14px; color: var(--text-secondary); }
+    .setup-item strong { font-size: 13px; color: var(--text-primary); font-weight: 600; margin-right: 6px; }
+
+    /* ── DAYS AHEAD ── */
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .day-card {
+      background: rgba(22, 48, 25, 0.75);
+      border: 1px solid rgba(74, 222, 128, 0.18);
+      border-radius: 12px;
+      padding: 16px 18px;
+      position: relative;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .day-card:hover {
+      border-color: rgba(74, 222, 128, 0.32);
+      background: rgba(26, 56, 30, 0.85);
+    }
+    .dc-emoji { font-size: 22px; margin-bottom: 8px; display: block; line-height: 1; }
+    .dc-num  { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+    .dc-name { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: #c8deca; line-height: 1.3; }
+    .dc-who  { font-size: 11px; color: #5a7a5c; margin-top: 6px; }
+
+    /* ── DON'T WORRY ── */
+    .worry-card {
+      border-left: 3px solid var(--gold);
+      padding-top: 28px;
+    }
+    .worry-card h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .worry-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .worry-list li {
+      font-size: 15px;
+      color: var(--text-secondary);
+      padding-left: 18px;
+      position: relative;
+    }
+    .worry-list li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--gold);
+      font-size: 20px;
+      line-height: 1.4;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(74,222,128,0.1), transparent);
+    }
+    .divider-icon { font-size: 15px; opacity: 0.4; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 48px 24px 52px;
+      text-align: center;
+      position: relative;
+    }
+    .mushrooms {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .footer-msg {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 24px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    .footer-sub { font-size: 13px; color: var(--text-muted); }
+    .footer-logo {
+      display: block;
+      height: 28px;
+      margin: 28px auto 0;
+      opacity: 0.3;
+    }
+
+    /* ── MINIMAP ── */
+    #minimap {
+      position: fixed;
+      bottom: 22px; right: 22px;
+      z-index: 400;
+      background: #f4e8c1;
+      border: 1px solid #c4a052;
+      border-radius: 10px;
+      padding: 10px 12px 12px;
+      width: 192px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.35), inset 0 0 0 2px rgba(255,255,255,0.3);
+    }
+    #minimap.collapsed { width: auto; }
+    #minimap.collapsed .map-body { display: none; }
+    .map-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    #minimap.collapsed .map-hdr { margin-bottom: 0; }
+    .map-ttl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7a5020; }
+    .map-tog { background: none; border: none; color: #a07040; font-size: 16px; cursor: pointer; line-height: 1; padding: 0 2px; }
+    .map-svg { width: 100%; height: 182px; display: block; }
+
+    /* ── UTILS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 580px) {
+      .days-grid { grid-template-columns: repeat(2, 1fr); }
+      #minimap { width: 160px; bottom: 12px; right: 12px; }
+      .map-svg { height: 152px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HUD -->
+  <nav class="hud">
+    <span class="hud-badge">Day 1 of 10</span>
+    <span class="hud-chapter">First Steps</span>
+    <div class="hud-progress"><div class="hud-fill"></div></div>
+    <img src="./cam_logo.png" alt="Campaigns" class="hud-logo">
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div id="stars"></div>
+
+    <div class="hero-inner">
+      <div class="chapter-tag">✦ &nbsp;Chapter 1 of 10&nbsp; ✦</div>
+      <h1 class="hero-title">The Campaigns<br>Adventure</h1>
+      <p class="hero-sub">Welcome to the forest, Fiona.</p>
+      <div class="date-pill">
+        <span class="date-dot"></span>
+        Monday, 20 April 2026
+      </div>
+    </div>
+
+    <!-- Forest tree silhouette -->
+    <div class="trees">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Back layer -->
+        <g fill="#0c1e0e">
+          <polygon points="0,200 55,65 110,200"/>
+          <polygon points="90,200 160,42 230,200"/>
+          <polygon points="210,200 275,72 340,200"/>
+          <polygon points="360,200 445,28 530,200"/>
+          <polygon points="520,200 600,58 680,200"/>
+          <polygon points="700,200 775,44 850,200"/>
+          <polygon points="870,200 945,32 1020,200"/>
+          <polygon points="1060,200 1145,52 1230,200"/>
+          <polygon points="1260,200 1345,38 1430,200"/>
+          <polygon points="1400,200 1440,70 1440,200"/>
+        </g>
+        <!-- Mid layer -->
+        <g fill="#111e12">
+          <polygon points="30,200 95,82 160,200"/>
+          <polygon points="155,200 220,58 285,200"/>
+          <polygon points="295,200 360,78 425,200"/>
+          <polygon points="460,200 545,52 630,200"/>
+          <polygon points="650,200 725,68 800,200"/>
+          <polygon points="820,200 895,42 970,200"/>
+          <polygon points="995,200 1075,62 1155,200"/>
+          <polygon points="1170,200 1245,56 1320,200"/>
+          <polygon points="1345,200 1410,74 1440,200"/>
+          <polygon points="0,200 38,88 76,200"/>
+        </g>
+        <!-- Front layer (darkest) -->
+        <g fill="#0a1a0c">
+          <polygon points="0,200 48,102 96,200"/>
+          <polygon points="95,200 175,72 255,200"/>
+          <polygon points="265,200 350,92 435,200"/>
+          <polygon points="455,200 540,66 625,200"/>
+          <polygon points="645,200 740,88 835,200"/>
+          <polygon points="855,200 950,70 1045,200"/>
+          <polygon points="1070,200 1165,82 1260,200"/>
+          <polygon points="1280,200 1375,68 1440,200"/>
+          <rect x="0" y="190" width="1440" height="10" fill="#0a1a0c"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="scroll-hint">
+      <span>explore</span>
+      <div class="scroll-arr"></div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+
+    <!-- ── SECTION 1: Welcome ── -->
+    <section class="clearing" id="s-welcome">
+      <div class="eyebrow">
+        <div class="q-marker">!</div>
+        <span class="section-label">A message from Gilad</span>
+      </div>
+      <h2 class="st">You made it.</h2>
+
+      <!-- Owl -->
+      <div class="owl-wrap">
+        <svg viewBox="0 0 60 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="30" cy="52" rx="18" ry="20" fill="#16301a" stroke="#4ade80" stroke-width="1.2"/>
+          <ellipse cx="30" cy="23" rx="14" ry="13" fill="#16301a" stroke="#4ade80" stroke-width="1.2"/>
+          <!-- Ear tufts -->
+          <polygon points="19,13 15,2 25,12" fill="#16301a" stroke="#4ade80" stroke-width="1"/>
+          <polygon points="41,13 45,2 35,12" fill="#16301a" stroke="#4ade80" stroke-width="1"/>
+          <!-- Eyes -->
+          <circle cx="23" cy="22" r="5.5" fill="#f5c842" opacity="0.7"/>
+          <circle cx="37" cy="22" r="5.5" fill="#f5c842" opacity="0.7"/>
+          <circle cx="23" cy="22" r="2.5" fill="#0a1a0c"/>
+          <circle cx="37" cy="22" r="2.5" fill="#0a1a0c"/>
+          <circle cx="22.2" cy="21" r="0.9" fill="#fff" opacity="0.75"/>
+          <circle cx="36.2" cy="21" r="0.9" fill="#fff" opacity="0.75"/>
+          <!-- Beak -->
+          <polygon points="30,26 27,31 33,31" fill="#f5c842" opacity="0.65"/>
+          <!-- Wing lines -->
+          <path d="M 13,44 Q 5,52 13,62" stroke="#4ade80" stroke-width="1.2" fill="none"/>
+          <path d="M 47,44 Q 55,52 47,62" stroke="#4ade80" stroke-width="1.2" fill="none"/>
+          <!-- Belly feather lines -->
+          <path d="M 22,40 Q 30,44 38,40" stroke="#4ade80" stroke-width="0.8" fill="none" opacity="0.4"/>
+          <path d="M 20,48 Q 30,52 40,48" stroke="#4ade80" stroke-width="0.8" fill="none" opacity="0.3"/>
+        </svg>
+      </div>
+
+      <div class="card gilad-note">
+        <span class="gilad-note-label">Gilad</span>
+        <p>Welcome to Campaigns, Fiona.</p>
+        <p>You've just joined the best team in monday. We may be slightly biased, but honestly, we're pretty sure it's true.</p>
+        <p>Everyone here is genuinely happy to help. Message anyone, ask anything. There's no such thing as a question too small. If you're wondering whether to ask something, the answer is: yes, ask it.</p>
+        <p>There will be moments that feel new and slightly confusing. That's completely normal. What matters is that when something isn't working (a tool isn't set up, something's unclear, something just feels off), say so. We'd much rather know early than have you quietly wrestling with it.</p>
+        <p>You should also have access to the onboarding board on monday. That's your reference for the first tasks and steps ahead. If anything on there isn't clear, or you're not sure where to start, just ask.</p>
+        <p>You're not expected to know anything yet. Today is about arriving. Having lunch. Getting your laptop working. Being here.</p>
+        <p>That's it. Enjoy Day 1.</p>
+      </div>
+    </section>
+
+    <div class="divider"><span class="divider-icon">🌿</span></div>
+
+    <!-- ── SECTION 2: Quest Log ── -->
+    <section class="clearing" id="s-quest">
+      <div class="eyebrow">
+        <div class="q-marker">⚔</div>
+        <span class="section-label">Today's quest log</span>
+      </div>
+      <h2 class="st">Two things on your list.</h2>
+
+      <div class="quest-list">
+        <div class="quest-item" onclick="this.classList.toggle('done')">
+          <div class="qchk"></div>
+          <span class="qi-icon">☕</span>
+          <div class="qi-body">
+            <strong>Team lunch with the Campaigns crew</strong>
+            <span>The whole team, no agenda. Just food, conversation, and getting to know the humans you'll be working with. Best possible way to spend a first afternoon.</span>
+          </div>
+        </div>
+
+        <div class="quest-item" onclick="this.classList.toggle('done')">
+          <div class="qchk"></div>
+          <span class="qi-icon">💻</span>
+          <div class="qi-body">
+            <strong>Get technically set up</strong>
+            <span>Laptop, accounts, access. Things will probably take longer than expected. That's fine. Just work through the checklist below when you can.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Setup checklist -->
+      <div class="card setup-card">
+        <p class="setup-label">Setup checklist</p>
+        <div class="setup-list">
+          <div class="setup-item" onclick="this.classList.toggle('done')">
+            <div class="qchk"></div>
+            <span><strong>Slack</strong> Set up your account, join the Campaigns channels</span>
+          </div>
+          <div class="setup-item" onclick="this.classList.toggle('done')">
+            <div class="qchk"></div>
+            <span><strong>monday.com</strong> Your account, the Campaigns workspace, and your onboarding board</span>
+          </div>
+          <div class="setup-item" onclick="this.classList.toggle('done')">
+            <div class="qchk"></div>
+            <span><strong>Google Workspace</strong> Email, Calendar: you'll need these today</span>
+          </div>
+          <div class="setup-item" onclick="this.classList.toggle('done')">
+            <div class="qchk"></div>
+            <span><strong>Redash</strong> Data dashboards. If access takes time, we'll sort it later</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"><span class="divider-icon">🍄</span></div>
+
+    <!-- ── SECTION 3: The Forest Ahead ── -->
+    <section class="clearing" id="s-ahead">
+      <div class="eyebrow">
+        <div class="q-marker teal">◈</div>
+        <span class="section-label">The path ahead</span>
+      </div>
+      <h2 class="st">Nine more chapters to explore.</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 26px; font-size: 15px;">Each day, a new part of the forest unlocks. Here's what's coming. No need to think about any of it today.</p>
+
+      <div class="days-grid">
+        <div class="day-card">
+          <span class="dc-emoji">🌍</span>
+          <div class="dc-num">Day 2 · Tue 21 Apr</div>
+          <div class="dc-name">The Big Picture</div>
+          <div class="dc-who">With Fabio + Noam</div>
+        </div>
+        <div class="day-card">
+          <span class="dc-emoji">📦</span>
+          <div class="dc-num">Day 3 · Wed 22 Apr</div>
+          <div class="dc-name">The Product</div>
+          <div class="dc-who">With Nick + Shannon</div>
+        </div>
+        <div class="day-card">
+          <span class="dc-emoji">✨</span>
+          <div class="dc-num">Day 4 · Thu 23 Apr</div>
+          <div class="dc-name">The AI Lab</div>
+          <div class="dc-who">With Uras + Nassim</div>
+        </div>
+        <div class="day-card">
+          <span class="dc-emoji">🎨</span>
+          <div class="dc-num">Day 5 · Fri 24 Apr</div>
+          <div class="dc-name">The Studio</div>
+          <div class="dc-who">With Mia + Patric</div>
+        </div>
+        <div class="day-card">
+          <span class="dc-emoji">🏗️</span>
+          <div class="dc-num">Day 6 · Mon 27 Apr</div>
+          <div class="dc-name">The Foundation</div>
+          <div class="dc-who">With Amit + Chandra</div>
+        </div>
+        <div class="day-card">
+          <span class="dc-emoji">📣</span>
+          <div class="dc-num">Day 7 · Tue 28 Apr</div>
+          <div class="dc-name">The Market</div>
+          <div class="dc-who">With Alessia + Gabi</div>
+        </div>
+        <div class="day-card">
+          <span class="dc-emoji">🌀</span>
+          <div class="dc-num">Day 8 · Wed 29 Apr</div>
+          <div class="dc-name">The Flywheel</div>
+          <div class="dc-who">With Gilad</div>
+        </div>
+        <div class="day-card">
+          <span class="dc-emoji">📚</span>
+          <div class="dc-num">Day 9 · Thu 30 Apr</div>
+          <div class="dc-name">The Library</div>
+          <div class="dc-who">Data + tools</div>
+        </div>
+        <div class="day-card">
+          <span class="dc-emoji">⛰️</span>
+          <div class="dc-num">Day 10 · Fri 1 May</div>
+          <div class="dc-name">The Summit</div>
+          <div class="dc-who">Chapter Two begins</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"><span class="divider-icon">🌿</span></div>
+
+    <!-- ── SECTION 4: Don't Worry ── -->
+    <section class="clearing" id="s-worry">
+      <div class="eyebrow">
+        <div class="q-marker ghost">?</div>
+        <span class="section-label">One last thing before you go</span>
+      </div>
+
+
+      
+      <div class="card worry-card">
+        <h3>Don't worry if...</h3>
+        <ul class="worry-list">
+          <li>The setup takes all day. It usually does.</li>
+          <li>You can't remember everyone's name after lunch. There are fourteen of us. That's a lot of names.</li>
+          <li>The product feels big and unfamiliar right now. You'll explore it properly starting tomorrow.</li>
+          <li>You feel like you have no idea what's going on yet. That's completely normal. That's Day 1.</li>
+        </ul>
+      </div>
+    </section>
+
+  </div><!-- /.content -->
+
+  <!-- FOOTER -->
+  <footer>
+    <!-- Mushrooms cluster -->
+    <div class="mushrooms">
+      <svg width="26" height="36" viewBox="0 0 26 36" fill="none">
+        <rect x="11" y="20" width="4" height="16" fill="#1a3a1e" rx="2"/>
+        <ellipse cx="13" cy="20" rx="11" ry="8" fill="#2a5430"/>
+        <circle cx="8"  cy="17" r="2.2" fill="rgba(245,200,66,0.28)"/>
+        <circle cx="16" cy="15" r="1.8" fill="rgba(245,200,66,0.28)"/>
+        <circle cx="12" cy="13" r="1.4" fill="rgba(245,200,66,0.22)"/>
+      </svg>
+      <svg width="20" height="28" viewBox="0 0 20 28" fill="none" style="margin-bottom:-2px">
+        <rect x="8" y="15" width="4" height="13" fill="#1a3a1e" rx="2"/>
+        <ellipse cx="10" cy="15" rx="9" ry="6.5" fill="#3a6840"/>
+        <circle cx="7"  cy="13" r="1.8" fill="rgba(245,200,66,0.28)"/>
+        <circle cx="13" cy="11" r="1.4" fill="rgba(245,200,66,0.22)"/>
+      </svg>
+      <svg width="34" height="48" viewBox="0 0 34 48" fill="none">
+        <rect x="14" y="26" width="6" height="22" fill="#1a3a1e" rx="3"/>
+        <ellipse cx="17" cy="26" rx="15" ry="11" fill="#2a5430"/>
+        <circle cx="10" cy="22" r="3"   fill="rgba(245,200,66,0.3)"/>
+        <circle cx="20" cy="19" r="2.4" fill="rgba(245,200,66,0.28)"/>
+        <circle cx="15" cy="16" r="1.8" fill="rgba(245,200,66,0.22)"/>
+      </svg>
+      <svg width="22" height="32" viewBox="0 0 22 32" fill="none" style="margin-bottom:-2px">
+        <rect x="9" y="17" width="4" height="15" fill="#1a3a1e" rx="2"/>
+        <ellipse cx="11" cy="17" rx="10" ry="7.5" fill="#3a6840"/>
+        <circle cx="7"  cy="14" r="2"   fill="rgba(245,200,66,0.28)"/>
+        <circle cx="15" cy="13" r="1.6" fill="rgba(245,200,66,0.22)"/>
+      </svg>
+      <svg width="18" height="25" viewBox="0 0 18 25" fill="none">
+        <rect x="7" y="13" width="4" height="12" fill="#1a3a1e" rx="2"/>
+        <ellipse cx="9" cy="13" rx="8" ry="6" fill="#2a5430"/>
+        <circle cx="6" cy="11" r="1.6" fill="rgba(245,200,66,0.25)"/>
+        <circle cx="12" cy="10" r="1.2" fill="rgba(245,200,66,0.2)"/>
+      </svg>
+    </div>
+
+    <p class="footer-msg">See you tomorrow, Fiona.</p>
+    <p class="footer-sub">Day 2 unlocks on Tuesday, 21 April.</p>
+    <img src="./cam_logo.png" alt="Campaigns" class="footer-logo">
+  </footer>
+
+  <!-- MINIMAP -->
+  <div id="minimap">
+    <div class="map-hdr" onclick="toggleMap()">
+      <span class="map-ttl">Adventure Map</span>
+      <button class="map-tog" id="map-tog">−</button>
+    </div>
+    <div class="map-body">
+      <svg class="map-svg" viewBox="0 0 168 188" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Paper texture via subtle noise filter -->
+          <filter id="paper">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/>
+            <feColorMatrix type="saturate" values="0" in="noise" result="grey"/>
+            <feBlend in="SourceGraphic" in2="grey" mode="multiply" result="blend"/>
+            <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+          </filter>
+        </defs>
+
+        <!-- Parchment background -->
+        <rect width="168" height="188" fill="#f0e2b0" rx="5"/>
+        <!-- Subtle aged edges -->
+        <rect width="168" height="188" fill="url(#paper)" rx="5" opacity="0.18"/>
+        <rect x="3" y="3" width="162" height="182" fill="none" stroke="#c4933a" stroke-width="1" rx="4" opacity="0.4"/>
+
+        <!-- Decorative corner trees (ink sketch) -->
+        <g stroke="#7a4a18" stroke-width="0.8" fill="none" opacity="0.35">
+          <polygon points="4,188 12,170 20,188" fill="#c4a052" stroke="none" opacity="0.2"/>
+          <polygon points="148,188 158,165 168,188" fill="#c4a052" stroke="none" opacity="0.2"/>
+          <line x1="8" y1="188" x2="8" y2="182"/><line x1="16" y1="188" x2="16" y2="178"/>
+          <line x1="156" y1="188" x2="156" y2="180"/><line x1="162" y1="188" x2="162" y2="184"/>
+        </g>
+
+        <!-- Path (ink, slightly wavy dashes) -->
+        <g stroke="#7a4a18" stroke-width="1.8" stroke-dasharray="4,3.5" fill="none" stroke-linecap="round" opacity="0.7">
+          <line x1="32" y1="170" x2="64" y2="150"/>
+          <line x1="64" y1="150" x2="106" y2="140"/>
+          <line x1="106" y1="140" x2="140" y2="120"/>
+          <line x1="140" y1="120" x2="122" y2="97"/>
+          <line x1="122" y1="97"  x2="76"  y2="84"/>
+          <line x1="76"  y1="84"  x2="108" y2="61"/>
+          <line x1="108" y1="61"  x2="142" y2="43"/>
+          <line x1="142" y1="43"  x2="112" y2="24"/>
+          <line x1="112" y1="24"  x2="68"  y2="11"/>
+        </g>
+
+        <!-- Future nodes (parchment circles, ink border) -->
+        <g fill="#e8d09a" stroke="#9a6830" stroke-width="1.2">
+          <circle cx="64"  cy="150" r="9"/>
+          <circle cx="106" cy="140" r="9"/>
+          <circle cx="140" cy="120" r="9"/>
+          <circle cx="122" cy="97"  r="9"/>
+          <circle cx="76"  cy="84"  r="9"/>
+          <circle cx="108" cy="61"  r="9"/>
+          <circle cx="142" cy="43"  r="9"/>
+          <circle cx="112" cy="24"  r="9"/>
+          <circle cx="68"  cy="11"  r="9"/>
+        </g>
+
+        <!-- Emoji labels on future nodes -->
+        <g font-size="10" text-anchor="middle">
+          <text x="64"  y="154">🌍</text>
+          <text x="106" y="144">📦</text>
+          <text x="140" y="124">✨</text>
+          <text x="122" y="101">🎨</text>
+          <text x="76"  y="88" >🏗️</text>
+          <text x="108" y="65" >📣</text>
+          <text x="142" y="47" >🌀</text>
+          <text x="112" y="28" >📚</text>
+          <text x="68"  y="15" >⛰️</text>
+        </g>
+
+        <!-- Node name labels (tiny ink) -->
+        <g fill="#7a4a18" font-size="5.8" font-family="Inter" opacity="0.75">
+          <text x="76"  y="148" text-anchor="start">Big Picture</text>
+          <text x="117" y="136" text-anchor="start">Product</text>
+          <text x="151" y="116" text-anchor="start">AI Lab</text>
+          <text x="133" y="93"  text-anchor="start">Studio</text>
+          <text x="87"  y="80"  text-anchor="start">Foundation</text>
+          <text x="119" y="57"  text-anchor="start">Market</text>
+          <text x="153" y="39"  text-anchor="start">Flywheel</text>
+          <text x="123" y="20"  text-anchor="start">Library</text>
+          <text x="79"  y="8"   text-anchor="start">Summit</text>
+        </g>
+
+        <!-- Day 1 — active, glowing gold ring on parchment -->
+        <circle cx="32" cy="170" r="14" fill="rgba(245,185,40,0.2)" stroke="none">
+          <animate attributeName="r" values="12;16;12" dur="2.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.2;0.07;0.2" dur="2.8s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="32" cy="170" r="10" fill="#f5c842" stroke="#8a5a10" stroke-width="1.8"/>
+        <text x="32" y="174" text-anchor="middle" fill="#3a2000" font-size="9" font-family="Inter" font-weight="700">🌱</text>
+
+        <!-- YOU label -->
+        <text x="32" y="161" text-anchor="middle" fill="#8a5a10" font-size="6.2" font-family="Inter" font-weight="700">YOU</text>
+
+        <!-- Compass rose (bottom left decoration) -->
+        <g transform="translate(16, 158)" opacity="0.35" fill="#7a4a18">
+          <text font-size="7" x="-3" y="-10" text-anchor="middle">N</text>
+          <line x1="0" y1="-8" x2="0" y2="8" stroke="#7a4a18" stroke-width="0.8"/>
+          <line x1="-8" y1="0" x2="8" y2="0" stroke="#7a4a18" stroke-width="0.8"/>
+          <polygon points="0,-8 -2,-2 2,-2" fill="#7a4a18"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    // ── STARS ──
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 90; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = 1 + Math.random() * 2;
+      s.style.cssText = `
+        left:${Math.random()*100}%;
+        top:${Math.random()*72}%;
+        width:${size}px; height:${size}px;
+        animation-duration:${2.5+Math.random()*4}s;
+        animation-delay:${Math.random()*5}s;
+        opacity:${0.08+Math.random()*0.45};
+      `;
+      starsEl.appendChild(s);
+    }
+
+    // ── FIREFLIES ──
+    for (let i = 0; i < 22; i++) {
+      const ff = document.createElement('div');
+      ff.className = 'firefly';
+      const size = 2.5 + Math.random() * 2.5;
+      const dx = (Math.random() - 0.5) * 200;
+      const dy = -(80 + Math.random() * 120);
+      const dur = 10 + Math.random() * 14;
+      const delay = Math.random() * 12;
+      ff.style.cssText = `
+        left:${5+Math.random()*88}vw;
+        top:${10+Math.random()*75}vh;
+        width:${size}px; height:${size}px;
+        --dx:${dx}px; --dy:${dy}px;
+        animation-duration:${dur}s, ${1.5+Math.random()*2}s;
+        animation-delay:${delay}s, ${Math.random()*3}s;
+      `;
+      document.body.appendChild(ff);
+
+      // Reposition after each cycle
+      ff.addEventListener('animationiteration', (e) => {
+        if (e.animationName === 'ffDrift') {
+          ff.style.left = (5 + Math.random() * 88) + 'vw';
+          ff.style.top  = (10 + Math.random() * 75) + 'vh';
+        }
+      });
+    }
+
+    // ── SCROLL REVEAL ──
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.clearing').forEach(c => obs.observe(c));
+
+    // ── MINIMAP TOGGLE ──
+    function toggleMap() {
+      const map = document.getElementById('minimap');
+      const tog = document.getElementById('map-tog');
+      map.classList.toggle('collapsed');
+      tog.textContent = map.classList.contains('collapsed') ? '+' : '−';
+    }
+  </script>
+</body>
+</html>
