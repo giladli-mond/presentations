@@ -1243,160 +1243,51 @@
     window.addEventListener('click',     () => dismissSplash(), { once: true });
     window.addEventListener('keydown',   () => dismissSplash(), { once: true });
 
-    // ── AMBIENT FOREST SOUNDSCAPE ──
-    let audioCtx    = null;
-    let masterGain  = null;
-    let soundActive = false;
-    const timers    = [];
+    // ── REAL FOREST AUDIO via YouTube IFrame API ──
+    let ytPlayer     = null;
+    let ytReady      = false;
+    let soundActive  = false;
+    let startQueued  = false;
+    let fadeInterval = null;
 
-    // Gentle plate reverb (warm, short tail)
-    function makeVerb(ctx, dest) {
-      const dly = ctx.createDelay(0.1);
-      const fb  = ctx.createGain();
-      const hp  = ctx.createBiquadFilter();
-      dly.delayTime.value = 0.072;
-      fb.gain.value       = 0.36;
-      hp.type             = 'highpass';
-      hp.frequency.value  = 320;
-      dly.connect(hp); hp.connect(fb); fb.connect(dly);
-      dly.connect(dest);
-      return dly;
-    }
-
-    // Soft wind — bandpass-filtered noise that breathes slowly
-    function addWind(ctx, dest) {
-      const len = 4 * ctx.sampleRate;
-      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-      const dat = buf.getChannelData(0);
-      let b0=0, b1=0, b2=0;
-      for (let i = 0; i < len; i++) {
-        const w = Math.random() * 2 - 1;
-        b0 = 0.99*b0 + w*0.07; b1 = 0.97*b1 + w*0.16; b2 = 0.85*b2 + w*0.30;
-        dat[i] = (b0 + b1 + b2) * 0.06;
-      }
-      const src  = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
-      const bp   = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 550; bp.Q.value = 0.7;
-      const gain = ctx.createGain(); gain.gain.value = 0.038;
-      const lfo  = ctx.createOscillator(); lfo.frequency.value = 0.038;
-      const lfog = ctx.createGain(); lfog.gain.value = 0.022;
-      lfo.connect(lfog); lfog.connect(gain.gain); lfo.start();
-      src.connect(bp); bp.connect(gain); gain.connect(dest);
-      src.start();
-    }
-
-    // Drone pads — mid/high register only (A3 and above) to avoid bass rumble
-    function addDrones(ctx, dest, verb) {
-      [
-        { freq: 220.00, vol: 0.055, lfoHz: 0.041, pan: -0.20 }, // A3
-        { freq: 329.63, vol: 0.042, lfoHz: 0.029, pan:  0.30 }, // E4
-        { freq: 440.00, vol: 0.034, lfoHz: 0.053, pan: -0.15 }, // A4
-        { freq: 659.25, vol: 0.024, lfoHz: 0.061, pan:  0.20 }, // E5 (shimmer)
-        { freq: 880.00, vol: 0.014, lfoHz: 0.037, pan: -0.10 }, // A5 (air)
-      ].forEach(({ freq, vol, lfoHz, pan }) => {
-        const osc    = ctx.createOscillator();
-        const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createPanner();
-        const gain   = ctx.createGain();
-        const lfo    = ctx.createOscillator();
-        const lfog   = ctx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.value = freq;
-        osc.detune.value = (Math.random() - 0.5) * 5;
-
-        if (panner.pan) panner.pan.value = pan;
-        gain.gain.value = vol;
-
-        lfo.frequency.value = lfoHz;
-        lfog.gain.value     = vol * 0.65;
-        lfo.connect(lfog); lfog.connect(gain.gain); lfo.start();
-
-        osc.connect(panner);
-        (panner.connect ? panner : { connect: (d) => osc.connect(d) }).connect(gain);
-        gain.connect(dest); gain.connect(verb);
-        osc.start();
-      });
-    }
-
-    // FM bird call — far more organic than pure sine sweeps
-    function fmBird(ctx, dest, t, species) {
-      // Four "species" — different timbres and registers
-      const sp = [
-        { cf: 2700, mr: 0.48, mi: 320, dur: 0.13, rise: 1.48, vol: 0.026 }, // flute chirp
-        { cf: 1950, mr: 0.72, mi: 260, dur: 0.20, rise: 1.28, vol: 0.030 }, // warm tweet
-        { cf: 3500, mr: 1.55, mi: 180, dur: 0.09, rise: 1.65, vol: 0.020 }, // bright pip
-        { cf: 1700, mr: 0.38, mi: 380, dur: 0.24, rise: 1.38, vol: 0.028 }, // low whistle
-      ][species !== undefined ? species : Math.floor(Math.random() * 4)];
-
-      const j = 1 + (Math.random() - 0.5) * 0.14; // pitch jitter ±7%
-      const carrier = ctx.createOscillator();
-      const mod     = ctx.createOscillator();
-      const modG    = ctx.createGain();
-      const ampG    = ctx.createGain();
-
-      carrier.type = mod.type = 'sine';
-      carrier.frequency.value = sp.cf * j;
-      mod.frequency.value     = sp.cf * sp.mr * j;
-      modG.gain.value         = sp.mi;
-
-      // Chirp shape: rises, then tiny fall at end (natural bird ending)
-      carrier.frequency.setValueAtTime(sp.cf * j,            t);
-      carrier.frequency.linearRampToValueAtTime(sp.cf * sp.rise * j, t + sp.dur * 0.60);
-      carrier.frequency.linearRampToValueAtTime(sp.cf * (sp.rise - 0.10) * j, t + sp.dur);
-
-      ampG.gain.setValueAtTime(0,       t);
-      ampG.gain.linearRampToValueAtTime(sp.vol, t + 0.010);
-      ampG.gain.exponentialRampToValueAtTime(0.001, t + sp.dur);
-
-      mod.connect(modG); modG.connect(carrier.frequency);
-      carrier.connect(ampG); ampG.connect(dest);
-      mod.start(t); carrier.start(t);
-      mod.stop(t + sp.dur + 0.05); carrier.stop(t + sp.dur + 0.05);
-    }
-
-    // Four independent bird voices at staggered, randomised intervals
-    function scheduleBirds(ctx, dest) {
-      function voice(sp, minS, maxS) {
-        const t = ctx.currentTime + 0.02;
-        fmBird(ctx, dest, t, sp);
-        // 30% chance of a second note (doublet, like a real bird call)
-        if (Math.random() < 0.30) {
-          fmBird(ctx, dest, t + 0.16 + Math.random() * 0.14, sp);
+    // Called by the YouTube API once it loads
+    window.onYouTubeIframeAPIReady = function () {
+      ytPlayer = new YT.Player('yt-audio', {
+        videoId: '2G8LAiHSCAs',
+        playerVars: {
+          autoplay: 0, controls: 0, disablekb: 1,
+          loop: 1, playlist: '2G8LAiHSCAs',
+          modestbranding: 1, rel: 0,
+        },
+        events: {
+          onReady: function (e) {
+            ytReady = true;
+            e.target.setVolume(0);
+            if (startQueued) { startQueued = false; _playAndFade(); }
+          }
         }
-        const wait = (minS + Math.random() * (maxS - minS)) * 1000;
-        const tid = setTimeout(() => { if (soundActive && audioCtx) voice(sp, minS, maxS); }, wait);
-        timers.push(tid);
-      }
-      // Stagger the initial calls so they don't all fire at once
-      timers.push(setTimeout(() => voice(0, 5,  11),  900 + Math.random() * 1200));
-      timers.push(setTimeout(() => voice(1, 7,  16), 2200 + Math.random() * 2000));
-      timers.push(setTimeout(() => voice(2, 3,   8),  400 + Math.random() *  800));
-      timers.push(setTimeout(() => voice(3, 9,  22), 4000 + Math.random() * 3000));
-    }
+      });
+    };
 
-    function buildAmbient(ctx) {
-      // High-pass on the master: cuts the low rumble below ~180 Hz
-      const hp = ctx.createBiquadFilter();
-      hp.type = 'highpass'; hp.frequency.value = 180; hp.Q.value = 0.5;
-      hp.connect(ctx.destination);
-
-      const master = ctx.createGain();
-      master.gain.setValueAtTime(0, ctx.currentTime);
-      master.gain.linearRampToValueAtTime(0.78, ctx.currentTime + 4.5);
-      master.connect(hp);
-      const verb = makeVerb(ctx, hp);
-      addWind(ctx, master);
-      addDrones(ctx, master, verb);
-      scheduleBirds(ctx, master);
-      return master;
+    function _playAndFade() {
+      ytPlayer.setVolume(0);
+      ytPlayer.playVideo();
+      soundActive = true;
+      document.getElementById('sound-btn').textContent = '♫';
+      document.getElementById('sound-btn').classList.add('playing');
+      clearInterval(fadeInterval);
+      let vol = 0;
+      fadeInterval = setInterval(() => {
+        vol = Math.min(vol + 1.5, 62);
+        ytPlayer.setVolume(vol);
+        if (vol >= 62) clearInterval(fadeInterval);
+      }, 100);
     }
 
     function startForestAudio() {
-      if (audioCtx) return;
-      audioCtx   = new (window.AudioContext || window.webkitAudioContext)();
-      masterGain = buildAmbient(audioCtx);
-      soundActive = true;
-      const btn = document.getElementById('sound-btn');
-      btn.textContent = '♫'; btn.classList.add('playing');
+      if (soundActive) return;
+      if (!ytReady || !ytPlayer) { startQueued = true; return; }
+      _playAndFade();
     }
 
     // ── SESSION TRACKER (persists across visits via localStorage) ──
@@ -1427,23 +1318,25 @@
 
     function toggleSound() {
       const btn = document.getElementById('sound-btn');
-      if (!audioCtx) { startForestAudio(); return; }
+      if (!ytReady || !ytPlayer) { startQueued = !startQueued; return; }
 
-      if (soundActive) {
-        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.2);
-        setTimeout(() => { if (audioCtx) audioCtx.suspend(); }, 1300);
-        timers.forEach(clearTimeout); timers.length = 0;
-        soundActive = false; btn.textContent = '♪'; btn.classList.remove('playing');
+      if (!soundActive) {
+        _playAndFade();
       } else {
-        audioCtx.resume();
-        masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(0.72, audioCtx.currentTime + 1.5);
-        scheduleBirds(audioCtx, masterGain); // drones resume automatically; restart bird timers
-        soundActive = true; btn.textContent = '♫'; btn.classList.add('playing');
+        clearInterval(fadeInterval);
+        let vol = ytPlayer.getVolume();
+        fadeInterval = setInterval(() => {
+          vol = Math.max(vol - 3, 0);
+          ytPlayer.setVolume(vol);
+          if (vol <= 0) { ytPlayer.pauseVideo(); clearInterval(fadeInterval); }
+        }, 60);
+        soundActive = false; btn.textContent = '♪'; btn.classList.remove('playing');
       }
     }
   </script>
 
+  <!-- Hidden YouTube player — real forest birdsong (18M views, 8 hrs) -->
+  <div id="yt-audio" style="position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;pointer-events:none;opacity:0;" aria-hidden="true"></div>
+  <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
