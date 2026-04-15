@@ -903,76 +903,73 @@
         <span class="section-label">Your 10-day journey</span>
       </div>
       <h2 class="st">The people waiting to meet you.</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 22px; font-size: 15px;">Every day, two people from the team will sit with you for a coffee. Each one is leading something specific — and they're here to share it with you.</p>
+      <p style="color: var(--text-secondary); margin-bottom: 22px; font-size: 15px;">Across your first two weeks you'll have a coffee with each of these groups. There's no fixed schedule — they'll find you, or you can reach out. Some days you'll have a few; some days none. Tick each one off when it happens.</p>
 
       <div class="today-callout">
         <span class="today-callout-icon">🌱</span>
-        <span>No meetings today. Day 1 is just for arriving. Tick off each day as you go — the map below stays with you throughout.</span>
+        <span>No meetings today. Day 1 is just for arriving, getting set up, and having lunch with the team.</span>
       </div>
 
       <div class="days-grid">
-        <div class="day-card" data-day="2">
+        <div class="day-card" data-session="fabio-noam">
           <span class="dc-emoji">🌍</span>
-          <div class="dc-num">Day 2 · Tue 21 Apr</div>
           <div class="dc-name">The Big Picture</div>
           <div class="dc-who">With Fabio + Noam</div>
-          <button class="dc-tick" onclick="toggleMet(2, event)" title="Mark as met">✓</button>
+          <button class="dc-tick" onclick="toggleMet('fabio-noam', event)" title="Mark as done">✓</button>
         </div>
-        <div class="day-card" data-day="3">
+        <div class="day-card" data-session="nick-shannon">
           <span class="dc-emoji">📦</span>
-          <div class="dc-num">Day 3 · Wed 22 Apr</div>
           <div class="dc-name">The Product</div>
           <div class="dc-who">With Nick + Shannon</div>
-          <button class="dc-tick" onclick="toggleMet(3, event)" title="Mark as met">✓</button>
+          <button class="dc-tick" onclick="toggleMet('nick-shannon', event)" title="Mark as done">✓</button>
         </div>
-        <div class="day-card" data-day="4">
+        <div class="day-card" data-session="uras-nassim">
           <span class="dc-emoji">✨</span>
-          <div class="dc-num">Day 4 · Thu 23 Apr</div>
           <div class="dc-name">The AI Lab</div>
           <div class="dc-who">With Uras + Nassim</div>
-          <button class="dc-tick" onclick="toggleMet(4, event)" title="Mark as met">✓</button>
+          <button class="dc-tick" onclick="toggleMet('uras-nassim', event)" title="Mark as done">✓</button>
         </div>
-        <div class="day-card" data-day="5">
+        <div class="day-card" data-session="mia-patric">
           <span class="dc-emoji">🎨</span>
-          <div class="dc-num">Day 5 · Fri 24 Apr</div>
           <div class="dc-name">The Studio</div>
           <div class="dc-who">With Mia + Patric</div>
-          <button class="dc-tick" onclick="toggleMet(5, event)" title="Mark as met">✓</button>
+          <button class="dc-tick" onclick="toggleMet('mia-patric', event)" title="Mark as done">✓</button>
         </div>
-        <div class="day-card" data-day="6">
+        <div class="day-card" data-session="amit-chandra">
           <span class="dc-emoji">🏗️</span>
-          <div class="dc-num">Day 6 · Mon 27 Apr</div>
           <div class="dc-name">The Foundation</div>
           <div class="dc-who">With Amit + Chandra</div>
-          <button class="dc-tick" onclick="toggleMet(6, event)" title="Mark as met">✓</button>
+          <button class="dc-tick" onclick="toggleMet('amit-chandra', event)" title="Mark as done">✓</button>
         </div>
-        <div class="day-card" data-day="7">
+        <div class="day-card" data-session="alessia-gabi">
           <span class="dc-emoji">📣</span>
-          <div class="dc-num">Day 7 · Tue 28 Apr</div>
           <div class="dc-name">The Market</div>
           <div class="dc-who">With Alessia + Gabi</div>
-          <button class="dc-tick" onclick="toggleMet(7, event)" title="Mark as met">✓</button>
+          <button class="dc-tick" onclick="toggleMet('alessia-gabi', event)" title="Mark as done">✓</button>
         </div>
-        <div class="day-card" data-day="8">
+        <div class="day-card" data-session="gilad">
           <span class="dc-emoji">🌀</span>
-          <div class="dc-num">Day 8 · Wed 29 Apr</div>
           <div class="dc-name">The Flywheel</div>
           <div class="dc-who">With Gilad</div>
-          <button class="dc-tick" onclick="toggleMet(8, event)" title="Mark as met">✓</button>
+          <button class="dc-tick" onclick="toggleMet('gilad', event)" title="Mark as done">✓</button>
         </div>
-        <div class="day-card" data-day="9">
+        <div class="day-card" data-session="analysts">
+          <span class="dc-emoji">🔬</span>
+          <div class="dc-name">Your Analyst Crew</div>
+          <div class="dc-who">With Gregory, Nikki + Olivia</div>
+          <button class="dc-tick" onclick="toggleMet('analysts', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="library">
           <span class="dc-emoji">📚</span>
-          <div class="dc-num">Day 9 · Thu 30 Apr</div>
           <div class="dc-name">The Library</div>
-          <div class="dc-who">Data + tools</div>
-          <button class="dc-tick" onclick="toggleMet(9, event)" title="Mark as met">✓</button>
+          <div class="dc-who">Data + tools deep dive</div>
+          <button class="dc-tick" onclick="toggleMet('library', event)" title="Mark as done">✓</button>
         </div>
-        <div class="day-card" data-day="10">
+        <div class="day-card" data-session="summit">
           <span class="dc-emoji">⛰️</span>
-          <div class="dc-num">Day 10 · Fri 1 May</div>
           <div class="dc-name">The Summit</div>
           <div class="dc-who">Chapter Two begins</div>
-          <button class="dc-tick" onclick="toggleMet(10, event)" title="Mark as met">✓</button>
+          <button class="dc-tick" onclick="toggleMet('summit', event)" title="Mark as done">✓</button>
         </div>
       </div>
     </section>
@@ -1147,7 +1144,7 @@
           <polygon points="0,-8 -2,-2 2,-2" fill="#7a4a18"/>
         </g>
       </svg>
-      <p class="map-note">Your companion for all 10 days. Tick as you go.</p>
+      <p class="map-note">Your companion for all 10 days. Tick each session when it happens.</p>
     </div>
   </div>
 
@@ -1396,26 +1393,26 @@
       btn.textContent = '♫'; btn.classList.add('playing');
     }
 
-    // ── MET TRACKER (persists across visits via localStorage) ──
-    const MET_KEY = 'fiona-onboarding-met-v1';
+    // ── SESSION TRACKER (persists across visits via localStorage) ──
+    const MET_KEY = 'fiona-onboarding-met-v2';
 
     function loadMet() {
       try { return JSON.parse(localStorage.getItem(MET_KEY) || '[]'); }
       catch { return []; }
     }
-    function saveMet(days) {
-      try { localStorage.setItem(MET_KEY, JSON.stringify(days)); } catch {}
+    function saveMet(sessions) {
+      try { localStorage.setItem(MET_KEY, JSON.stringify(sessions)); } catch {}
     }
-    function renderMet(days) {
-      document.querySelectorAll('.day-card[data-day]').forEach(card => {
-        card.classList.toggle('met', days.includes(parseInt(card.dataset.day)));
+    function renderMet(sessions) {
+      document.querySelectorAll('.day-card[data-session]').forEach(card => {
+        card.classList.toggle('met', sessions.includes(card.dataset.session));
       });
     }
-    function toggleMet(day, e) {
+    function toggleMet(session, e) {
       e.stopPropagation();
       const met = loadMet();
-      const idx = met.indexOf(day);
-      if (idx > -1) met.splice(idx, 1); else met.push(day);
+      const idx = met.indexOf(session);
+      if (idx > -1) met.splice(idx, 1); else met.push(session);
       saveMet(met);
       renderMet(met);
     }
