@@ -1283,15 +1283,14 @@
       src.start();
     }
 
-    // Drone pads — open-fifth chords (A, E) that breathe at different rates
+    // Drone pads — mid/high register only (A3 and above) to avoid bass rumble
     function addDrones(ctx, dest, verb) {
       [
-        { freq: 110.00, vol: 0.055, lfoHz: 0.033, pan: -0.30 }, // A2
-        { freq: 164.81, vol: 0.040, lfoHz: 0.047, pan:  0.20 }, // E3
-        { freq: 220.00, vol: 0.045, lfoHz: 0.041, pan: -0.15 }, // A3
-        { freq: 329.63, vol: 0.032, lfoHz: 0.029, pan:  0.35 }, // E4
-        { freq: 440.00, vol: 0.024, lfoHz: 0.053, pan: -0.10 }, // A4 (shimmer)
-        { freq: 659.25, vol: 0.016, lfoHz: 0.061, pan:  0.15 }, // E5 (air)
+        { freq: 220.00, vol: 0.055, lfoHz: 0.041, pan: -0.20 }, // A3
+        { freq: 329.63, vol: 0.042, lfoHz: 0.029, pan:  0.30 }, // E4
+        { freq: 440.00, vol: 0.034, lfoHz: 0.053, pan: -0.15 }, // A4
+        { freq: 659.25, vol: 0.024, lfoHz: 0.061, pan:  0.20 }, // E5 (shimmer)
+        { freq: 880.00, vol: 0.014, lfoHz: 0.037, pan: -0.10 }, // A5 (air)
       ].forEach(({ freq, vol, lfoHz, pan }) => {
         const osc    = ctx.createOscillator();
         const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createPanner();
@@ -1374,11 +1373,16 @@
     }
 
     function buildAmbient(ctx) {
+      // High-pass on the master: cuts the low rumble below ~180 Hz
+      const hp = ctx.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 180; hp.Q.value = 0.5;
+      hp.connect(ctx.destination);
+
       const master = ctx.createGain();
       master.gain.setValueAtTime(0, ctx.currentTime);
-      master.gain.linearRampToValueAtTime(0.72, ctx.currentTime + 4.5);
-      master.connect(ctx.destination);
-      const verb = makeVerb(ctx, master);
+      master.gain.linearRampToValueAtTime(0.78, ctx.currentTime + 4.5);
+      master.connect(hp);
+      const verb = makeVerb(ctx, hp);
       addWind(ctx, master);
       addDrones(ctx, master, verb);
       scheduleBirds(ctx, master);
