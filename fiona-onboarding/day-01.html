@@ -438,8 +438,64 @@
     }
     .dc-emoji { font-size: 22px; margin-bottom: 8px; display: block; line-height: 1; }
     .dc-num  { font-size: 9px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
-    .dc-name { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: #c8deca; line-height: 1.3; }
+    .dc-name { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; color: #c8deca; line-height: 1.3; transition: opacity 0.3s; }
     .dc-who  { font-size: 11px; color: #5a7a5c; margin-top: 6px; }
+
+    /* Tick button on each day card */
+    .dc-tick {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 22px; height: 22px;
+      border: 1.5px solid rgba(74, 222, 128, 0.2);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: transparent;
+      background: transparent;
+      transition: all 0.25s;
+      flex-shrink: 0;
+    }
+    .dc-tick:hover { border-color: rgba(74, 222, 128, 0.55); background: rgba(74,222,128,0.08); }
+    .day-card.met .dc-tick {
+      background: var(--green-light);
+      border-color: var(--green-light);
+      color: #0a1a0c;
+      font-size: 13px;
+    }
+    .day-card.met {
+      border-color: rgba(74, 222, 128, 0.35);
+      background: rgba(18, 40, 20, 0.55);
+    }
+    .day-card.met .dc-name { opacity: 0.5; }
+    .day-card.met .dc-who  { opacity: 0.4; }
+    .day-card.met .dc-emoji { opacity: 0.4; }
+    .day-card.met .dc-num { opacity: 0.5; }
+
+    /* "No meetings today" callout */
+    .today-callout {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(245, 200, 66, 0.07);
+      border: 1px solid rgba(245, 200, 66, 0.2);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      font-size: 14px;
+      color: var(--gold);
+    }
+    .today-callout-icon { font-size: 18px; flex-shrink: 0; }
+
+    /* Minimap companion note */
+    .map-note {
+      font-size: 8px;
+      font-style: italic;
+      color: #a07040;
+      text-align: center;
+      margin-top: 6px;
+      opacity: 0.75;
+      letter-spacing: 0.03em;
+    }
 
     /* ── DON'T WORRY ── */
     .worry-card {
@@ -840,69 +896,83 @@
 
     <div class="divider"><span class="divider-icon">🍄</span></div>
 
-    <!-- ── SECTION 3: The Forest Ahead ── -->
+    <!-- ── SECTION 3: The Journey Ahead ── -->
     <section class="clearing" id="s-ahead">
       <div class="eyebrow">
         <div class="q-marker teal">◈</div>
-        <span class="section-label">The path ahead</span>
+        <span class="section-label">Your 10-day journey</span>
       </div>
-      <h2 class="st">Nine more chapters to explore.</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 26px; font-size: 15px;">Each day, a new part of the forest unlocks. Here's what's coming. No need to think about any of it today.</p>
+      <h2 class="st">The people waiting to meet you.</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 22px; font-size: 15px;">Every day, two people from the team will sit with you for a coffee. Each one is leading something specific — and they're here to share it with you.</p>
+
+      <div class="today-callout">
+        <span class="today-callout-icon">🌱</span>
+        <span>No meetings today. Day 1 is just for arriving. Tick off each day as you go — the map below stays with you throughout.</span>
+      </div>
 
       <div class="days-grid">
-        <div class="day-card">
+        <div class="day-card" data-day="2">
           <span class="dc-emoji">🌍</span>
           <div class="dc-num">Day 2 · Tue 21 Apr</div>
           <div class="dc-name">The Big Picture</div>
           <div class="dc-who">With Fabio + Noam</div>
+          <button class="dc-tick" onclick="toggleMet(2, event)" title="Mark as met">✓</button>
         </div>
-        <div class="day-card">
+        <div class="day-card" data-day="3">
           <span class="dc-emoji">📦</span>
           <div class="dc-num">Day 3 · Wed 22 Apr</div>
           <div class="dc-name">The Product</div>
           <div class="dc-who">With Nick + Shannon</div>
+          <button class="dc-tick" onclick="toggleMet(3, event)" title="Mark as met">✓</button>
         </div>
-        <div class="day-card">
+        <div class="day-card" data-day="4">
           <span class="dc-emoji">✨</span>
           <div class="dc-num">Day 4 · Thu 23 Apr</div>
           <div class="dc-name">The AI Lab</div>
           <div class="dc-who">With Uras + Nassim</div>
+          <button class="dc-tick" onclick="toggleMet(4, event)" title="Mark as met">✓</button>
         </div>
-        <div class="day-card">
+        <div class="day-card" data-day="5">
           <span class="dc-emoji">🎨</span>
           <div class="dc-num">Day 5 · Fri 24 Apr</div>
           <div class="dc-name">The Studio</div>
           <div class="dc-who">With Mia + Patric</div>
+          <button class="dc-tick" onclick="toggleMet(5, event)" title="Mark as met">✓</button>
         </div>
-        <div class="day-card">
+        <div class="day-card" data-day="6">
           <span class="dc-emoji">🏗️</span>
           <div class="dc-num">Day 6 · Mon 27 Apr</div>
           <div class="dc-name">The Foundation</div>
           <div class="dc-who">With Amit + Chandra</div>
+          <button class="dc-tick" onclick="toggleMet(6, event)" title="Mark as met">✓</button>
         </div>
-        <div class="day-card">
+        <div class="day-card" data-day="7">
           <span class="dc-emoji">📣</span>
           <div class="dc-num">Day 7 · Tue 28 Apr</div>
           <div class="dc-name">The Market</div>
           <div class="dc-who">With Alessia + Gabi</div>
+          <button class="dc-tick" onclick="toggleMet(7, event)" title="Mark as met">✓</button>
         </div>
-        <div class="day-card">
+        <div class="day-card" data-day="8">
           <span class="dc-emoji">🌀</span>
           <div class="dc-num">Day 8 · Wed 29 Apr</div>
           <div class="dc-name">The Flywheel</div>
           <div class="dc-who">With Gilad</div>
+          <button class="dc-tick" onclick="toggleMet(8, event)" title="Mark as met">✓</button>
         </div>
-        <div class="day-card">
+        <div class="day-card" data-day="9">
           <span class="dc-emoji">📚</span>
           <div class="dc-num">Day 9 · Thu 30 Apr</div>
           <div class="dc-name">The Library</div>
           <div class="dc-who">Data + tools</div>
+          <button class="dc-tick" onclick="toggleMet(9, event)" title="Mark as met">✓</button>
         </div>
-        <div class="day-card">
+        <div class="day-card" data-day="10">
           <span class="dc-emoji">⛰️</span>
           <div class="dc-num">Day 10 · Fri 1 May</div>
           <div class="dc-name">The Summit</div>
           <div class="dc-who">Chapter Two begins</div>
+          <button class="dc-tick" onclick="toggleMet(10, event)" title="Mark as met">✓</button>
         </div>
       </div>
     </section>
@@ -1077,6 +1147,7 @@
           <polygon points="0,-8 -2,-2 2,-2" fill="#7a4a18"/>
         </g>
       </svg>
+      <p class="map-note">Your companion for all 10 days. Tick as you go.</p>
     </div>
   </div>
 
@@ -1306,6 +1377,32 @@
       const btn = document.getElementById('sound-btn');
       btn.textContent = '♫'; btn.classList.add('playing');
     }
+
+    // ── MET TRACKER (persists across visits via localStorage) ──
+    const MET_KEY = 'fiona-onboarding-met-v1';
+
+    function loadMet() {
+      try { return JSON.parse(localStorage.getItem(MET_KEY) || '[]'); }
+      catch { return []; }
+    }
+    function saveMet(days) {
+      try { localStorage.setItem(MET_KEY, JSON.stringify(days)); } catch {}
+    }
+    function renderMet(days) {
+      document.querySelectorAll('.day-card[data-day]').forEach(card => {
+        card.classList.toggle('met', days.includes(parseInt(card.dataset.day)));
+      });
+    }
+    function toggleMet(day, e) {
+      e.stopPropagation();
+      const met = loadMet();
+      const idx = met.indexOf(day);
+      if (idx > -1) met.splice(idx, 1); else met.push(day);
+      saveMet(met);
+      renderMet(met);
+    }
+    // Restore state on load
+    renderMet(loadMet());
 
     function toggleSound() {
       const btn = document.getElementById('sound-btn');
