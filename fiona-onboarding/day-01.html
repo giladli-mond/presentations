@@ -668,30 +668,27 @@
       margin-bottom: 52px;
     }
 
-    .splash-cta {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
+    .splash-btn {
+      margin-top: 10px;
+      padding: 18px 48px;
+      background: var(--gold);
+      color: #0c1e0e;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
       cursor: pointer;
-      color: var(--text-muted);
-      font-size: 13px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      transition: color 0.2s;
+      box-shadow: 0 0 32px rgba(245,200,66,0.35), 0 4px 20px rgba(0,0,0,0.4);
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
       user-select: none;
     }
-    .splash-cta:hover { color: var(--gold); }
-    .splash-cta:hover .splash-arr { border-color: var(--gold); }
-
-    .splash-arr {
-      width: 18px; height: 18px;
-      border-right: 1.5px solid var(--text-muted);
-      border-bottom: 1.5px solid var(--text-muted);
-      transform: rotate(45deg);
-      animation: arrowBounce 2s ease-in-out infinite;
-      transition: border-color 0.2s;
+    .splash-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 48px rgba(245,200,66,0.55), 0 6px 28px rgba(0,0,0,0.45);
     }
+    .splash-btn:active { transform: scale(0.98); }
   </style>
 </head>
 <body>
@@ -703,10 +700,7 @@
       <div class="splash-phones">🎧</div>
       <h1 class="splash-title">Headphones on.</h1>
       <p class="splash-sub">Your adventure is about to begin.</p>
-      <div class="splash-cta" onclick="dismissSplash()">
-        <span>Scroll down when you're ready</span>
-        <div class="splash-arr"></div>
-      </div>
+      <button class="splash-btn" onclick="startJourney()">Start your journey</button>
     </div>
     <!-- Trees at bottom -->
     <div class="splash-trees">
@@ -832,10 +826,10 @@
         <span class="gilad-note-label">Gilad</span>
         <p>Welcome to Campaigns, Fiona.</p>
         <p>You've just joined the best team in monday. We may be slightly biased, but honestly, we're pretty sure it's true.</p>
-        <p>Full disclosure: like any company of monday's size, there are a handful of compliance trainings sitting in your inbox waiting to be clicked through. We know. Not the most thrilling start. The good news is that Campaigns runs much more like a startup than a big corporate — you won't feel much of that energy day-to-day. But the courses exist and HR will eventually follow up — consider yourself prepared.</p>
+        <p>Full disclosure: like any company of monday's size, there are a handful of compliance trainings sitting in your inbox waiting to be clicked through. We know. Not the most thrilling start. The good news is that Campaigns runs much more like a startup than a big corporate, so you won't feel much of that energy day-to-day. But the courses exist and HR will eventually follow up. Consider yourself prepared.</p>
         <p>Everyone here is genuinely happy to help. Message anyone, ask anything. There's no such thing as a question too small. If you're wondering whether to ask something, the answer is: yes, ask it.</p>
         <p>There will be moments that feel new and slightly confusing. That's completely normal. What matters is that when something isn't working (a tool isn't set up, something's unclear, something just feels off), say so. We'd much rather know early than have you quietly wrestling with it.</p>
-        <p>Your onboarding board on monday is the main source of truth for your first couple of weeks. That's where the actual tasks and steps live. This page is the companion to that — a bit of context, some friendly faces, and a way to track the conversations ahead. When in doubt: check the board first.</p>
+        <p>Your onboarding board on monday is the main source of truth for your first couple of weeks. That's where the actual tasks and steps live. This page is the companion to that: a bit of context, some friendly faces, and a way to track the conversations ahead. When in doubt, check the board first.</p>
         <p>You're not expected to know anything yet. Today is about arriving. Having lunch. Getting your laptop working. Being here.</p>
         <p>One last thing: I called this a forest on purpose. There will be moments where it feels like you're wandering and not quite sure which way is forward. That's fine. You're not in some deep, dark wood. Think of it more as a magical forest at the start of a great journey. The path becomes clearer as you walk it, and the team is right there with you.</p>
         <p>That's it. Enjoy Day 1.</p>
@@ -905,7 +899,7 @@
         <span class="section-label">Your 10-day journey</span>
       </div>
       <h2 class="st">The people waiting to meet you.</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 22px; font-size: 15px;">Across your first two weeks you'll have a coffee with each of these groups. There's no fixed schedule — they'll find you, or you can reach out. Some days you'll have a few; some days none. Tick each one off when it happens.</p>
+      <p style="color: var(--text-secondary); margin-bottom: 22px; font-size: 15px;">Across your first two weeks you'll have a coffee with each of these groups. There's no fixed schedule. They'll find you, or you can reach out. Some days you'll have a few; some days none. Tick each one off when it happens.</p>
 
       <div class="today-callout">
         <span class="today-callout-icon">🌱</span>
@@ -1232,16 +1226,31 @@
       const sp = document.getElementById('splash');
       sp.classList.add('dismissed');
       document.body.style.overflow = '';
-      startForestAudio();
       sp.addEventListener('transitionend', () => sp.remove(), { once: true });
+    }
+
+    function startJourney() {
+      dismissSplash();
+      // Button click = guaranteed user gesture: start audio immediately
+      if (ytPlayer) {
+        ytPlayer.unMute();
+        ytPlayer.setVolume(0);
+        ytPlayer.playVideo();
+        soundActive = true;
+        document.getElementById('sound-btn').textContent = '♫';
+        document.getElementById('sound-btn').classList.add('playing');
+        clearInterval(fadeInterval);
+        let vol = 0;
+        fadeInterval = setInterval(() => {
+          vol = Math.min(vol + 1.5, 62);
+          ytPlayer.setVolume(vol);
+          if (vol >= 62) clearInterval(fadeInterval);
+        }, 100);
+      }
     }
 
     // Block scroll until splash dismissed
     document.body.style.overflow = 'hidden';
-    window.addEventListener('wheel',     () => dismissSplash(), { once: true, passive: true });
-    window.addEventListener('touchmove', () => dismissSplash(), { once: true, passive: true });
-    window.addEventListener('click',     () => dismissSplash(), { once: true });
-    window.addEventListener('keydown',   () => dismissSplash(), { once: true });
 
     // ── REAL FOREST AUDIO via YouTube IFrame API ──
     let ytPlayer     = null;
@@ -1278,8 +1287,7 @@
       });
     };
 
-    // Called from splash dismiss — audio already starting, nothing more to do
-    function startForestAudio() {}
+    function startForestAudio() { /* audio handled by startJourney() button */ }
 
     // ── SESSION TRACKER (persists across visits via localStorage) ──
     const MET_KEY = 'fiona-onboarding-met-v2';
