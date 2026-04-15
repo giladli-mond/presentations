@@ -100,6 +100,33 @@
       opacity: 0.55;
       flex-shrink: 0;
     }
+    .sound-btn {
+      background: rgba(245, 200, 66, 0.1);
+      border: 1px solid rgba(245, 200, 66, 0.25);
+      border-radius: 8px;
+      color: var(--gold);
+      font-size: 14px;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+      position: relative;
+    }
+    .sound-btn:hover { background: rgba(245, 200, 66, 0.18); border-color: rgba(245, 200, 66, 0.45); }
+    .sound-btn.playing { background: rgba(245, 200, 66, 0.2); border-color: rgba(245, 200, 66, 0.5); }
+    .sound-btn.playing::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 10px;
+      border: 1px solid rgba(245, 200, 66, 0.3);
+      animation: soundRing 1.8s ease-in-out infinite;
+    }
+    @keyframes soundRing {
+      0%   { transform: scale(1);   opacity: 0.6; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
 
     /* ── HERO ── */
     .hero {
@@ -532,6 +559,7 @@
     <span class="hud-badge">Day 1 of 10</span>
     <span class="hud-chapter">First Steps</span>
     <div class="hud-progress"><div class="hud-fill"></div></div>
+    <button class="sound-btn" id="sound-btn" onclick="toggleSound()" title="Toggle ambient music">♪</button>
     <img src="./cam_logo.png" alt="Campaigns" class="hud-logo">
   </nav>
 
@@ -1003,6 +1031,186 @@
       const tog = document.getElementById('map-tog');
       map.classList.toggle('collapsed');
       tog.textContent = map.classList.contains('collapsed') ? '+' : '−';
+    }
+
+    // ── AMBIENT FOREST AUDIO ──
+    let audioCtx = null;
+    let masterGain = null;
+    let soundActive = false;
+    let chimeTimeout = null;
+
+    function buildForest(ctx) {
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0, ctx.currentTime);
+      master.gain.linearRampToValueAtTime(0.72, ctx.currentTime + 3.5);
+      master.connect(ctx.destination);
+
+      // ── REVERB (simple feedback delay for space) ──
+      function makeReverb(ctx) {
+        const delay  = ctx.createDelay(0.08);
+        const fb     = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        delay.delayTime.value = 0.065;
+        fb.gain.value = 0.38;
+        filter.type = 'lowpass';
+        filter.frequency.value = 1800;
+        delay.connect(filter);
+        filter.connect(fb);
+        fb.connect(delay);
+        return { input: delay, output: fb };
+      }
+      const reverb = makeReverb(ctx);
+      reverb.output.connect(master);
+
+      // ── BASS DRONE (two slightly detuned sines for warmth) ──
+      [55, 55.3, 82.4, 110].forEach((freq, i) => {
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filt = ctx.createBiquadFilter();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        osc.detune.value = (i % 2 === 0 ? 1 : -1) * (i * 2.5);
+        filt.type = 'lowpass';
+        filt.frequency.value = 320;
+        gain.gain.value = 0.28 / 4;
+        osc.connect(filt); filt.connect(gain); gain.connect(master);
+        osc.start();
+      });
+
+      // ── SOFT PAD (triangle waves, mid-range harmonics) ──
+      // A minor pentatonic: A3, C4, D4, E4, G4
+      [220, 261.6, 293.7, 329.6, 392].forEach((freq, i) => {
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filt = ctx.createBiquadFilter();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        osc.detune.value = (Math.random() - 0.5) * 8;
+        filt.type = 'lowpass';
+        filt.frequency.value = 900;
+        gain.gain.value = 0.055 / (i + 1);
+        // Slow tremolo via LFO
+        const lfo  = ctx.createOscillator();
+        const lfoG = ctx.createGain();
+        lfo.frequency.value = 0.18 + i * 0.04;
+        lfoG.gain.value = gain.gain.value * 0.35;
+        lfo.connect(lfoG); lfoG.connect(gain.gain);
+        lfo.start();
+        osc.connect(filt); filt.connect(gain);
+        gain.connect(master);
+        gain.connect(reverb.input);
+        osc.start();
+      });
+
+      // ── WIND (shaped pink noise) ──
+      const bufLen = 4 * ctx.sampleRate;
+      const buf    = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+      const data   = buf.getChannelData(0);
+      let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0;
+      for (let i = 0; i < bufLen; i++) {
+        const w = Math.random() * 2 - 1;
+        b0 = 0.99886*b0 + w*0.0555179; b1 = 0.99332*b1 + w*0.0750759;
+        b2 = 0.96900*b2 + w*0.1538520; b3 = 0.86650*b3 + w*0.3104856;
+        b4 = 0.55000*b4 + w*0.5329522; b5 = -0.7616*b5 - w*0.0168980;
+        data[i] = (b0+b1+b2+b3+b4+b5+w*0.5362) * 0.11;
+      }
+      const noise    = ctx.createBufferSource();
+      noise.buffer   = buf;
+      noise.loop     = true;
+      const windFilt = ctx.createBiquadFilter();
+      windFilt.type  = 'bandpass';
+      windFilt.frequency.value = 380;
+      windFilt.Q.value = 0.7;
+      const windGain  = ctx.createGain();
+      windGain.gain.value = 0.09;
+      // Gentle wind swell LFO
+      const windLFO  = ctx.createOscillator();
+      const windLFOG = ctx.createGain();
+      windLFO.frequency.value = 0.07;
+      windLFOG.gain.value = 0.04;
+      windLFO.connect(windLFOG); windLFOG.connect(windGain.gain);
+      windLFO.start();
+      noise.connect(windFilt); windFilt.connect(windGain);
+      windGain.connect(master);
+      noise.start();
+
+      // ── MAGIC CHIMES (random pentatonic notes, like fireflies) ──
+      const chimePitches = [523.3, 659.3, 783.9, 1046.5, 1318.5]; // C5,E5,G5,C6,E6
+      function ringChime() {
+        const freq  = chimePitches[Math.floor(Math.random() * chimePitches.length)];
+        const osc   = ctx.createOscillator();
+        const gain  = ctx.createGain();
+        const now   = ctx.currentTime;
+        osc.type    = 'sine';
+        osc.frequency.value = freq;
+        // Harmonic overtone
+        const osc2  = ctx.createOscillator();
+        osc2.type   = 'sine';
+        osc2.frequency.value = freq * 2.76; // inharmonic partial for bell quality
+        const gain2 = ctx.createGain();
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.09, now + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+        gain2.gain.setValueAtTime(0, now);
+        gain2.gain.linearRampToValueAtTime(0.035, now + 0.006);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+        osc.connect(gain);   gain.connect(reverb.input);  gain.connect(master);
+        osc2.connect(gain2); gain2.connect(reverb.input); gain2.connect(master);
+        osc.start(now);  osc.stop(now + 3);
+        osc2.start(now); osc2.stop(now + 2);
+        chimeTimeout = setTimeout(ringChime, 2800 + Math.random() * 6000);
+      }
+      chimeTimeout = setTimeout(ringChime, 1800 + Math.random() * 3000);
+
+      return master;
+    }
+
+    function toggleSound() {
+      const btn = document.getElementById('sound-btn');
+
+      if (!audioCtx) {
+        audioCtx  = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = buildForest(audioCtx);
+        soundActive = true;
+        btn.textContent = '♫';
+        btn.classList.add('playing');
+        return;
+      }
+
+      if (soundActive) {
+        // Fade out then suspend
+        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
+        masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.2);
+        setTimeout(() => audioCtx.suspend(), 1300);
+        clearTimeout(chimeTimeout);
+        soundActive = false;
+        btn.textContent = '♪';
+        btn.classList.remove('playing');
+      } else {
+        audioCtx.resume();
+        masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+        masterGain.gain.linearRampToValueAtTime(0.72, audioCtx.currentTime + 1.5);
+        soundActive = true;
+        btn.textContent = '♫';
+        btn.classList.add('playing');
+        // Restart chimes
+        const chimePitches = [523.3, 659.3, 783.9, 1046.5, 1318.5];
+        function ringChime() {
+          const freq = chimePitches[Math.floor(Math.random() * chimePitches.length)];
+          const osc  = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          const now  = audioCtx.currentTime;
+          osc.type   = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.09, now + 0.008);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.8);
+          osc.connect(gain); gain.connect(masterGain);
+          osc.start(now); osc.stop(now + 3);
+          chimeTimeout = setTimeout(ringChime, 2800 + Math.random() * 6000);
+        }
+        chimeTimeout = setTimeout(ringChime, 800 + Math.random() * 2000);
+      }
     }
   </script>
 </body>
