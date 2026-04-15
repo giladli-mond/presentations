@@ -1242,137 +1242,20 @@
     window.addEventListener('wheel',     () => dismissSplash(), { once: true, passive: true });
     window.addEventListener('touchmove', () => dismissSplash(), { once: true, passive: true });
 
-    // ── CHEERFUL NATURE AUDIO ──
-    let audioCtx    = null;
-    let masterGain  = null;
+    // ── FOREST AUDIO (real birdsong recording) ──
     let soundActive = false;
-    const timers    = [];
-
-    function buildForest(ctx) {
-      const master = ctx.createGain();
-      master.gain.setValueAtTime(0, ctx.currentTime);
-      master.gain.linearRampToValueAtTime(0.78, ctx.currentTime + 2.8);
-      master.connect(ctx.destination);
-
-      // ── BRIGHT REVERB (short room, airy) ──
-      const revDelay  = ctx.createDelay(0.055);
-      const revFB     = ctx.createGain();
-      const revFilter = ctx.createBiquadFilter();
-      revDelay.delayTime.value = 0.048;
-      revFB.gain.value         = 0.32;
-      revFilter.type           = 'highpass';
-      revFilter.frequency.value = 600;     // only reflect mids/highs → airy
-      revDelay.connect(revFilter); revFilter.connect(revFB); revFB.connect(revDelay);
-      revDelay.connect(master);
-
-      // ── WARM LIGHT BASS (C major: C2, G2, C3) ──
-      [65.4, 98, 130.8].forEach((freq, i) => {
-        const osc = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
-        osc.type = 'sine'; osc.frequency.value = freq;
-        f.type = 'lowpass'; f.frequency.value = 280;
-        g.gain.value = [0.14, 0.08, 0.05][i];
-        osc.connect(f); f.connect(g); g.connect(master);
-        osc.start();
-      });
-
-      // ── BRIGHT PAD (C major pentatonic: C4–E5, triangle waves) ──
-      // C major pentatonic: C, D, E, G, A
-      [261.6, 293.7, 329.6, 392, 440, 523.3, 587.3].forEach((freq, i) => {
-        const osc = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
-        osc.type = 'triangle'; osc.frequency.value = freq;
-        osc.detune.value = (Math.random() - 0.5) * 6;
-        f.type = 'lowpass'; f.frequency.value = 2200;
-        g.gain.value = 0.048 / (i * 0.4 + 1);
-        // Gentle tremolo
-        const lfo = ctx.createOscillator(), lg = ctx.createGain();
-        lfo.frequency.value = 0.22 + i * 0.05; lg.gain.value = g.gain.value * 0.28;
-        lfo.connect(lg); lg.connect(g.gain); lfo.start();
-        osc.connect(f); f.connect(g); g.connect(master); g.connect(revDelay);
-        osc.start();
-      });
-
-      // ── GENTLE BREEZE (light noise, brighter band) ──
-      const bLen = 3 * ctx.sampleRate;
-      const bBuf = ctx.createBuffer(1, bLen, ctx.sampleRate);
-      const bDat = bBuf.getChannelData(0);
-      let b0=0,b1=0,b2=0,b3=0;
-      for (let i = 0; i < bLen; i++) {
-        const w = Math.random()*2-1;
-        b0=0.99*b0+w*0.06; b1=0.97*b1+w*0.14; b2=0.87*b2+w*0.28; b3=0.55*b3+w*0.42;
-        bDat[i] = (b0+b1+b2+b3) * 0.08;
-      }
-      const breeze = ctx.createBufferSource(); breeze.buffer = bBuf; breeze.loop = true;
-      const bFilt  = ctx.createBiquadFilter(); bFilt.type = 'bandpass'; bFilt.frequency.value = 900; bFilt.Q.value = 0.5;
-      const bGain  = ctx.createGain(); bGain.gain.value = 0.055;
-      const bLFO   = ctx.createOscillator(), bLFOg = ctx.createGain();
-      bLFO.frequency.value = 0.09; bLFOg.gain.value = 0.025;
-      bLFO.connect(bLFOg); bLFOg.connect(bGain.gain); bLFO.start();
-      breeze.connect(bFilt); bFilt.connect(bGain); bGain.connect(master);
-      breeze.start();
-
-      // ── SPARKLING CHIMES (C major, bright and frequent) ──
-      // Two tiers: high sparkle + mid warmth
-      const hiChimes  = [1046.5, 1174.7, 1318.5, 1568, 1760]; // C6,D6,E6,G6,A6
-      const midChimes = [523.3, 587.3, 659.3, 783.9, 880];    // C5,D5,E5,G5,A5
-
-      function playChime(pitches, vol, decay) {
-        const freq = pitches[Math.floor(Math.random() * pitches.length)];
-        const now  = ctx.currentTime;
-        // Two partials for a bell-like quality
-        [[freq, vol], [freq * 2.75, vol * 0.35]].forEach(([f, v]) => {
-          const osc = ctx.createOscillator(), g = ctx.createGain();
-          osc.type = 'sine'; osc.frequency.value = f;
-          g.gain.setValueAtTime(0, now);
-          g.gain.linearRampToValueAtTime(v, now + 0.006);
-          g.gain.exponentialRampToValueAtTime(0.0001, now + decay);
-          osc.connect(g); g.connect(revDelay); g.connect(master);
-          osc.start(now); osc.stop(now + decay + 0.05);
-        });
-      }
-
-      function scheduleHiChime() {
-        playChime(hiChimes, 0.07, 1.6);
-        const t = setTimeout(scheduleHiChime, 800 + Math.random() * 2800);
-        timers.push(t);
-      }
-      function scheduleMidChime() {
-        playChime(midChimes, 0.1, 2.4);
-        const t = setTimeout(scheduleMidChime, 1800 + Math.random() * 3800);
-        timers.push(t);
-      }
-      timers.push(setTimeout(scheduleHiChime,  400 + Math.random() * 800));
-      timers.push(setTimeout(scheduleMidChime, 1200 + Math.random() * 1600));
-
-      // ── BIRD CALLS (ascending whistles, happy and light) ──
-      function birdCall() {
-        const now  = ctx.currentTime;
-        const base = 900 + Math.random() * 600;
-        // Short two-note tweet: up then slightly down
-        const osc = ctx.createOscillator(), g = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(base,          now);
-        osc.frequency.linearRampToValueAtTime(base * 1.35, now + 0.09);
-        osc.frequency.linearRampToValueAtTime(base * 1.18, now + 0.18);
-        osc.frequency.linearRampToValueAtTime(base * 1.42, now + 0.26);
-        g.gain.setValueAtTime(0,    now);
-        g.gain.linearRampToValueAtTime(0.055, now + 0.02);
-        g.gain.setValueAtTime(0.055, now + 0.12);
-        g.gain.linearRampToValueAtTime(0.04, now + 0.19);
-        g.gain.linearRampToValueAtTime(0,    now + 0.32);
-        osc.connect(g); g.connect(master);
-        osc.start(now); osc.stop(now + 0.35);
-        const t = setTimeout(birdCall, 3500 + Math.random() * 9000);
-        timers.push(t);
-      }
-      timers.push(setTimeout(birdCall, 2000 + Math.random() * 3000));
-
-      return master;
-    }
 
     function startForestAudio() {
-      if (audioCtx) return;
-      audioCtx   = new (window.AudioContext || window.webkitAudioContext)();
-      masterGain = buildForest(audioCtx);
+      const audio = document.getElementById('forest-audio');
+      if (!audio) return;
+      audio.volume = 0;
+      audio.play().catch(() => {});
+      let vol = 0;
+      const fadeIn = setInterval(() => {
+        vol = Math.min(vol + 0.008, 0.6);
+        audio.volume = vol;
+        if (vol >= 0.6) clearInterval(fadeIn);
+      }, 60);
       soundActive = true;
       const btn = document.getElementById('sound-btn');
       btn.textContent = '♫'; btn.classList.add('playing');
@@ -1405,22 +1288,38 @@
     renderMet(loadMet());
 
     function toggleSound() {
-      const btn = document.getElementById('sound-btn');
-      if (!audioCtx) { startForestAudio(); return; }
+      const audio = document.getElementById('forest-audio');
+      const btn   = document.getElementById('sound-btn');
+      if (!audio) return;
 
-      if (soundActive) {
-        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.2);
-        setTimeout(() => audioCtx.suspend(), 1300);
-        timers.forEach(clearTimeout); timers.length = 0;
+      if (!soundActive) {
+        startForestAudio();
+      } else if (!audio.paused) {
+        let vol = audio.volume;
+        const fadeOut = setInterval(() => {
+          vol = Math.max(vol - 0.02, 0);
+          audio.volume = vol;
+          if (vol <= 0) { audio.pause(); clearInterval(fadeOut); }
+        }, 50);
         soundActive = false; btn.textContent = '♪'; btn.classList.remove('playing');
       } else {
-        audioCtx.resume();
-        masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(0.78, audioCtx.currentTime + 1.4);
+        audio.play().catch(() => {});
+        let vol = 0;
+        const fadeIn = setInterval(() => {
+          vol = Math.min(vol + 0.01, 0.6);
+          audio.volume = vol;
+          if (vol >= 0.6) clearInterval(fadeIn);
+        }, 60);
         soundActive = true; btn.textContent = '♫'; btn.classList.add('playing');
       }
     }
   </script>
+
+  <!-- Real forest birdsong — "Birdsong in the morning at the edge of a small forest" -->
+  <!-- Source: Wikimedia Commons / Martin Thurnherr, CC BY-SA 4.0 -->
+  <audio id="forest-audio" loop preload="none">
+    <source src="https://upload.wikimedia.org/wikipedia/commons/transcoded/e/e7/Birdsong_morning_01.ogg/Birdsong_morning_01.ogg.mp3" type="audio/mpeg">
+    <source src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Birdsong_morning_01.ogg" type="audio/ogg">
+  </audio>
 </body>
 </html>
