@@ -1245,50 +1245,41 @@
 
     // ── REAL FOREST AUDIO via YouTube IFrame API ──
     let ytPlayer     = null;
-    let ytReady      = false;
     let soundActive  = false;
-    let startQueued  = false;
     let fadeInterval = null;
 
-    // Called by the YouTube API once it loads
     window.onYouTubeIframeAPIReady = function () {
       ytPlayer = new YT.Player('yt-audio', {
         videoId: '2G8LAiHSCAs',
         playerVars: {
-          autoplay: 0, controls: 0, disablekb: 1,
+          autoplay: 1,   // start immediately (muted, so browsers allow it)
+          mute: 1,
+          controls: 0, disablekb: 1,
           loop: 1, playlist: '2G8LAiHSCAs',
           modestbranding: 1, rel: 0,
         },
         events: {
           onReady: function (e) {
-            ytReady = true;
+            // Unmute and fade in as soon as the player is ready
+            e.target.unMute();
             e.target.setVolume(0);
-            if (startQueued) { startQueued = false; _playAndFade(); }
+            soundActive = true;
+            document.getElementById('sound-btn').textContent = '♫';
+            document.getElementById('sound-btn').classList.add('playing');
+            clearInterval(fadeInterval);
+            let vol = 0;
+            fadeInterval = setInterval(() => {
+              vol = Math.min(vol + 1.5, 62);
+              e.target.setVolume(vol);
+              if (vol >= 62) clearInterval(fadeInterval);
+            }, 100);
           }
         }
       });
     };
 
-    function _playAndFade() {
-      ytPlayer.setVolume(0);
-      ytPlayer.playVideo();
-      soundActive = true;
-      document.getElementById('sound-btn').textContent = '♫';
-      document.getElementById('sound-btn').classList.add('playing');
-      clearInterval(fadeInterval);
-      let vol = 0;
-      fadeInterval = setInterval(() => {
-        vol = Math.min(vol + 1.5, 62);
-        ytPlayer.setVolume(vol);
-        if (vol >= 62) clearInterval(fadeInterval);
-      }, 100);
-    }
-
-    function startForestAudio() {
-      if (soundActive) return;
-      if (!ytReady || !ytPlayer) { startQueued = true; return; }
-      _playAndFade();
-    }
+    // Called from splash dismiss — audio already starting, nothing more to do
+    function startForestAudio() {}
 
     // ── SESSION TRACKER (persists across visits via localStorage) ──
     const MET_KEY = 'fiona-onboarding-met-v2';
@@ -1318,11 +1309,10 @@
 
     function toggleSound() {
       const btn = document.getElementById('sound-btn');
-      if (!ytReady || !ytPlayer) { startQueued = !startQueued; return; }
+      if (!ytPlayer) return;
 
-      if (!soundActive) {
-        _playAndFade();
-      } else {
+      if (soundActive) {
+        // Fade out then pause
         clearInterval(fadeInterval);
         let vol = ytPlayer.getVolume();
         fadeInterval = setInterval(() => {
@@ -1331,6 +1321,19 @@
           if (vol <= 0) { ytPlayer.pauseVideo(); clearInterval(fadeInterval); }
         }, 60);
         soundActive = false; btn.textContent = '♪'; btn.classList.remove('playing');
+      } else {
+        // Resume and fade back in
+        ytPlayer.unMute();
+        ytPlayer.setVolume(0);
+        ytPlayer.playVideo();
+        soundActive = true; btn.textContent = '♫'; btn.classList.add('playing');
+        clearInterval(fadeInterval);
+        let vol = 0;
+        fadeInterval = setInterval(() => {
+          vol = Math.min(vol + 2, 62);
+          ytPlayer.setVolume(vol);
+          if (vol >= 62) clearInterval(fadeInterval);
+        }, 80);
       }
     }
   </script>
