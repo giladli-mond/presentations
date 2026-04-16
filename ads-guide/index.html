@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Digital Advertising Industry — A Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2/dist/chartjs-plugin-zoom.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-slide: #0a0a0a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #555555;
+    --accent: #00d4ff;
+    --accent-dim: #0a1a2e;
+    --positive: #4ade80;
+    --negative: #f87171;
+    --warning: #fbbf24;
+    --purple: #c084fc;
+    --orange: #fb923c;
+    --border: #1e1e1e;
+    --card-bg: #141414;
+    --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .deck {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 52px 90px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    background: var(--bg-slide);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .slide.active [data-animate] {
+    animation-play-state: running;
+  }
+
+  .slide h1 {
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+
+  .slide h2 {
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+
+  .slide h3 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .slide p {
+    font-size: 19px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    max-width: 720px;
+  }
+
+  .slide ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .slide ul li {
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    padding: 9px 0 9px 26px;
+    position: relative;
+  }
+
+  .slide ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 17px;
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .accent { color: var(--accent); }
+  .green { color: var(--positive); }
+  .red { color: var(--negative); }
+  .purple { color: var(--purple); }
+  .orange { color: var(--orange); }
+  .muted { color: var(--text-muted); font-size: 13px; }
+  .source { color: var(--text-muted); font-size: 11px; margin-top: 12px; }
+  .center { text-align: center; align-items: center; }
+
+  .stat {
+    font-size: 76px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-label {
+    font-size: 17px;
+    color: var(--text-secondary);
+  }
+
+  .stat-group {
+    display: flex;
+    gap: 60px;
+    margin-top: 20px;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 680px;
+    height: 300px;
+    margin-top: 20px;
+  }
+
+  .chart-container.wide {
+    max-width: 860px;
+    height: 340px;
+  }
+
+  .chart-container.tall {
+    max-width: 680px;
+    height: 380px;
+  }
+
+  .diagram {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 16px;
+  }
+
+  .diagram svg { width: 100%; height: auto; }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+    width: 100%;
+  }
+
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+  }
+
+  .card.accent-border { border-color: var(--accent); }
+  .card.purple-border { border-color: var(--purple); }
+  .card.green-border { border-color: var(--positive); }
+  .card.orange-border { border-color: var(--orange); }
+
+  .card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .card .card-stat {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+
+  .card .card-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .card .card-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .tag-search { background: rgba(0,212,255,0.12); color: var(--accent); }
+  .tag-social { background: rgba(192,132,252,0.12); color: var(--purple); }
+  .tag-display { background: rgba(74,222,128,0.12); color: var(--positive); }
+  .tag-video { background: rgba(251,146,60,0.12); color: var(--orange); }
+  .tag-programmatic { background: rgba(248,113,113,0.12); color: var(--negative); }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 52px;
+    align-items: start;
+    width: 100%;
+  }
+
+  .two-col.balanced { align-items: center; }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+    width: 100%;
+  }
+
+  .metric-row {
+    display: flex;
+    gap: 36px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .metric-item { text-align: left; }
+
+  .metric-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .metric-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .metric-change {
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 3px;
+  }
+
+  .metric-change.up { color: var(--positive); }
+  .metric-change.down { color: var(--negative); }
+
+  .slide table {
+    width: 100%;
+    max-width: 860px;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 16px;
+  }
+
+  .slide th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .slide td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #111;
+    color: var(--text-secondary);
+    vertical-align: top;
+  }
+
+  .slide td.accent-cell { color: var(--accent); font-weight: 600; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    padding: 14px 20px;
+    margin-top: 20px;
+    background: var(--accent-dim);
+    border-radius: 0 8px 8px 0;
+    max-width: 700px;
+  }
+
+  .callout p {
+    font-size: 17px;
+    color: var(--text-primary);
+    line-height: 1.55;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  .pill.cyan { color: var(--accent); border-color: var(--accent); background: rgba(0,212,255,0.07); }
+  .pill.green { color: var(--positive); border-color: var(--positive); background: rgba(74,222,128,0.07); }
+  .pill.purple { color: var(--purple); border-color: var(--purple); background: rgba(192,132,252,0.07); }
+  .pill.orange { color: var(--orange); border-color: var(--orange); background: rgba(251,146,60,0.07); }
+  .pill.red { color: var(--negative); border-color: var(--negative); background: rgba(248,113,113,0.07); }
+
+  /* Animations */
+  [data-animate="fade-up"] {
+    opacity: 0;
+    transform: translateY(22px);
+    animation: fadeUp 0.55s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="fade-in"] {
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="scale-in"] {
+    opacity: 0;
+    transform: scale(0.93);
+    animation: scaleIn 0.5s ease forwards;
+    animation-play-state: paused;
+  }
+
+  [data-animate="slide-left"] {
+    opacity: 0;
+    transform: translateX(28px);
+    animation: slideLeft 0.55s ease forwards;
+    animation-play-state: paused;
+  }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { to { opacity: 1; } }
+  @keyframes scaleIn { to { opacity: 1; transform: scale(1); } }
+  @keyframes slideLeft { to { opacity: 1; transform: translateX(0); } }
+
+  [data-delay="1"] { animation-delay: 0.12s; }
+  [data-delay="2"] { animation-delay: 0.24s; }
+  [data-delay="3"] { animation-delay: 0.36s; }
+  [data-delay="4"] { animation-delay: 0.48s; }
+  [data-delay="5"] { animation-delay: 0.62s; }
+  [data-delay="6"] { animation-delay: 0.76s; }
+  [data-delay="7"] { animation-delay: 0.9s; }
+  [data-delay="8"] { animation-delay: 1.05s; }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    z-index: 100;
+    opacity: 0.7;
+  }
+
+  /* Slide counter */
+  .slide-counter {
+    position: fixed;
+    bottom: 12px; right: 22px;
+    font-size: 12px;
+    color: var(--text-muted);
+    z-index: 100;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.5;
+  }
+
+  /* Navigation hint */
+  .nav-hint {
+    position: fixed;
+    bottom: 12px; left: 22px;
+    font-size: 11px;
+    color: var(--text-muted);
+    z-index: 100;
+    opacity: 0.4;
+    letter-spacing: 0.3px;
+  }
+
+  /* Speaker notes panel */
+  .notes-panel {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    border-top: 1px solid var(--border);
+    padding: 18px 44px;
+    max-height: 28vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 200;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  .notes-panel.visible { transform: translateY(0); }
+
+  .notes-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .slide aside.notes { display: none; }
+
+  /* Section divider slides */
+  .slide-section {
+    background: #080808;
+  }
+
+  .section-number {
+    font-size: 120px;
+    font-weight: 700;
+    color: #111;
+    position: absolute;
+    right: 80px;
+    bottom: 40px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    pointer-events: none;
+  }
+
+  /* Title slide aurora */
+  .slide-hero { overflow: hidden; }
+
+  .slide-hero .aurora {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .slide-hero .aurora-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0;
+    animation: auroraPulse 8s ease-in-out infinite, auroraDrift 20s ease-in-out infinite;
+  }
+
+  .slide-hero.active .aurora-blob { opacity: 1; }
+
+  .slide-hero .aurora-blob:nth-child(1) {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,255,0.35) 0%, transparent 70%);
+    top: -15%; left: -10%;
+  }
+  .slide-hero .aurora-blob:nth-child(2) {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%);
+    top: 30%; right: -8%;
+    animation-delay: 2s; animation-duration: 10s, 24s;
+  }
+  .slide-hero .aurora-blob:nth-child(3) {
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 70%);
+    bottom: -10%; left: 25%;
+    animation-delay: 4s; animation-duration: 12s, 18s;
+  }
+  .slide-hero .aurora-blob:nth-child(4) {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(236,72,153,0.2) 0%, transparent 70%);
+    top: 10%; right: 30%;
+    animation-delay: 3s; animation-duration: 9s, 22s;
+  }
+  .slide-hero .aurora-blob:nth-child(5) {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%);
+    bottom: 5%; right: 10%;
+    animation-delay: 1.5s; animation-duration: 11s, 16s;
+  }
+
+  @keyframes auroraPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.15); }
+  }
+  @keyframes auroraDrift {
+    0% { translate: 0 0; }
+    25% { translate: 60px -40px; }
+    50% { translate: -30px 50px; }
+    75% { translate: 40px 20px; }
+    100% { translate: 0 0; }
+  }
+
+  .slide-hero .particles-canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .slide-hero h3,
+  .slide-hero h1,
+  .slide-hero p,
+  .slide-hero .pill-row {
+    position: relative;
+    z-index: 2;
+  }
+
+  .pill-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* Funnel shape */
+  .funnel-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: 12px;
+    max-width: 560px;
+  }
+
+  .funnel-level {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .funnel-bar {
+    height: 46px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .funnel-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* Step arrows */
+  .steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .step-box {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    min-width: 110px;
+    text-align: center;
+  }
+
+  .step-box .step-num {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .step-box .step-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .step-box .step-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .step-arrow {
+    font-size: 18px;
+    color: var(--text-muted);
+    padding: 0 4px;
+    flex-shrink: 0;
+  }
+
+  /* Stack diagram */
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 16px;
+    max-width: 700px;
+  }
+
+  .stack-layer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+  }
+
+  .stack-layer.highlighted { border-color: var(--accent); background: var(--accent-dim); }
+  .stack-layer.purple-bg { border-color: var(--purple); background: rgba(192,132,252,0.05); }
+  .stack-layer.green-bg { border-color: var(--positive); background: rgba(74,222,128,0.05); }
+  .stack-layer.orange-bg { border-color: var(--orange); background: rgba(251,146,60,0.05); }
+
+  .stack-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    min-width: 110px;
+  }
+
+  .stack-content {
+    flex: 1;
+  }
+
+  .stack-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .stack-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .stack-examples {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .stack-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #1a1a1a;
+    color: var(--text-muted);
+    border: 1px solid #222;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .badge-new { background: rgba(74,222,128,0.15); color: var(--positive); }
+  .badge-hot { background: rgba(251,146,60,0.15); color: var(--orange); }
+
+  /* Tooltip-style info cards */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+    max-width: 820px;
+  }
+
+  .info-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+
+  .info-term {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .info-def {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .info-formula {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  @media print {
+    .slide { position: relative; opacity: 1; pointer-events: all; page-break-after: always; }
+    .progress-bar, .slide-counter, .notes-panel, .nav-hint { display: none; }
+    [data-animate] { opacity: 1 !important; transform: none !important; animation: none !important; }
+    .aurora, .particles-canvas { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ── SLIDE 1: Title ── -->
+  <section class="slide slide-hero active" data-slide="1">
+    <div class="aurora">
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+      <div class="aurora-blob"></div>
+    </div>
+    <canvas class="particles-canvas" id="particlesCanvas"></canvas>
+    <h3 data-animate="fade-in">A FIELD GUIDE</h3>
+    <h1 data-animate="fade-up" data-delay="1">The Digital<br>Advertising Industry</h1>
+    <p data-animate="fade-up" data-delay="2">From the basics to programmatic auctions, platforms, formats, and what's changing. Built for product people who want to understand ads.</p>
+    <div class="pill-row" data-animate="fade-up" data-delay="3">
+      <span class="pill cyan">15 chapters</span>
+      <span class="pill green">Deep dives</span>
+      <span class="pill purple">SVG diagrams</span>
+      <span class="pill orange">Use cases</span>
+    </div>
+    <aside class="notes">This is a comprehensive primer on digital advertising. Use arrow keys to navigate. Press N to toggle speaker notes. Aimed at product and ops professionals with no prior ads background.</aside>
+  </section>
+
+  <!-- ── SLIDE 2: The Scale ── -->
+  <section class="slide" data-slide="2">
+    <h3 data-animate="fade-in">CHAPTER 1 — WHY THIS MATTERS</h3>
+    <h2 data-animate="fade-up">Digital advertising is one of the largest industries on the planet</h2>
+    <div class="stat-group" data-animate="scale-in" data-delay="2">
+      <div>
+        <div class="stat">$740B</div>
+        <div class="stat-label">Global ad spend in 2024</div>
+      </div>
+      <div>
+        <div class="stat">73%</div>
+        <div class="stat-label">Share that is now digital</div>
+      </div>
+      <div>
+        <div class="stat">+11%</div>
+        <div class="stat-label">YoY growth rate</div>
+      </div>
+    </div>
+    <p class="source" data-animate="fade-in" data-delay="3">Sources: WARC, GroupM Global Advertising Forecast 2024</p>
+    <div class="callout" data-animate="fade-up" data-delay="4">
+      <p>Google and Meta alone capture roughly <span class="accent">50% of all global digital ad revenue</span>. The next 20 companies share most of the rest.</p>
+    </div>
+    <aside class="notes">The advertising industry funds the vast majority of the internet. Almost every free product you use — search, social media, email — is paid for by advertising revenue.</aside>
+  </section>
+
+  <!-- ── SLIDE 3: The Big Picture ── -->
+  <section class="slide" data-slide="3">
+    <h3 data-animate="fade-in">CHAPTER 1 — THE BIG PICTURE</h3>
+    <h2 data-animate="fade-up">Three core goals, one industry</h2>
+    <div class="card-grid cols-3" style="margin-top: 20px;">
+      <div class="card accent-border" data-animate="fade-up" data-delay="1">
+        <div class="card-icon">📣</div>
+        <h4>Brand Awareness</h4>
+        <p>Tell people you exist. Get your name in front of as many relevant people as possible. Success = impressions, reach, recall.</p>
+        <div style="margin-top: 10px;">
+          <span class="pill cyan" style="font-size:11px;">Top of funnel</span>
+        </div>
+      </div>
+      <div class="card purple-border" data-animate="fade-up" data-delay="2">
+        <div class="card-icon">🎯</div>
+        <h4>Performance / Conversion</h4>
+        <p>Get people to do something: click, sign up, buy. Every pound spent is measured against a specific outcome. Success = CPA, ROAS.</p>
+        <div style="margin-top: 10px;">
+          <span class="pill purple" style="font-size:11px;">Mid / bottom of funnel</span>
+        </div>
+      </div>
+      <div class="card green-border" data-animate="fade-up" data-delay="3">
+        <div class="card-icon">🔁</div>
+        <h4>Retention / Re-engagement</h4>
+        <p>Bring existing customers back. Upsell, reactivate dormant users, reduce churn. Success = repeat purchase, LTV uplift.</p>
+        <div style="margin-top: 10px;">
+          <span class="pill green" style="font-size:11px;">Loyalty / bottom of funnel</span>
+        </div>
+      </div>
+    </div>
+    <div class="callout" data-animate="fade-up" data-delay="4" style="margin-top: 16px;">
+      <p>Most companies run all three simultaneously. The split depends on their growth stage: early-stage companies often over-index on performance; mature brands invest more in brand.</p>
+    </div>
+    <aside class="notes">These three goals map roughly to the marketing funnel: Awareness (top), Consideration/Conversion (middle), Retention (bottom). Different ad types, formats, and platforms serve each goal differently.</aside>
+  </section>
+
+  <!-- ── SLIDE 4: The Ecosystem ── -->
+  <section class="slide" data-slide="4">
+    <h3 data-animate="fade-in">CHAPTER 2 — THE ECOSYSTEM</h3>
+    <h2 data-animate="fade-up">Four main players in every ad transaction</h2>
+    <div class="diagram" data-animate="fade-in" data-delay="1" style="max-width: 100%;">
+      <svg viewBox="0 0 960 320" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+        <!-- Advertiser -->
+        <rect x="20" y="110" width="160" height="100" rx="10" fill="#141414" stroke="#00d4ff" stroke-width="1.5"/>
+        <text x="100" y="150" text-anchor="middle" fill="#00d4ff" font-family="Inter" font-size="11" font-weight="700" letter-spacing="1">ADVERTISER</text>
+        <text x="100" y="168" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="11">Nike, Mailchimp,</text>
+        <text x="100" y="183" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="11">monday.com</text>
+        <text x="100" y="200" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">wants to reach people</text>
+
+        <!-- Arrow 1 -->
+        <line x1="182" y1="160" x2="228" y2="160" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="205" y="153" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">budget +</text>
+        <text x="205" y="167" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">targeting</text>
+
+        <!-- DSP -->
+        <rect x="230" y="90" width="160" height="140" rx="10" fill="#0a1a2e" stroke="#00d4ff" stroke-width="1.5"/>
+        <text x="310" y="120" text-anchor="middle" fill="#00d4ff" font-family="Inter" font-size="11" font-weight="700" letter-spacing="1">DSP</text>
+        <text x="310" y="138" text-anchor="middle" fill="#e0e0e0" font-family="Inter" font-size="10.5">Demand-Side Platform</text>
+        <text x="310" y="157" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">Google DV360, The</text>
+        <text x="310" y="171" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">Trade Desk, Amazon DSP</text>
+        <text x="310" y="193" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">bids in auctions on</text>
+        <text x="310" y="207" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">behalf of advertiser</text>
+
+        <!-- Arrow 2 -->
+        <line x1="392" y1="160" x2="438" y2="160" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="415" y="153" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">bids in</text>
+        <text x="415" y="167" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">auction</text>
+
+        <!-- Ad Exchange -->
+        <rect x="440" y="70" width="160" height="180" rx="10" fill="#141414" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="520" y="100" text-anchor="middle" fill="#fbbf24" font-family="Inter" font-size="11" font-weight="700" letter-spacing="1">AD EXCHANGE</text>
+        <text x="520" y="118" text-anchor="middle" fill="#e0e0e0" font-family="Inter" font-size="10.5">The auction house</text>
+        <text x="520" y="142" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">Google Ad Exchange,</text>
+        <text x="520" y="156" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">OpenX, Xandr</text>
+        <text x="520" y="178" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">Runs real-time</text>
+        <text x="520" y="193" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">auction in ~100ms.</text>
+        <text x="520" y="208" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">Highest bid wins.</text>
+        <text x="520" y="228" text-anchor="middle" fill="#fbbf24" font-family="Inter" font-size="10" font-weight="600">RTB — Real-Time Bidding</text>
+
+        <!-- Arrow 3 -->
+        <line x1="602" y1="160" x2="648" y2="160" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="625" y="153" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">wins slot,</text>
+        <text x="625" y="167" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">serves ad</text>
+
+        <!-- SSP -->
+        <rect x="650" y="90" width="160" height="140" rx="10" fill="#0d1a0d" stroke="#4ade80" stroke-width="1.5"/>
+        <text x="730" y="120" text-anchor="middle" fill="#4ade80" font-family="Inter" font-size="11" font-weight="700" letter-spacing="1">SSP</text>
+        <text x="730" y="138" text-anchor="middle" fill="#e0e0e0" font-family="Inter" font-size="10.5">Supply-Side Platform</text>
+        <text x="730" y="157" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">Magnite, PubMatic,</text>
+        <text x="730" y="171" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">Google Ad Manager</text>
+        <text x="730" y="193" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">maximises yield for</text>
+        <text x="730" y="207" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">publisher inventory</text>
+
+        <!-- Arrow 4 -->
+        <line x1="812" y1="160" x2="848" y2="160" stroke="#333" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="830" y="153" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">ad</text>
+        <text x="830" y="167" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">slot</text>
+
+        <!-- Publisher -->
+        <rect x="850" y="110" width="90" height="100" rx="10" fill="#141414" stroke="#c084fc" stroke-width="1.5"/>
+        <text x="895" y="148" text-anchor="middle" fill="#c084fc" font-family="Inter" font-size="11" font-weight="700" letter-spacing="0.5">PUBLISHER</text>
+        <text x="895" y="165" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">NY Times,</text>
+        <text x="895" y="180" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">YouTube,</text>
+        <text x="895" y="195" text-anchor="middle" fill="#a0a0a0" font-family="Inter" font-size="10">Spotify</text>
+
+        <!-- User at bottom -->
+        <rect x="390" y="268" width="160" height="44" rx="8" fill="#111" stroke="#333" stroke-width="1"/>
+        <text x="470" y="288" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">👤 USER visits publisher</text>
+        <text x="470" y="304" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">All of the above happens before the page loads</text>
+
+        <!-- Arrow from user up to exchange -->
+        <line x1="470" y1="268" x2="470" y2="252" stroke="#222" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-dim)"/>
+
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#444"/>
+          </marker>
+          <marker id="arrow-dim" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 Z" fill="#222"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+    <p class="source" data-animate="fade-in" data-delay="2">The entire chain above typically executes in under 100 milliseconds — before the page finishes loading.</p>
+    <aside class="notes">This is the programmatic advertising ecosystem. Advertisers don't buy ad slots directly — they use DSPs to bid in real-time auctions. Publishers use SSPs to maximise their revenue. The exchange is the marketplace in the middle.</aside>
+  </section>
+
+  <!-- ── SLIDE 5: How an Auction Works ── -->
+  <section class="slide" data-slide="5">
+    <h3 data-animate="fade-in">CHAPTER 3 — PROGRAMMATIC ADVERTISING</h3>
+    <h2 data-animate="fade-up">What happens in 100 milliseconds</h2>
+    <div class="steps" data-animate="fade-up" data-delay="1" style="flex-wrap: wrap; gap: 0;">
+      <div class="step-box">
+        <div class="step-num">01</div>
+        <div class="step-name">User visits page</div>
+        <div class="step-desc">Publisher's site loads, an ad slot is detected</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box">
+        <div class="step-num">02</div>
+        <div class="step-name">Bid request sent</div>
+        <div class="step-desc">SSP sends auction call to exchanges. Includes user data, context, floor price</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box">
+        <div class="step-num">03</div>
+        <div class="step-name">DSPs evaluate</div>
+        <div class="step-desc">Every connected DSP checks: is this user in my target audience?</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box">
+        <div class="step-num">04</div>
+        <div class="step-name">Bids submitted</div>
+        <div class="step-desc">DSPs submit bids in real time. Each bid = a price they're willing to pay</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box">
+        <div class="step-num">05</div>
+        <div class="step-name">Auction runs</div>
+        <div class="step-desc">Second-price auction: winner pays the 2nd-highest bid + $0.01</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step-box">
+        <div class="step-num">06</div>
+        <div class="step-name">Ad served</div>
+        <div class="step-desc">Winning ad creative is delivered to the user's browser</div>
+      </div>
+    </div>
+    <div class="callout" data-animate="fade-up" data-delay="2" style="margin-top: 16px;">
+      <p>This is called <span class="accent">Real-Time Bidding (RTB)</span> or <span class="accent">Programmatic Advertising</span>. It replaced the old model where humans negotiated ad buys directly.</p>
+    </div>
+    <aside class="notes">The second-price auction is a Vickrey auction model — it encourages honest bidding because you only pay just above the second-highest bid, not your maximum. Header bidding later allowed publishers to run multiple auctions simultaneously to maximise yield.</aside>
+  </section>
+
+  <!-- ── SLIDE 6: Major Platforms ── -->
+  <section class="slide" data-slide="6">
+    <h3 data-animate="fade-in">CHAPTER 4 — THE MAJOR PLATFORMS</h3>
+    <h2 data-animate="fade-up">Where advertisers spend their money</h2>
+    <div class="card-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 16px;">
+      <div class="card" data-animate="fade-up" data-delay="1">
+        <div class="card-tag tag-search">Search</div>
+        <h4>Google Ads</h4>
+        <div class="card-stat">~$240B</div>
+        <p>Largest ad platform. Search, Display (GDN), YouTube, Shopping, App. Intent-based targeting.</p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="2">
+        <div class="card-tag tag-social">Social</div>
+        <h4>Meta (FB + IG)</h4>
+        <div class="card-stat">~$130B</div>
+        <p>Unmatched interest and behavioural targeting. Feed, Stories, Reels, Messenger ads.</p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="3">
+        <div class="card-tag tag-video">Video / Social</div>
+        <h4>TikTok Ads</h4>
+        <div class="card-stat">~$20B</div>
+        <p>Fastest growing. Short-form video. Strong with Gen Z. Spark Ads boost organic content. <span class="badge badge-hot">HOT</span></p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="4">
+        <div class="card-tag tag-social">B2B Social</div>
+        <h4>LinkedIn Ads</h4>
+        <div class="card-stat">~$5B</div>
+        <p>Best for B2B. Target by job title, company, seniority. High CPCs but high intent for business.</p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="5">
+        <div class="card-tag tag-search">Search / Retail</div>
+        <h4>Amazon Ads</h4>
+        <div class="card-stat">~$47B</div>
+        <p>Massive intent signal: people searching to buy. Sponsored Products, Brands, Display. <span class="badge badge-new">GROWING</span></p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="6">
+        <div class="card-tag tag-programmatic">Programmatic</div>
+        <h4>The Trade Desk</h4>
+        <div class="card-stat">~$2B rev</div>
+        <p>Leading independent DSP. Access to open web inventory across display, video, audio, CTV.</p>
+      </div>
+    </div>
+    <aside class="notes">These are the major "walled gardens" (Google, Meta, Amazon, TikTok, LinkedIn) plus an independent DSP (TTD). Walled gardens own both the platform and the audience data — they're self-contained ecosystems. The open web uses programmatic and DSPs.</aside>
+  </section>
+
+  <!-- ── SLIDE 7: Google Ads Deep Dive ── -->
+  <section class="slide" data-slide="7">
+    <h3 data-animate="fade-in">CHAPTER 4 — PLATFORM DEEP DIVE</h3>
+    <h2 data-animate="fade-up">Google Ads: the intent engine</h2>
+    <div class="two-col">
+      <div>
+        <ul>
+          <li data-animate="fade-up" data-delay="1"><span class="accent">Search Ads</span> — appear in Google search results when someone types a query. Charged per click (CPC). Highest purchase intent of any channel.</li>
+          <li data-animate="fade-up" data-delay="2"><span class="accent">Display Ads (GDN)</span> — banners on 2M+ websites across the Google Display Network. Great for reach and retargeting.</li>
+          <li data-animate="fade-up" data-delay="3"><span class="accent">YouTube Ads</span> — skippable/non-skippable video. Second largest search engine. Strong for awareness + consideration.</li>
+          <li data-animate="fade-up" data-delay="4"><span class="accent">Shopping Ads</span> — product images with prices in search results. Essential for e-commerce.</li>
+          <li data-animate="fade-up" data-delay="5"><span class="accent">Performance Max (PMax)</span> — AI-driven campaign type that runs across all Google channels simultaneously. Growing fast.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="chart-container" data-animate="scale-in" data-delay="2" style="height: 280px;">
+          <canvas id="googleChart" data-chart></canvas>
+        </div>
+        <p class="source" data-animate="fade-in" data-delay="3">Google's revenue split by ad type (approx.)</p>
+        <div class="callout" data-animate="fade-up" data-delay="4" style="margin-top: 12px;">
+          <p>Google Search is unique: <span class="accent">users initiate</span>. The ad answers an existing question. This is why search has the highest conversion rates of any channel.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">Google's Quality Score algorithm determines ad placement. It's not just who bids highest — ad relevance, expected click-through rate, and landing page experience all factor in. A highly relevant ad can beat a higher bidder.</aside>
+  </section>
+
+  <!-- ── SLIDE 8: Meta Ads Deep Dive ── -->
+  <section class="slide" data-slide="8">
+    <h3 data-animate="fade-in">CHAPTER 4 — PLATFORM DEEP DIVE</h3>
+    <h2 data-animate="fade-up">Meta Ads: the targeting powerhouse</h2>
+    <div class="two-col">
+      <div>
+        <ul>
+          <li data-animate="fade-up" data-delay="1"><span class="accent">Core Audiences</span> — target by demographics, location, interests, and behaviours. Built from Facebook profile data and activity.</li>
+          <li data-animate="fade-up" data-delay="2"><span class="accent">Custom Audiences</span> — upload your customer list. Meta matches to Facebook users. Also: retarget website visitors (Pixel) or app users.</li>
+          <li data-animate="fade-up" data-delay="3"><span class="accent">Lookalike Audiences</span> — Meta finds users who resemble your best customers. Often the highest-performing prospecting tool.</li>
+          <li data-animate="fade-up" data-delay="4"><span class="accent">Advantage+ Audiences</span> — Meta's AI selects the best audience automatically. Increasingly defaulted to after iOS 14 signal loss.</li>
+          <li data-animate="fade-up" data-delay="5"><span class="accent">Formats</span> — Feed, Stories, Reels, Carousel, Collection, Messenger. Creative quality matters enormously here.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="stack" data-animate="fade-in" data-delay="2" style="margin-top: 0;">
+          <div class="stack-layer highlighted">
+            <div class="stack-label">Prospecting</div>
+            <div class="stack-content">
+              <div class="stack-title">New audience acquisition</div>
+              <div class="stack-sub">Lookalike, Interest targeting, Advantage+</div>
+            </div>
+          </div>
+          <div class="stack-layer" style="border-color:#c084fc; background:rgba(192,132,252,0.05);">
+            <div class="stack-label">Retargeting</div>
+            <div class="stack-content">
+              <div class="stack-title">Re-engage warm audience</div>
+              <div class="stack-sub">Pixel visitors, cart abandoners, engagers</div>
+            </div>
+          </div>
+          <div class="stack-layer" style="border-color:#4ade80; background:rgba(74,222,128,0.05);">
+            <div class="stack-label">Retention</div>
+            <div class="stack-content">
+              <div class="stack-title">Existing customers</div>
+              <div class="stack-sub">Upsell, loyalty, re-purchase campaigns</div>
+            </div>
+          </div>
+        </div>
+        <div class="callout" data-animate="fade-up" data-delay="4" style="margin-top: 12px;">
+          <p>Apple's iOS 14.5 (2021) destroyed Meta's tracking accuracy. Attributable conversions dropped ~30-40%. Meta's AI has been recovering, but measurement is still imperfect.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">The Pixel is a JavaScript snippet you put on your website. It fires events (PageView, AddToCart, Purchase) back to Meta. This is how Meta knows who visited your site and can retarget them. Server-side Conversions API is the modern alternative that bypasses browser-level blocking.</aside>
+  </section>
+
+  <!-- ── SLIDE 9: The Ad Tech Stack ── -->
+  <section class="slide" data-slide="9">
+    <h3 data-animate="fade-in">CHAPTER 5 — THE AD TECH STACK</h3>
+    <h2 data-animate="fade-up">Every layer of the machine</h2>
+    <div class="two-col" style="gap: 40px;">
+      <div class="stack" data-animate="fade-in" data-delay="1" style="margin-top: 0;">
+        <div class="stack-layer" style="border-color:#fbbf24; background:rgba(251,191,36,0.05);">
+          <div class="stack-label" style="color:#fbbf24;">ADVERTISER</div>
+          <div class="stack-content">
+            <div class="stack-title">Brand / Agency</div>
+            <div class="stack-sub">Sets strategy, budget, creative, KPIs</div>
+          </div>
+        </div>
+        <div class="stack-layer highlighted">
+          <div class="stack-label">DSP</div>
+          <div class="stack-content">
+            <div class="stack-title">Demand-Side Platform</div>
+            <div class="stack-sub">Manages bidding across exchanges</div>
+            <div class="stack-examples">
+              <span class="stack-tag">DV360</span>
+              <span class="stack-tag">The Trade Desk</span>
+              <span class="stack-tag">Amazon DSP</span>
+            </div>
+          </div>
+        </div>
+        <div class="stack-layer" style="border-color:#555;">
+          <div class="stack-label">DMP / CDP</div>
+          <div class="stack-content">
+            <div class="stack-title">Data layer</div>
+            <div class="stack-sub">Audience segments, 1st/3rd party data</div>
+            <div class="stack-examples">
+              <span class="stack-tag">Adobe Audience Mgr</span>
+              <span class="stack-tag">Segment</span>
+            </div>
+          </div>
+        </div>
+        <div class="stack-layer" style="border-color:#555;">
+          <div class="stack-label">MEASUREMENT</div>
+          <div class="stack-content">
+            <div class="stack-title">Attribution & Analytics</div>
+            <div class="stack-sub">Who saw / clicked / converted</div>
+            <div class="stack-examples">
+              <span class="stack-tag">AppsFlyer</span>
+              <span class="stack-tag">GA4</span>
+              <span class="stack-tag">Adjust</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="stack" data-animate="fade-in" data-delay="2" style="margin-top: 0;">
+          <div class="stack-layer" style="border-color:#c084fc; background:rgba(192,132,252,0.05);">
+            <div class="stack-label" style="color:#c084fc;">PUBLISHER</div>
+            <div class="stack-content">
+              <div class="stack-title">Website / App / CTV</div>
+              <div class="stack-sub">The media owner with inventory to sell</div>
+            </div>
+          </div>
+          <div class="stack-layer green-bg">
+            <div class="stack-label" style="color:#4ade80;">SSP</div>
+            <div class="stack-content">
+              <div class="stack-title">Supply-Side Platform</div>
+              <div class="stack-sub">Maximises publisher yield</div>
+              <div class="stack-examples">
+                <span class="stack-tag">Magnite</span>
+                <span class="stack-tag">PubMatic</span>
+                <span class="stack-tag">GAM</span>
+              </div>
+            </div>
+          </div>
+          <div class="stack-layer" style="border-color:#fbbf24; background:rgba(251,191,36,0.05);">
+            <div class="stack-label" style="color:#fbbf24;">EXCHANGE</div>
+            <div class="stack-content">
+              <div class="stack-title">Ad Exchange / RTB marketplace</div>
+              <div class="stack-sub">Runs the real-time auctions between DSPs and SSPs</div>
+              <div class="stack-examples">
+                <span class="stack-tag">Google AdX</span>
+                <span class="stack-tag">Xandr</span>
+              </div>
+            </div>
+          </div>
+          <div class="stack-layer" style="border-color:#555;">
+            <div class="stack-label">AD SERVER</div>
+            <div class="stack-content">
+              <div class="stack-title">Creative delivery</div>
+              <div class="stack-sub">Tracks impressions, clicks, frequency. Decides which ad to serve.</div>
+              <div class="stack-examples">
+                <span class="stack-tag">Campaign Manager 360</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">DMPs (Data Management Platforms) are being replaced by CDPs (Customer Data Platforms) as third-party cookies die. The distinction: DMPs relied on cookie-based third-party data; CDPs are first-party data focused.</aside>
+  </section>
+
+  <!-- ── SLIDE 10: Campaign Types ── -->
+  <section class="slide" data-slide="10">
+    <h3 data-animate="fade-in">CHAPTER 6 — CAMPAIGN TYPES</h3>
+    <h2 data-animate="fade-up">Matching ad type to the goal</h2>
+    <table data-animate="fade-up" data-delay="1">
+      <thead>
+        <tr>
+          <th>Campaign Type</th>
+          <th>Goal</th>
+          <th>Format</th>
+          <th>Where it runs</th>
+          <th>Key metric</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="accent-cell">Search</td>
+          <td>Capture intent</td>
+          <td>Text ads</td>
+          <td>Google, Bing</td>
+          <td>CPC, CVR</td>
+        </tr>
+        <tr>
+          <td class="accent-cell">Display / Banner</td>
+          <td>Awareness, retargeting</td>
+          <td>Image, HTML5</td>
+          <td>Open web, GDN</td>
+          <td>CPM, CTR</td>
+        </tr>
+        <tr>
+          <td class="accent-cell">Video</td>
+          <td>Awareness, consideration</td>
+          <td>Pre-roll, in-feed</td>
+          <td>YouTube, TikTok, CTV</td>
+          <td>VCR, CPV, reach</td>
+        </tr>
+        <tr>
+          <td class="accent-cell">Social</td>
+          <td>All funnel stages</td>
+          <td>Feed, Stories, Reels</td>
+          <td>Meta, TikTok, LinkedIn</td>
+          <td>CPA, ROAS</td>
+        </tr>
+        <tr>
+          <td class="accent-cell">Programmatic Display</td>
+          <td>Reach &amp; retargeting</td>
+          <td>Banners, rich media</td>
+          <td>Open web via DSPs</td>
+          <td>CPM, viewability</td>
+        </tr>
+        <tr>
+          <td class="accent-cell">Email / Sponsored</td>
+          <td>Retention, conversion</td>
+          <td>HTML emails, newsletters</td>
+          <td>Email platforms, newsletters</td>
+          <td>Open rate, CPC</td>
+        </tr>
+        <tr>
+          <td class="accent-cell">Connected TV (CTV)</td>
+          <td>Awareness</td>
+          <td>Video, 15-30s spots</td>
+          <td>Streaming apps, Hulu, NBCU</td>
+          <td>Reach, frequency</td>
+        </tr>
+      </tbody>
+    </table>
+    <aside class="notes">CTV is the fastest-growing ad format. As people cut cable and move to streaming, TV advertising is shifting to programmatic. AVOD (ad-supported video on demand) platforms like Netflix Ad-supported, Disney+, Peacock are the new territory.</aside>
+  </section>
+
+  <!-- ── SLIDE 11: Key Metrics ── -->
+  <section class="slide" data-slide="11">
+    <h3 data-animate="fade-in">CHAPTER 7 — METRICS &amp; MEASUREMENT</h3>
+    <h2 data-animate="fade-up">The numbers that actually matter</h2>
+    <div class="info-grid" data-animate="fade-up" data-delay="1">
+      <div class="info-item">
+        <div class="info-term">CPM — Cost Per Mille</div>
+        <div class="info-def">Cost to show your ad 1,000 times. Used for awareness campaigns. Typical range: $1-$50+ depending on audience quality.</div>
+        <div class="info-formula">CPM = (Total Spend / Impressions) × 1,000</div>
+      </div>
+      <div class="info-item">
+        <div class="info-term">CPC — Cost Per Click</div>
+        <div class="info-def">How much you pay each time someone clicks your ad. Google Search CPCs average $1-$5 (varies wildly by industry).</div>
+        <div class="info-formula">CPC = Total Spend / Clicks</div>
+      </div>
+      <div class="info-item">
+        <div class="info-term">CTR — Click-Through Rate</div>
+        <div class="info-def">What % of people who saw the ad clicked it. Search CTR averages ~3-5%. Display is typically &lt;0.5%.</div>
+        <div class="info-formula">CTR = Clicks / Impressions × 100</div>
+      </div>
+      <div class="info-item">
+        <div class="info-term">CPA — Cost Per Acquisition</div>
+        <div class="info-def">How much you spend to get one conversion (purchase, signup, lead). The primary performance metric for direct-response campaigns.</div>
+        <div class="info-formula">CPA = Total Spend / Conversions</div>
+      </div>
+      <div class="info-item">
+        <div class="info-term">ROAS — Return on Ad Spend</div>
+        <div class="info-def">Revenue generated for every £1 spent on ads. A ROAS of 4x = £4 back for every £1 spent. Target varies by margin.</div>
+        <div class="info-formula">ROAS = Revenue / Ad Spend</div>
+      </div>
+      <div class="info-item">
+        <div class="info-term">LTV : CAC Ratio</div>
+        <div class="info-def">Lifetime value of a customer vs. cost to acquire them. Healthy SaaS target: 3:1 or higher. Tells you if growth is sustainable.</div>
+        <div class="info-formula">Ratio = Customer LTV / CAC</div>
+      </div>
+      <div class="info-item">
+        <div class="info-term">VCR — Video Completion Rate</div>
+        <div class="info-def">% of viewers who watched the full video ad. Good benchmark: 70%+ for skippable YouTube ads.</div>
+        <div class="info-formula">VCR = Completed Views / Total Views × 100</div>
+      </div>
+      <div class="info-item">
+        <div class="info-term">Frequency &amp; Reach</div>
+        <div class="info-def">Reach = unique people exposed to your ad. Frequency = average times each person saw it. Sweet spot: 3-7 exposures before fatigue sets in.</div>
+        <div class="info-formula">Reach × Frequency = Total Impressions</div>
+      </div>
+    </div>
+    <aside class="notes">ROAS is a common but imperfect metric — it ignores margin. £4 ROAS on a 10% margin product is bad; the same ROAS on an 80% margin SaaS product is great. Always put metrics in the context of unit economics.</aside>
+  </section>
+
+  <!-- ── SLIDE 12: The Funnel ── -->
+  <section class="slide" data-slide="12">
+    <h3 data-animate="fade-in">CHAPTER 8 — THE MARKETING FUNNEL</h3>
+    <h2 data-animate="fade-up">Where different ads fit in the customer journey</h2>
+    <div class="two-col balanced">
+      <div class="funnel-wrap" data-animate="fade-in" data-delay="1">
+        <div class="funnel-level">
+          <div class="funnel-bar" style="background: rgba(0,212,255,0.2); border: 1px solid rgba(0,212,255,0.4); width: 100%; color: #00d4ff; font-size:13px;">
+            AWARENESS — Reach as many relevant people as possible
+          </div>
+        </div>
+        <div class="funnel-level">
+          <div class="funnel-bar" style="background: rgba(192,132,252,0.18); border: 1px solid rgba(192,132,252,0.4); width: 85%; color: #c084fc; font-size:13px;">
+            CONSIDERATION — Educate &amp; engage warm audience
+          </div>
+        </div>
+        <div class="funnel-level">
+          <div class="funnel-bar" style="background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.4); width: 68%; color: #fbbf24; font-size:13px;">
+            INTENT — Capture people actively searching
+          </div>
+        </div>
+        <div class="funnel-level">
+          <div class="funnel-bar" style="background: rgba(251,146,60,0.15); border: 1px solid rgba(251,146,60,0.4); width: 52%; color: #fb923c; font-size:13px;">
+            CONVERSION — Move from interest to purchase
+          </div>
+        </div>
+        <div class="funnel-level">
+          <div class="funnel-bar" style="background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.4); width: 36%; color: #4ade80; font-size:13px;">
+            LOYALTY — Retain and grow existing customers
+          </div>
+        </div>
+      </div>
+      <div>
+        <table data-animate="fade-up" data-delay="2" style="max-width: 100%; font-size: 13px;">
+          <thead>
+            <tr><th>Stage</th><th>Best channels</th><th>Metric</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="color:#00d4ff;">Awareness</td><td>Display, Video, CTV, Social (broad)</td><td>Reach, CPM</td></tr>
+            <tr><td style="color:#c084fc;">Consideration</td><td>YouTube, Social (interest), Native</td><td>VCR, Engagement</td></tr>
+            <tr><td style="color:#fbbf24;">Intent</td><td>Search (Google, Bing), Shopping</td><td>CPC, CTR</td></tr>
+            <tr><td style="color:#fb923c;">Conversion</td><td>Search, Retargeting, Social (custom)</td><td>CPA, CVR</td></tr>
+            <tr><td style="color:#4ade80;">Loyalty</td><td>Email, Retargeting, Push</td><td>ROAS, LTV</td></tr>
+          </tbody>
+        </table>
+        <div class="callout" data-animate="fade-up" data-delay="3" style="margin-top: 12px;">
+          <p>Most SMBs skip awareness and jump straight to performance. This works short-term but limits ceiling growth — people can't click an ad for a brand they've never heard of.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">Full-funnel advertising is the gold standard but requires significant budget. Most brands start at the bottom (performance) and gradually invest up the funnel as they scale. Attribution across the funnel is notoriously hard — each stage influences the one below it.</aside>
+  </section>
+
+  <!-- ── SLIDE 13: Targeting ── -->
+  <section class="slide" data-slide="13">
+    <h3 data-animate="fade-in">CHAPTER 9 — TARGETING</h3>
+    <h2 data-animate="fade-up">How ads find the right person</h2>
+    <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="card accent-border" data-animate="fade-up" data-delay="1">
+        <h4>Demographic</h4>
+        <p>Age, gender, location, language, household income. The basics — available on almost every platform.</p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="2" style="border-color:#c084fc;">
+        <h4>Interest / Behavioural</h4>
+        <p>People who've shown interest in a topic (Meta, Google). Based on what they've liked, searched, or watched.</p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="3" style="border-color:#fbbf24;">
+        <h4>Intent (In-Market)</h4>
+        <p>People actively researching or comparing products like yours. Google's strongest signal — search queries.</p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="4" style="border-color:#4ade80;">
+        <h4>Retargeting</h4>
+        <p>People who've already visited your site, used your app, or watched your content. Warm audience = higher conversion.</p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="5" style="border-color:#fb923c;">
+        <h4>Lookalike / Similar</h4>
+        <p>AI finds new users who resemble your best customers. Feed it your top 1,000 customers; it finds more like them.</p>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="6" style="border-color:#f87171;">
+        <h4>Contextual</h4>
+        <p>Place ads alongside relevant content, not based on user data. Growing again as cookies die. No privacy concerns.</p>
+      </div>
+    </div>
+    <div class="callout" data-animate="fade-up" data-delay="7" style="margin-top: 12px;">
+      <p><span class="accent">First-party data</span> is now the most valuable targeting asset. Email lists, CRM data, purchase history — these are signals no platform can take away from you.</p>
+    </div>
+    <aside class="notes">The targeting hierarchy: intent signals are highest quality (they're in-market right now), then behavioural/interest (likely interested), then demographic (broad but scalable), then contextual (no user signal at all but privacy-safe). The ideal strategy layers multiple signals.</aside>
+  </section>
+
+  <!-- ── SLIDE 14: The Privacy Revolution ── -->
+  <section class="slide" data-slide="14">
+    <h3 data-animate="fade-in">CHAPTER 10 — WHAT'S CHANGING</h3>
+    <h2 data-animate="fade-up">The privacy revolution is reshaping the industry</h2>
+    <div class="two-col" style="gap: 40px;">
+      <div>
+        <ul>
+          <li data-animate="fade-up" data-delay="1"><span class="accent">Third-party cookies dying</span> — Chrome is deprecating them (delayed but coming). These cookies powered cross-site retargeting and attribution for 25 years.</li>
+          <li data-animate="fade-up" data-delay="2"><span class="accent">Apple's ATT (App Tracking Transparency)</span> — iOS 14.5 required opt-in for tracking. ~75% of users opt out. Destroyed app-level attribution accuracy.</li>
+          <li data-animate="fade-up" data-delay="3"><span class="accent">GDPR / CCPA regulations</span> — EU and US privacy laws restrict data collection and require consent. Heavy fines for violations.</li>
+          <li data-animate="fade-up" data-delay="4"><span class="accent">AI compensating</span> — Platforms are using AI to model conversions they can no longer measure directly. Meta's Advantage+, Google's Smart Bidding, PMax all lean on this.</li>
+          <li data-animate="fade-up" data-delay="5"><span class="accent">First-party data as moat</span> — Brands with strong email lists, CRMs, and logged-in users will win. Everyone else will pay more for less signal.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="stack" data-animate="fade-in" data-delay="2" style="margin-top: 0;">
+          <div class="stack-layer" style="border-color:#f87171; background:rgba(248,113,113,0.06);">
+            <div class="stack-label" style="color:#f87171; font-size:10px;">GOING AWAY</div>
+            <div class="stack-content">
+              <div class="stack-title">Third-party cookies</div>
+              <div class="stack-sub">Cross-site tracking, audience building, attribution</div>
+            </div>
+          </div>
+          <div class="stack-layer" style="border-color:#fbbf24; background:rgba(251,191,36,0.06);">
+            <div class="stack-label" style="color:#fbbf24; font-size:10px;">FRAGILE</div>
+            <div class="stack-content">
+              <div class="stack-title">Third-party data</div>
+              <div class="stack-sub">Audience segments from DMPs, data brokers</div>
+            </div>
+          </div>
+          <div class="stack-layer highlighted">
+            <div class="stack-label" style="font-size:10px;">GROWING</div>
+            <div class="stack-content">
+              <div class="stack-title">First-party data</div>
+              <div class="stack-sub">CRM, email, on-site behaviour, login data</div>
+            </div>
+          </div>
+          <div class="stack-layer green-bg">
+            <div class="stack-label" style="color:#4ade80; font-size:10px;">WINNING</div>
+            <div class="stack-content">
+              <div class="stack-title">AI + Contextual</div>
+              <div class="stack-sub">Platform AI, contextual targeting, clean rooms</div>
+            </div>
+          </div>
+        </div>
+        <div class="callout" data-animate="fade-up" data-delay="4" style="margin-top: 12px;">
+          <p>Data clean rooms (Google PAIR, Meta CAPI) let brands match first-party data to platform data without sharing raw records.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">The cookieless future is creating a massive consolidation toward walled gardens (Google, Meta, Amazon, TikTok) because they have their own logged-in audience data. The open web is most affected. Contextual advertising is experiencing a renaissance as a result.</aside>
+  </section>
+
+  <!-- ── SLIDE 15: Ads + Email / Campaigns ── -->
+  <section class="slide" data-slide="15">
+    <h3 data-animate="fade-in">CHAPTER 11 — ADS IN A CAMPAIGNS CONTEXT</h3>
+    <h2 data-animate="fade-up">How email marketing intersects with ads</h2>
+    <div class="two-col" style="gap: 40px;">
+      <div>
+        <ul>
+          <li data-animate="fade-up" data-delay="1"><span class="accent">Lead gen ads</span> — paid ads drive traffic to landing pages where people give their email in exchange for something (discount, guide, trial). Email list = product of ad spend.</li>
+          <li data-animate="fade-up" data-delay="2"><span class="accent">Email retargeting via ads</span> — upload your email list to Meta/Google. Run ads to subscribers who haven't opened emails. Multi-channel reinforcement.</li>
+          <li data-animate="fade-up" data-delay="3"><span class="accent">CRM-synced audiences</span> — connect your CRM to ad platforms. Automatically exclude churned customers, target trial users with upgrade ads, suppress paid plans from acquisition campaigns.</li>
+          <li data-animate="fade-up" data-delay="4"><span class="accent">Post-send retargeting</span> — send an email, then show ads to everyone who opened but didn't click. Layers channels for higher conversion.</li>
+          <li data-animate="fade-up" data-delay="5"><span class="accent">Measurement challenge</span> — if a customer gets an email AND sees a Facebook ad AND clicks a Google ad, who gets credit? Multi-touch attribution is still unsolved.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="diagram" data-animate="fade-in" data-delay="2" style="max-width: 380px;">
+          <svg viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- Email Campaign -->
+            <rect x="110" y="20" width="160" height="50" rx="8" fill="#0a1a2e" stroke="#00d4ff" stroke-width="1.5"/>
+            <text x="190" y="42" text-anchor="middle" fill="#00d4ff" font-family="Inter" font-size="12" font-weight="700">EMAIL CAMPAIGN</text>
+            <text x="190" y="60" text-anchor="middle" fill="#888" font-family="Inter" font-size="11">monday campaigns ✉️</text>
+
+            <!-- Branch down -->
+            <line x1="190" y1="70" x2="190" y2="98" stroke="#333" stroke-width="1.5"/>
+
+            <!-- Opened -->
+            <rect x="10" y="100" width="140" height="44" rx="7" fill="#141414" stroke="#4ade80" stroke-width="1.2"/>
+            <text x="80" y="118" text-anchor="middle" fill="#4ade80" font-family="Inter" font-size="11" font-weight="600">Opened: 35%</text>
+            <text x="80" y="134" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">Read the email</text>
+
+            <!-- Not opened -->
+            <rect x="230" y="100" width="140" height="44" rx="7" fill="#141414" stroke="#555" stroke-width="1.2"/>
+            <text x="300" y="118" text-anchor="middle" fill="#888" font-family="Inter" font-size="11" font-weight="600">Not opened: 65%</text>
+            <text x="300" y="134" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">Didn't see it</text>
+
+            <!-- Lines from email -->
+            <line x1="155" y1="98" x2="80" y2="98" stroke="#333" stroke-width="1"/>
+            <line x1="80" y1="98" x2="80" y2="100" stroke="#333" stroke-width="1"/>
+            <line x1="225" y1="98" x2="300" y2="98" stroke="#333" stroke-width="1"/>
+            <line x1="300" y1="98" x2="300" y2="100" stroke="#333" stroke-width="1"/>
+
+            <!-- Clicked from opened -->
+            <line x1="80" y1="144" x2="80" y2="170" stroke="#333" stroke-width="1"/>
+            <rect x="20" y="170" width="120" height="40" rx="7" fill="#141414" stroke="#4ade80" stroke-width="1.2"/>
+            <text x="80" y="186" text-anchor="middle" fill="#4ade80" font-family="Inter" font-size="11" font-weight="600">Clicked: 3%</text>
+            <text x="80" y="200" text-anchor="middle" fill="#555" font-family="Inter" font-size="10">Landed on page</text>
+
+            <!-- Retarget opened-not-clicked via ads -->
+            <line x1="80" y1="144" x2="160" y2="220" stroke="#555" stroke-dasharray="4,3" stroke-width="1"/>
+            <rect x="140" y="222" width="100" height="36" rx="6" fill="#111" stroke="#fbbf24" stroke-width="1"/>
+            <text x="190" y="236" text-anchor="middle" fill="#fbbf24" font-family="Inter" font-size="10" font-weight="600">Retarget via ads</text>
+            <text x="190" y="250" text-anchor="middle" fill="#555" font-family="Inter" font-size="9">Meta / Google</text>
+
+            <!-- Reach not-opened via ads -->
+            <line x1="300" y1="144" x2="250" y2="222" stroke="#555" stroke-dasharray="4,3" stroke-width="1"/>
+
+            <!-- Final conversion -->
+            <rect x="140" y="278" width="100" height="34" rx="6" fill="#0d1a0d" stroke="#4ade80" stroke-width="1.2"/>
+            <text x="190" y="293" text-anchor="middle" fill="#4ade80" font-family="Inter" font-size="10" font-weight="600">Conversion</text>
+            <text x="190" y="307" text-anchor="middle" fill="#555" font-family="Inter" font-size="9">Signup / Purchase</text>
+            <line x1="190" y1="258" x2="190" y2="278" stroke="#333" stroke-width="1" marker-end="url(#arr2)"/>
+
+            <defs>
+              <marker id="arr2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L7,3 Z" fill="#444"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">This is where email marketing and paid advertising overlap directly. Platforms like monday campaigns, Klaviyo, or Braze increasingly offer direct integrations with Meta and Google for CRM-synced audiences. The trend is toward unified customer engagement, not siloed channels.</aside>
+  </section>
+
+  <!-- ── SLIDE 16: Creative Formats ── -->
+  <section class="slide" data-slide="16">
+    <h3 data-animate="fade-in">CHAPTER 12 — CREATIVE FORMATS</h3>
+    <h2 data-animate="fade-up">What ads actually look like</h2>
+    <div class="card-grid" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="card" data-animate="fade-up" data-delay="1">
+        <div style="font-size:28px; margin-bottom:8px;">📝</div>
+        <h4>Text Ads</h4>
+        <p>Headline + description + URL. Native to search results. No images. Copy is everything.</p>
+        <div style="margin-top:8px;"><span class="pill cyan" style="font-size:10px;">Search only</span></div>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="2">
+        <div style="font-size:28px; margin-bottom:8px;">🖼️</div>
+        <h4>Static Banner</h4>
+        <p>A simple image in standard IAB sizes (728×90, 300×250, 160×600). Display networks, programmatic.</p>
+        <div style="margin-top:8px;"><span class="pill green" style="font-size:10px;">Display / Social</span></div>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="3">
+        <div style="font-size:28px; margin-bottom:8px;">📱</div>
+        <h4>Carousel</h4>
+        <p>Multiple images/videos in one ad. Each card can have its own link. Great for products and storytelling.</p>
+        <div style="margin-top:8px;"><span class="pill purple" style="font-size:10px;">Social platforms</span></div>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="4">
+        <div style="font-size:28px; margin-bottom:8px;">🎥</div>
+        <h4>Video</h4>
+        <p>6s bumpers, 15s, 30s, or long-form. In-stream (before content) or in-feed. Hook in first 3 seconds.</p>
+        <div style="margin-top:8px;"><span class="pill orange" style="font-size:10px;">YouTube, TikTok, CTV</span></div>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="5">
+        <div style="font-size:28px; margin-bottom:8px;">🛍️</div>
+        <h4>Shopping / Catalogue</h4>
+        <p>Auto-generated from your product feed. Shows image, price, product name. Massive for e-commerce.</p>
+        <div style="margin-top:8px;"><span class="pill cyan" style="font-size:10px;">Google, Meta, Amazon</span></div>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="6">
+        <div style="font-size:28px; margin-bottom:8px;">📄</div>
+        <h4>Lead Gen Forms</h4>
+        <p>In-platform form. User taps, their data pre-fills. No landing page. High conversion because low friction.</p>
+        <div style="margin-top:8px;"><span class="pill purple" style="font-size:10px;">Meta, LinkedIn</span></div>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="7">
+        <div style="font-size:28px; margin-bottom:8px;">🤝</div>
+        <h4>Influencer / Spark</h4>
+        <p>Pay to boost a creator's organic content as a paid ad. Authentic feel. TikTok Spark Ads, Meta Partnerships.</p>
+        <div style="margin-top:8px;"><span class="pill orange" style="font-size:10px;">TikTok, Instagram</span></div>
+      </div>
+      <div class="card" data-animate="fade-up" data-delay="8">
+        <div style="font-size:28px; margin-bottom:8px;">🤖</div>
+        <h4>Responsive / AI-gen</h4>
+        <p>Supply headlines + images; AI tests combinations. Google RSA, Meta Advantage+ Creative. Default now.</p>
+        <div style="margin-top:8px;"><span class="pill cyan" style="font-size:10px;">Google, Meta</span></div>
+      </div>
+    </div>
+    <aside class="notes">Creative quality is the single biggest lever in paid social. Better creative → better CTR → lower CPM (platforms reward relevant ads). A mediocre campaign with great creative will beat a great campaign with mediocre creative almost every time.</aside>
+  </section>
+
+  <!-- ── SLIDE 17: Industry Spend Chart ── -->
+  <section class="slide" data-slide="17">
+    <h3 data-animate="fade-in">CHAPTER 13 — MARKET DATA</h3>
+    <h2 data-animate="fade-up">Where digital ad spend lives</h2>
+    <div class="two-col balanced">
+      <div>
+        <div class="chart-container tall" data-animate="scale-in" data-delay="1" style="height:340px; max-width:400px;">
+          <canvas id="spendChart" data-chart></canvas>
+        </div>
+        <p class="source" data-animate="fade-in" data-delay="2">Global digital ad revenue, 2024 estimates. Sources: WARC, Statista.</p>
+      </div>
+      <div>
+        <div class="chart-container" data-animate="scale-in" data-delay="2" style="height: 280px; max-width: 380px;">
+          <canvas id="growthChart" data-chart></canvas>
+        </div>
+        <p class="source" data-animate="fade-in" data-delay="3">Digital as % of total global ad spend, 2019-2025.</p>
+        <div class="callout" data-animate="fade-up" data-delay="4" style="margin-top: 12px; max-width: 380px;">
+          <p>CTV and retail media (Amazon, Walmart) are the fastest-growing segments. Traditional display is flattening. Search remains king for ROI.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">Retail media (ads on e-commerce platforms like Amazon, Instacart, Walmart Connect) is the hottest emerging channel because the targeting is based on purchase intent — the strongest signal available. Expected to reach $100B+ by 2026.</aside>
+  </section>
+
+  <!-- ── SLIDE 18: Attribution Challenge ── -->
+  <section class="slide" data-slide="18">
+    <h3 data-animate="fade-in">CHAPTER 14 — THE HARD PART</h3>
+    <h2 data-animate="fade-up">Attribution: who gets the credit?</h2>
+    <div class="two-col" style="gap: 40px;">
+      <div>
+        <p data-animate="fade-up" data-delay="1">A customer sees a YouTube ad on Monday. Googles the brand on Wednesday. Gets an email Thursday. Clicks a retargeting Facebook ad on Friday. Buys on Saturday.</p>
+        <p data-animate="fade-up" data-delay="2" style="margin-top: 14px;">Which channel "caused" the purchase?</p>
+        <div class="stack" data-animate="fade-in" data-delay="3" style="margin-top: 16px;">
+          <div class="stack-layer">
+            <div class="stack-label" style="font-size:10px;">LAST-CLICK</div>
+            <div class="stack-content">
+              <div class="stack-title">Facebook gets 100%</div>
+              <div class="stack-sub">The old default. Misleading — ignores everything that built intent.</div>
+            </div>
+          </div>
+          <div class="stack-layer highlighted">
+            <div class="stack-label" style="font-size:10px;">DATA-DRIVEN</div>
+            <div class="stack-content">
+              <div class="stack-title">AI distributes credit</div>
+              <div class="stack-sub">Google's model (GA4 default). Better, but black-box and Google-biased.</div>
+            </div>
+          </div>
+          <div class="stack-layer" style="border-color:#4ade80; background:rgba(74,222,128,0.05);">
+            <div class="stack-label" style="font-size:10px; color:#4ade80;">BEST PRACTICE</div>
+            <div class="stack-content">
+              <div class="stack-title">Incrementality testing</div>
+              <div class="stack-sub">Run holdout groups: turn off a channel for a segment and measure the delta. True causal measurement.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="diagram" data-animate="fade-in" data-delay="2" style="max-width: 380px; margin-top: 0;">
+          <svg viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg">
+            <text x="190" y="22" text-anchor="middle" fill="#555" font-family="Inter" font-size="11" letter-spacing="1" text-transform="uppercase">SAME PURCHASE — DIFFERENT MODELS</text>
+
+            <!-- Timeline -->
+            <text x="10" y="60" fill="#888" font-family="Inter" font-size="10">Mon</text>
+            <text x="80" y="60" fill="#888" font-family="Inter" font-size="10">Wed</text>
+            <text x="150" y="60" fill="#888" font-family="Inter" font-size="10">Thu</text>
+            <text x="225" y="60" fill="#888" font-family="Inter" font-size="10">Fri</text>
+            <text x="305" y="60" fill="#888" font-family="Inter" font-size="10">Sat</text>
+
+            <!-- Touch points -->
+            <circle cx="25" cy="90" r="18" fill="#0a1a2e" stroke="#00d4ff" stroke-width="1.5"/>
+            <text x="25" y="87" text-anchor="middle" fill="#00d4ff" font-family="Inter" font-size="8" font-weight="700">YT</text>
+            <text x="25" y="99" text-anchor="middle" fill="#00d4ff" font-family="Inter" font-size="8">Ad</text>
+
+            <circle cx="95" cy="90" r="18" fill="#111" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="95" y="87" text-anchor="middle" fill="#fbbf24" font-family="Inter" font-size="8" font-weight="700">Search</text>
+            <text x="95" y="99" text-anchor="middle" fill="#fbbf24" font-family="Inter" font-size="8">Google</text>
+
+            <circle cx="165" cy="90" r="18" fill="#111" stroke="#4ade80" stroke-width="1.5"/>
+            <text x="165" y="87" text-anchor="middle" fill="#4ade80" font-family="Inter" font-size="8" font-weight="700">Email</text>
+            <text x="165" y="99" text-anchor="middle" fill="#4ade80" font-family="Inter" font-size="8">Opened</text>
+
+            <circle cx="240" cy="90" r="18" fill="#111" stroke="#c084fc" stroke-width="1.5"/>
+            <text x="240" y="87" text-anchor="middle" fill="#c084fc" font-family="Inter" font-size="8" font-weight="700">Meta</text>
+            <text x="240" y="99" text-anchor="middle" fill="#c084fc" font-family="Inter" font-size="8">Retarget</text>
+
+            <circle cx="320" cy="90" r="20" fill="#0d1a0d" stroke="#4ade80" stroke-width="2"/>
+            <text x="320" y="87" text-anchor="middle" fill="#4ade80" font-family="Inter" font-size="9" font-weight="700">BUY</text>
+            <text x="320" y="100" text-anchor="middle" fill="#4ade80" font-family="Inter" font-size="8">£49</text>
+
+            <line x1="43" y1="90" x2="77" y2="90" stroke="#333" stroke-width="1"/>
+            <line x1="113" y1="90" x2="147" y2="90" stroke="#333" stroke-width="1"/>
+            <line x1="183" y1="90" x2="222" y2="90" stroke="#333" stroke-width="1"/>
+            <line x1="258" y1="90" x2="300" y2="90" stroke="#333" stroke-width="1"/>
+
+            <!-- Attribution models -->
+            <text x="10" y="145" fill="#555" font-family="Inter" font-size="10" letter-spacing="0.5">LAST CLICK</text>
+            <rect x="10" y="152" width="330" height="20" rx="3" fill="#111"/>
+            <rect x="296" y="152" width="44" height="20" rx="3" fill="rgba(192,132,252,0.5)"/>
+            <text x="318" y="166" text-anchor="middle" fill="#fff" font-family="Inter" font-size="10">100%</text>
+
+            <text x="10" y="192" fill="#555" font-family="Inter" font-size="10" letter-spacing="0.5">LINEAR (EQUAL CREDIT)</text>
+            <rect x="10" y="199" width="80" height="20" rx="3" fill="rgba(0,212,255,0.25)"/>
+            <rect x="94" y="199" width="80" height="20" rx="3" fill="rgba(251,191,36,0.25)"/>
+            <rect x="178" y="199" width="80" height="20" rx="3" fill="rgba(74,222,128,0.25)"/>
+            <rect x="262" y="199" width="78" height="20" rx="3" fill="rgba(192,132,252,0.25)"/>
+            <text x="50" y="213" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">25%</text>
+            <text x="134" y="213" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">25%</text>
+            <text x="218" y="213" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">25%</text>
+            <text x="301" y="213" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">25%</text>
+
+            <text x="10" y="240" fill="#4ade80" font-family="Inter" font-size="10" letter-spacing="0.5" font-weight="600">DATA-DRIVEN (AI)</text>
+            <rect x="10" y="247" width="40" height="20" rx="3" fill="rgba(0,212,255,0.4)"/>
+            <rect x="54" y="247" width="80" height="20" rx="3" fill="rgba(251,191,36,0.4)"/>
+            <rect x="138" y="247" width="60" height="20" rx="3" fill="rgba(74,222,128,0.3)"/>
+            <rect x="202" y="247" width="148" height="20" rx="3" fill="rgba(192,132,252,0.4)"/>
+            <text x="30" y="261" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">12%</text>
+            <text x="94" y="261" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">26%</text>
+            <text x="168" y="261" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">20%</text>
+            <text x="276" y="261" text-anchor="middle" fill="#fff" font-family="Inter" font-size="9">42%</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <aside class="notes">Attribution is the central unsolved problem in digital marketing. Different attribution models lead to very different budget allocation decisions. Last-click systematically under-values upper-funnel spend. Incrementality testing (holdout experiments) is the gold standard but requires scale.</aside>
+  </section>
+
+  <!-- ── SLIDE 19: Quick Reference ── -->
+  <section class="slide" data-slide="19">
+    <h3 data-animate="fade-in">CHAPTER 15 — YOUR CHEAT SHEET</h3>
+    <h2 data-animate="fade-up">Key terms at a glance</h2>
+    <div class="two-col" style="gap: 32px; align-items: start;">
+      <table data-animate="fade-up" data-delay="1" style="font-size: 13px;">
+        <thead>
+          <tr><th>Term</th><th>What it means in plain English</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="accent-cell">DSP</td><td>Software advertisers use to buy ad space across the open internet</td></tr>
+          <tr><td class="accent-cell">SSP</td><td>Software publishers use to sell their ad inventory at the best price</td></tr>
+          <tr><td class="accent-cell">RTB</td><td>Real-time auction that picks the winning ad in ~100ms</td></tr>
+          <tr><td class="accent-cell">Pixel</td><td>Code on your website that reports user behaviour back to ad platforms</td></tr>
+          <tr><td class="accent-cell">1P Data</td><td>Data you own: your email list, CRM, logged-in users</td></tr>
+          <tr><td class="accent-cell">Lookalike</td><td>AI-found audience that resembles your existing customers</td></tr>
+          <tr><td class="accent-cell">Retargeting</td><td>Showing ads to people who've already visited your site</td></tr>
+          <tr><td class="accent-cell">CPM</td><td>Cost per 1,000 impressions (how often your ad appears)</td></tr>
+          <tr><td class="accent-cell">ROAS</td><td>Revenue per £1 of ad spend — the core performance metric</td></tr>
+        </tbody>
+      </table>
+      <table data-animate="fade-up" data-delay="2" style="font-size: 13px;">
+        <thead>
+          <tr><th>Platform</th><th>Best for</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="accent-cell">Google Search</td><td>Capturing high-intent demand in the moment</td></tr>
+          <tr><td style="color:#c084fc;">Meta</td><td>Building audiences at scale; interest + behaviour targeting</td></tr>
+          <tr><td style="color:#fb923c;">TikTok</td><td>Gen Z, video-first, fast-growing FMCG and DTC brands</td></tr>
+          <tr><td style="color:#4ade80;">Amazon</td><td>Products with purchase intent; retail media</td></tr>
+          <tr><td style="color:#a0a0a0;">LinkedIn</td><td>B2B, job-title targeting, premium audience</td></tr>
+          <tr><td class="accent-cell">YouTube</td><td>Brand + consideration via video; second largest search</td></tr>
+          <tr><td style="color:#fbbf24;">The Trade Desk</td><td>Open-web programmatic; CTV; independent from Google</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="notes">Use this as a reference card when joining calls or reviewing ad strategy documents. The key insight across everything: digital advertising is fundamentally a data business — whoever has the best audience data and the best AI to optimise against it wins.</aside>
+  </section>
+
+  <!-- ── SLIDE 20: Closing ── -->
+  <section class="slide slide-section" data-slide="20">
+    <div class="section-number">END</div>
+    <h3 data-animate="fade-in">FIELD GUIDE — COMPLETE</h3>
+    <h2 data-animate="fade-up" style="font-size: 42px;">The industry in one sentence</h2>
+    <div class="callout" data-animate="scale-in" data-delay="2" style="max-width: 640px; border-left-width: 4px;">
+      <p style="font-size: 22px; line-height: 1.6;">Digital advertising is an <span class="accent">automated data marketplace</span> where companies bid to reach specific people with messages, measured by whether those people do something useful as a result.</p>
+    </div>
+    <div class="metric-row" data-animate="fade-up" data-delay="3" style="margin-top: 32px;">
+      <div class="metric-item">
+        <div class="metric-value" style="font-size:24px; color: var(--accent);">4 players</div>
+        <div class="metric-label">in every transaction</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value" style="font-size:24px; color: var(--purple);">100ms</div>
+        <div class="metric-label">per auction</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value" style="font-size:24px; color: var(--positive);">1P data</div>
+        <div class="metric-label">is the new moat</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-value" style="font-size:24px; color: var(--warning);">$740B</div>
+        <div class="metric-label">global market 2024</div>
+      </div>
+    </div>
+    <p class="muted" data-animate="fade-in" data-delay="4" style="margin-top: 24px;">Built April 2026 · Press ← to review · Press N for speaker notes</p>
+    <aside class="notes">Full guide covers: scale + goals, the 4-player ecosystem, programmatic auctions, major platforms (Google, Meta, TikTok, LinkedIn, Amazon, TTD), the ad tech stack, campaign types, key metrics, the funnel, targeting, privacy revolution, email+ads overlap, creative formats, market data, attribution, and a cheat sheet.</aside>
+  </section>
+
+</div>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progress"></div>
+
+<!-- Slide counter -->
+<div class="slide-counter" id="counter"></div>
+
+<!-- Nav hint -->
+<div class="nav-hint">← → Arrow keys to navigate · N for notes</div>
+
+<!-- Speaker notes panel -->
+<div class="notes-panel" id="notesPanel">
+  <div class="notes-label">Speaker Notes</div>
+  <div id="notesContent"></div>
+</div>
+
+<!-- Navigation JS -->
+<script>
+(() => {
+  const deck = document.getElementById('deck');
+  const slides = deck.querySelectorAll('.slide');
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesContent = document.getElementById('notesContent');
+  let current = 0;
+  let notesVisible = false;
+
+  function resetAnimations(slide) {
+    slide.querySelectorAll('[data-animate]').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= slides.length) return;
+    slides[current].classList.remove('active');
+    resetAnimations(slides[current]);
+    current = index;
+    slides[current].classList.add('active');
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+    const notes = slides[current].querySelector('aside.notes');
+    notesContent.textContent = notes ? notes.textContent : '';
+    const chartCanvases = slides[current].querySelectorAll('canvas[data-chart]');
+    chartCanvases.forEach(canvas => {
+      const chart = Chart.getChart(canvas);
+      if (chart) chart.update('active');
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown'].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+    if (['ArrowLeft', 'ArrowUp'].includes(e.key)) { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'n' || e.key === 'N') { notesVisible = !notesVisible; notesPanel.classList.toggle('visible', notesVisible); }
+  });
+
+  goTo(0);
+})();
+</script>
+
+<!-- Particles for title slide -->
+<script>
+(() => {
+  const canvas = document.getElementById('particlesCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, particles;
+  const connDist = 130;
+  const colours = ['rgba(0,212,255,','rgba(139,92,246,','rgba(59,130,246,','rgba(236,72,153,','rgba(6,182,212,'];
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    w = canvas.width = rect.width;
+    h = canvas.height = rect.height;
+  }
+
+  function createParticles() {
+    const count = Math.floor((w * h) / 11000);
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+        r: Math.random() * 1.8 + 0.8,
+        col: colours[Math.floor(Math.random() * colours.length)],
+        alpha: Math.random() * 0.45 + 0.25,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: Math.random() * 0.018 + 0.005,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.pulse += p.pulseSpeed;
+      if (p.x < -10) p.x = w + 10;
+      if (p.x > w + 10) p.x = -10;
+      if (p.y < -10) p.y = h + 10;
+      if (p.y > h + 10) p.y = -10;
+      const glow = p.alpha + Math.sin(p.pulse) * 0.12;
+      for (let j = i + 1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < connDist) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = p.col + ((1 - dist/connDist) * 0.13) + ')';
+          ctx.lineWidth = 0.4; ctx.stroke();
+        }
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.col + glow + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize(); createParticles(); draw();
+  window.addEventListener('resize', () => { resize(); createParticles(); });
+})();
+</script>
+
+<!-- Charts -->
+<script>
+// Chart defaults
+Chart.defaults.color = '#555';
+Chart.defaults.font.family = 'Inter, sans-serif';
+
+const tooltipDefaults = {
+  backgroundColor: '#141414',
+  titleColor: '#fff',
+  bodyColor: '#a0a0a0',
+  borderColor: '#1e1e1e',
+  borderWidth: 1,
+  padding: 12,
+  cornerRadius: 8,
+};
+
+// Slide 7: Google revenue split (doughnut)
+const googleCanvas = document.getElementById('googleChart');
+if (googleCanvas) {
+  new Chart(googleCanvas, {
+    type: 'doughnut',
+    data: {
+      labels: ['Search Ads', 'YouTube', 'Google Network / Display', 'Shopping', 'PMax & Other'],
+      datasets: [{
+        data: [56, 14, 12, 11, 7],
+        backgroundColor: [
+          'rgba(0,212,255,0.8)',
+          'rgba(192,132,252,0.7)',
+          'rgba(74,222,128,0.6)',
+          'rgba(251,146,60,0.7)',
+          'rgba(248,113,113,0.5)',
+        ],
+        borderColor: '#0a0a0a',
+        borderWidth: 3,
+        hoverBorderColor: '#1e1e1e',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { color: '#888', font: { size: 11 }, padding: 12, boxWidth: 12 }
+        },
+        tooltip: { ...tooltipDefaults }
+      }
+    }
+  });
+}
+
+// Slide 17: Platform spend (horizontal bar)
+const spendCanvas = document.getElementById('spendChart');
+if (spendCanvas) {
+  new Chart(spendCanvas, {
+    type: 'bar',
+    data: {
+      labels: ['Google', 'Meta', 'Amazon', 'ByteDance (TikTok)', 'Alibaba', 'Microsoft (Bing)', 'LinkedIn', 'Twitter/X', 'Snap', 'Other'],
+      datasets: [{
+        label: 'Revenue ($B, approx.)',
+        data: [240, 130, 47, 20, 18, 12, 5, 3, 2.4, 263],
+        backgroundColor: [
+          'rgba(0,212,255,0.7)',
+          'rgba(192,132,252,0.65)',
+          'rgba(251,146,60,0.65)',
+          'rgba(248,113,113,0.65)',
+          'rgba(74,222,128,0.55)',
+          'rgba(251,191,36,0.55)',
+          'rgba(0,212,255,0.4)',
+          'rgba(192,132,252,0.35)',
+          'rgba(248,113,113,0.35)',
+          'rgba(85,85,85,0.4)',
+        ],
+        borderRadius: 4,
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { ...tooltipDefaults, callbacks: { label: (ctx) => ` $${ctx.raw}B` } }
+      },
+      scales: {
+        x: { ticks: { color: '#555', callback: (v) => `$${v}B` }, grid: { color: '#1a1a1a' } },
+        y: { ticks: { color: '#888', font: { size: 11 } }, grid: { color: '#111' } }
+      }
+    }
+  });
+}
+
+// Slide 17: Digital % of total ad spend (line)
+const growthCanvas = document.getElementById('growthChart');
+if (growthCanvas) {
+  new Chart(growthCanvas, {
+    type: 'line',
+    data: {
+      labels: ['2019', '2020', '2021', '2022', '2023', '2024', '2025E'],
+      datasets: [{
+        label: 'Digital % of total',
+        data: [51, 55, 64, 67, 70, 73, 76],
+        borderColor: '#00d4ff',
+        backgroundColor: 'rgba(0,212,255,0.07)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        pointBackgroundColor: '#00d4ff',
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 800, easing: 'easeOutQuart' },
+      plugins: {
+        legend: { display: false },
+        tooltip: { ...tooltipDefaults, callbacks: { label: (ctx) => ` ${ctx.raw}% digital` } }
+      },
+      scales: {
+        x: { ticks: { color: '#555' }, grid: { color: '#1a1a1a' } },
+        y: {
+          min: 45, max: 82,
+          ticks: { color: '#555', callback: (v) => `${v}%` },
+          grid: { color: '#1a1a1a' }
+        }
+      }
+    }
+  });
+}
+</script>
+
+</body>
+</html>
