@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 3 · The Campaigns Adventure</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: #0a1a0c;
+      color: #f0ede8;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    :root {
+      --forest-deep: #0a1a0c;
+      --forest-mid: #0d2010;
+      --card-bg: rgba(16, 36, 18, 0.88);
+      --card-border: rgba(74, 222, 128, 0.1);
+      --gold: #f5c842;
+      --gold-dim: rgba(245, 200, 66, 0.25);
+      --teal: #00d4ff;
+      --green-light: #4ade80;
+      --text-primary: #f0ede8;
+      --text-secondary: #a8c5ab;
+      --text-muted: #5a7a5c;
+    }
+
+    /* ── FIREFLIES ── */
+    .firefly {
+      position: fixed; border-radius: 50%; background: var(--gold);
+      pointer-events: none; z-index: 10;
+      animation: ffDrift linear infinite, ffPulse ease-in-out infinite;
+    }
+    @keyframes ffDrift {
+      0%   { transform: translate(0,0) scale(1); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.7; }
+      100% { transform: translate(var(--dx), var(--dy)) scale(0.6); opacity: 0; }
+    }
+    @keyframes ffPulse {
+      0%,100% { box-shadow: 0 0 4px 2px rgba(245,200,66,0.7); }
+      50%      { box-shadow: 0 0 10px 5px rgba(245,200,66,0.2); }
+    }
+
+    /* ── HUD ── */
+    .hud {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+      display: flex; align-items: center; gap: 16px; padding: 14px 28px;
+      background: linear-gradient(to bottom, rgba(10,26,12,0.96) 0%, transparent 100%);
+    }
+    .hud-badge {
+      background: var(--gold); color: #0a1a0c;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 4px 12px; border-radius: 4px; flex-shrink: 0;
+    }
+    .hud-chapter {
+      font-family: 'Fraunces', serif; font-style: italic;
+      font-size: 13px; color: var(--text-muted);
+    }
+    .hud-progress {
+      flex: 1; height: 2px; background: rgba(255,255,255,0.07);
+      border-radius: 2px; overflow: hidden;
+    }
+    .hud-fill {
+      height: 100%; width: 30%;
+      background: linear-gradient(to right, var(--gold), var(--teal));
+      border-radius: 2px;
+    }
+    .hud-logo { height: 24px; opacity: 0.55; }
+    .sound-btn {
+      background: rgba(245,200,66,0.08); border: 1px solid rgba(245,200,66,0.2);
+      color: var(--gold); border-radius: 50%; width: 30px; height: 30px;
+      cursor: pointer; font-size: 13px; display: flex; align-items: center;
+      justify-content: center; transition: background 0.2s, border-color 0.2s; flex-shrink: 0;
+    }
+    .sound-btn:hover { background: rgba(245,200,66,0.18); border-color: rgba(245,200,66,0.45); }
+    .sound-btn.playing { background: rgba(245,200,66,0.2); border-color: rgba(245,200,66,0.5); }
+    .sound-btn.playing::after {
+      content: ''; position: absolute; width: 36px; height: 36px;
+      border: 1px solid rgba(245,200,66,0.25); border-radius: 50%;
+      animation: soundRing 1.8s ease-in-out infinite;
+    }
+    @keyframes soundRing {
+      0%   { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 40%, #0f2e14 0%, #0a1a0c 65%);
+    }
+    .hero-inner {
+      position: relative; z-index: 5; text-align: center; padding: 40px 24px;
+    }
+    .chapter-tag {
+      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 28px; opacity: 0.75;
+    }
+    .hero-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(52px, 9vw, 110px); font-weight: 700;
+      line-height: 1.0; color: #f0ede8; letter-spacing: -0.02em; margin-bottom: 24px;
+    }
+    .hero-sub {
+      font-family: 'Fraunces', serif; font-style: italic;
+      font-size: clamp(18px, 3vw, 26px); color: var(--text-secondary);
+      margin-bottom: 32px; font-weight: 300;
+    }
+    .date-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(245,200,66,0.08); border: 1px solid rgba(245,200,66,0.2);
+      border-radius: 50px; padding: 8px 20px;
+      font-size: 13px; color: var(--gold); letter-spacing: 0.06em;
+    }
+    .date-dot {
+      width: 6px; height: 6px; background: var(--gold); border-radius: 50%;
+      animation: datePulse 2s ease-in-out infinite;
+    }
+    @keyframes datePulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── STARS ── */
+    #stars { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+    .star {
+      position: absolute; border-radius: 50%; background: #fff;
+      animation: starTwinkle ease-in-out infinite;
+    }
+    @keyframes starTwinkle {
+      0%,100% { opacity: var(--op,0.3); transform: scale(1); }
+      50%      { opacity: calc(var(--op,0.3)*0.2); transform: scale(0.7); }
+    }
+
+    /* ── TREES ── */
+    .trees { position: absolute; bottom: 0; left: 0; right: 0; z-index: 3; pointer-events: none; }
+    .trees svg { display: block; width: 100%; height: auto; }
+
+    /* ── SCROLL HINT ── */
+    .scroll-hint {
+      position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+      z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-muted); animation: hintFade 3s ease-in-out infinite;
+    }
+    @keyframes hintFade { 0%,100%{opacity:0.4} 50%{opacity:1} }
+    .scroll-arr {
+      width: 12px; height: 12px;
+      border-right: 1.5px solid var(--text-muted); border-bottom: 1.5px solid var(--text-muted);
+      transform: rotate(45deg); animation: arrowBounce 2s ease-in-out infinite;
+    }
+    @keyframes arrowBounce { 0%,100%{transform:rotate(45deg) translate(0,0)} 50%{transform:rotate(45deg) translate(3px,3px)} }
+
+    /* ── CONTENT ── */
+    .content {
+      position: relative; z-index: 20; max-width: 740px;
+      margin: 0 auto; padding: 80px 24px 160px;
+    }
+
+    /* ── SECTION ── */
+    .clearing {
+      margin-bottom: 72px; opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .clearing.visible { opacity: 1; transform: none; }
+
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .q-marker {
+      width: 26px; height: 26px; background: var(--gold); color: #0a1a0c;
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .q-marker.teal   { background: var(--teal); }
+    .q-marker.ghost  { background: rgba(245,200,66,0.1); color: var(--gold); border: 1px solid var(--gold-dim); }
+    .q-marker.green  { background: var(--green-light); }
+    .section-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+
+    .st {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(28px, 5vw, 42px); font-weight: 700;
+      line-height: 1.15; color: #f0ede8; margin-bottom: 24px; letter-spacing: -0.01em;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 28px 32px; margin-bottom: 16px;
+      backdrop-filter: blur(6px);
+    }
+    .card p { color: var(--text-secondary); margin-bottom: 14px; }
+    .card p:last-child { margin-bottom: 0; }
+    .card strong { color: var(--text-primary); font-weight: 600; }
+
+    .gilad-note-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: block;
+    }
+
+    /* ── BIG QUESTION STATEMENT ── */
+    .big-q {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 700;
+      line-height: 1.1;
+      color: #f0ede8;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+    .big-q em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    /* ── QUESTION CARDS ── */
+    .q-examples {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .q-example {
+      background: rgba(0, 212, 255, 0.04);
+      border: 1px solid rgba(0, 212, 255, 0.12);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 1.5;
+      position: relative;
+    }
+    .q-example::before {
+      content: '"';
+      font-family: 'Fraunces', serif;
+      font-size: 36px;
+      color: var(--teal);
+      opacity: 0.25;
+      position: absolute;
+      top: 6px; left: 12px;
+      line-height: 1;
+    }
+    .q-example-text { padding-top: 16px; }
+
+    /* ── MEETING CARDS ── */
+    .meeting-list { display: flex; flex-direction: column; gap: 12px; }
+    .meeting-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: rgba(16,36,18,0.7); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 20px 22px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .meeting-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+    .meeting-body { flex: 1; }
+    .meeting-title {
+      font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 4px;
+    }
+    .meeting-who { font-size: 12px; color: var(--gold); font-weight: 600; margin-bottom: 6px; }
+    .meeting-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+
+    /* ── TIPS LIST ── */
+    .tip-list { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+    .tip-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: rgba(16,36,18,0.6); border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px; padding: 14px 16px;
+    }
+    .tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .tip-text { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+    .tip-text strong { color: var(--text-primary); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      text-align: center; margin: 52px 0; color: var(--text-muted);
+      font-size: 18px; position: relative;
+    }
+    .divider::before, .divider::after {
+      content: ''; position: absolute; top: 50%; width: 38%;
+      height: 1px; background: rgba(255,255,255,0.05);
+    }
+    .divider::before { left: 0; }
+    .divider::after  { right: 0; }
+    .divider-icon { display: inline-block; padding: 0 18px; background: var(--forest-deep); position: relative; z-index: 1; }
+
+    /* ── SESSION CARDS ── */
+    .days-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 4px; }
+    .day-card {
+      background: rgba(22,44,24,0.7); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 18px 16px 14px; position: relative;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .day-card:hover { border-color: rgba(74,222,128,0.2); background: rgba(74,222,128,0.04); }
+    .dc-emoji  { font-size: 22px; display: block; margin-bottom: 8px; }
+    .dc-name   { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+    .dc-who    { font-size: 11px; color: var(--text-muted); }
+    .dc-tick {
+      position: absolute; top: 12px; right: 12px;
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.12); background: transparent;
+      color: transparent; font-size: 11px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.18s;
+    }
+    .dc-tick:hover { border-color: rgba(74,222,128,0.55); background: rgba(74,222,128,0.08); }
+    .day-card.met .dc-tick { background: var(--green-light); border-color: var(--green-light); color: #0a1a0c; }
+    .day-card.met { border-color: rgba(74,222,128,0.25); background: rgba(74,222,128,0.05); }
+    .day-card.met .dc-name { opacity: 0.5; }
+    .day-card.met .dc-who  { opacity: 0.4; }
+    .day-card.met .dc-emoji { opacity: 0.4; }
+
+    /* ── MINIMAP ── */
+    .map-note { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 10px; letter-spacing: 0.03em; font-style: italic; }
+    #minimap {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      width: 180px; background: transparent; border-radius: 8px; font-family: 'Inter', sans-serif;
+    }
+    #minimap.collapsed { width: auto; }
+    #minimap.collapsed .map-body { display: none; }
+    .map-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; padding: 6px 10px;
+      background: rgba(10,26,12,0.85); border: 1px solid rgba(196,147,58,0.3);
+      border-radius: 6px; margin-bottom: 6px;
+    }
+    #minimap.collapsed .map-hdr { margin-bottom: 0; }
+    .map-ttl { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #7a5020; }
+    .map-tog { background: none; border: none; color: #9a7a3a; font-size: 14px; cursor: pointer; line-height: 1; }
+    .map-svg { width: 100%; height: auto; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; padding: 48px 0 24px; text-align: center;
+      color: var(--text-muted); font-size: 11px; letter-spacing: 0.12em; overflow: hidden;
+    }
+    .mushrooms { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; opacity: 0.4; }
+
+    /* ── SPLASH ── */
+    #splash {
+      position: fixed; inset: 0; z-index: 500;
+      background: radial-gradient(ellipse at 50% 45%, #0f2e14 0%, #060e07 70%);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.9s ease;
+    }
+    #splash.dismissed { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+    .splash-inner { text-align: center; position: relative; z-index: 2; padding: 0 24px; }
+    .splash-phones { font-size: 64px; margin-bottom: 24px; animation: phoneBob 3s ease-in-out infinite; filter: drop-shadow(0 0 22px rgba(245,200,66,0.4)); }
+    @keyframes phoneBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    .splash-title { font-family:'Fraunces',serif; font-size:clamp(40px,8vw,72px); font-weight:700; color:#f0ede8; margin-bottom:16px; letter-spacing:-0.02em; }
+    .splash-sub { font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:var(--text-secondary); margin-bottom:40px; font-weight:300; }
+    .splash-trees { position:absolute; bottom:0; left:0; right:0; pointer-events:none; }
+    .splash-btn {
+      margin-top: 10px; padding: 18px 48px; background: var(--gold);
+      color: #0c1e0e; border: none; border-radius: 50px;
+      font-family: 'Fraunces', Georgia, serif; font-size: 18px; font-weight: 700;
+      letter-spacing: 0.02em; cursor: pointer;
+      box-shadow: 0 0 32px rgba(245,200,66,0.35), 0 4px 20px rgba(0,0,0,0.4);
+      transition: transform 0.15s, box-shadow 0.15s; user-select: none;
+    }
+    .splash-btn:hover { transform: scale(1.05); box-shadow: 0 0 48px rgba(245,200,66,0.55), 0 6px 28px rgba(0,0,0,0.45); }
+    .splash-btn:active { transform: scale(0.98); }
+
+    @media (max-width: 600px) {
+      .days-grid { grid-template-columns: repeat(2, 1fr); }
+      #minimap { width: 160px; bottom: 12px; right: 12px; }
+      .q-examples { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <div id="splash-stars"></div>
+    <div class="splash-inner">
+      <div class="splash-phones">🎧</div>
+      <h1 class="splash-title">Day 3.</h1>
+      <p class="splash-sub">Your questions are waiting.</p>
+      <button class="splash-btn" onclick="startJourney()">Continue the adventure</button>
+    </div>
+    <div class="splash-trees">
+      <svg viewBox="0 0 1440 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#0c1e0e"><polygon points="0,160 55,50 110,160"/><polygon points="90,160 160,30 230,160"/><polygon points="210,160 275,58 340,160"/><polygon points="360,160 445,18 530,160"/><polygon points="520,160 600,44 680,160"/><polygon points="700,160 775,34 850,160"/><polygon points="870,160 945,22 1020,160"/><polygon points="1060,160 1145,40 1230,160"/><polygon points="1260,160 1345,28 1430,160"/><polygon points="1400,160 1440,56 1440,160"/></g>
+        <g fill="#111e12"><polygon points="30,160 95,68 160,160"/><polygon points="155,160 220,44 285,160"/><polygon points="295,160 360,64 425,160"/><polygon points="460,160 545,38 630,160"/><polygon points="650,160 725,54 800,160"/><polygon points="820,160 895,28 970,160"/><polygon points="995,160 1075,48 1155,160"/><polygon points="1170,160 1245,42 1320,160"/><polygon points="1345,160 1410,60 1440,160"/><polygon points="0,160 38,74 76,160"/></g>
+        <g fill="#0a1a0c"><polygon points="0,160 48,88 96,160"/><polygon points="95,160 175,58 255,160"/><polygon points="265,160 350,78 435,160"/><polygon points="455,160 540,52 625,160"/><polygon points="645,160 740,74 835,160"/><polygon points="855,160 950,56 1045,160"/><polygon points="1070,160 1165,68 1260,160"/><polygon points="1280,160 1375,54 1440,160"/><rect x="0" y="152" width="1440" height="8" fill="#0a1a0c"/></g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <nav class="hud">
+    <span class="hud-badge">Day 3 of 10</span>
+    <span class="hud-chapter">The Art of Asking</span>
+    <div class="hud-progress"><div class="hud-fill"></div></div>
+    <button class="sound-btn" id="sound-btn" onclick="toggleSound()" title="Toggle ambient music">♪</button>
+    <img src="./cam_logo.png" alt="Campaigns" class="hud-logo">
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div id="stars"></div>
+    <div class="hero-inner">
+      <div class="chapter-tag">✦ &nbsp;Chapter 3 of 10&nbsp; ✦</div>
+      <h1 class="hero-title">The Art<br>of Asking</h1>
+      <p class="hero-sub">There are no dumb questions here.</p>
+      <div class="date-pill">
+        <span class="date-dot"></span>
+        Wednesday, 22 April 2026
+      </div>
+    </div>
+    <div class="trees">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <g fill="#0c1e0e"><polygon points="0,200 55,65 110,200"/><polygon points="90,200 160,42 230,200"/><polygon points="210,200 275,72 340,200"/><polygon points="360,200 445,28 530,200"/><polygon points="520,200 600,58 680,200"/><polygon points="700,200 775,44 850,200"/><polygon points="870,200 945,32 1020,200"/><polygon points="1060,200 1145,52 1230,200"/><polygon points="1260,200 1345,38 1430,200"/><polygon points="1400,200 1440,70 1440,200"/></g>
+        <g fill="#111e12"><polygon points="30,200 95,82 160,200"/><polygon points="155,200 220,58 285,200"/><polygon points="295,200 360,78 425,200"/><polygon points="460,200 545,52 630,200"/><polygon points="650,200 725,68 800,200"/><polygon points="820,200 895,42 970,200"/><polygon points="995,200 1075,62 1155,200"/><polygon points="1170,200 1245,56 1320,200"/><polygon points="1345,200 1410,74 1440,200"/><polygon points="0,200 38,88 76,200"/></g>
+        <g fill="#0a1a0c"><polygon points="0,200 48,102 96,200"/><polygon points="95,200 175,72 255,200"/><polygon points="265,200 350,92 435,200"/><polygon points="455,200 540,66 625,200"/><polygon points="645,200 740,88 835,200"/><polygon points="855,200 950,70 1045,200"/><polygon points="1070,200 1165,82 1260,200"/><polygon points="1280,200 1375,68 1440,200"/><rect x="0" y="190" width="1440" height="10" fill="#0a1a0c"/></g>
+      </svg>
+    </div>
+    <div class="scroll-hint"><span>explore</span><div class="scroll-arr"></div></div>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ── SECTION 1: Gilad's note ── -->
+    <section class="clearing" id="s-note">
+      <div class="eyebrow">
+        <div class="q-marker">✉️</div>
+        <span class="section-label">A note from Gilad</span>
+      </div>
+      <h2 class="st">Today, you meet the team.</h2>
+      <div class="card">
+        <span class="gilad-note-label">Gilad</span>
+        <p>Three days in. You've had the welcome, you've got the duck, and you've hopefully started booking some sessions. Today is when it really starts to get interesting: you'll be having your first proper conversations with the team.</p>
+        <p>Before you go in, I want to make one thing very clear about how we work. <strong>There are no dumb questions here.</strong> That is not a thing people say and then quietly judge you for asking. We genuinely mean it. If something is unclear, confusing, or feels like it should already make sense but doesn't, ask. Every person in this team, including me, has been in that exact same spot.</p>
+        <p>Asking good questions is a skill. It shows you're paying attention, that you care about understanding things properly, and that you're not just nodding along to be polite. We value that. So come prepared with questions, and do not hold back.</p>
+      </div>
+    </section>
+
+    <div class="divider"><span class="divider-icon">❓</span></div>
+
+    <!-- ── SECTION 2: No dumb questions ── -->
+    <section class="clearing" id="s-questions">
+      <div class="eyebrow">
+        <div class="q-marker teal">?</div>
+        <span class="section-label">Our culture</span>
+      </div>
+
+      <p class="big-q">There are <em>no</em> dumb questions.</p>
+
+      <div class="card">
+        <p>In this team, the only thing that counts as a mistake is staying silent when you are confused. Everything else is just learning. The product is complex, the context is deep, and nobody expects you to know it all. What we do expect is that you ask when you don't.</p>
+        <p>Some of the best insights we've had as a team have come from someone new asking the "obvious" question that turned out not to be obvious at all. Fresh eyes are genuinely useful. Use yours.</p>
+      </div>
+
+      <div class="q-examples">
+        <div class="q-example"><div class="q-example-text">Why do we do it this way and not another?</div></div>
+        <div class="q-example"><div class="q-example-text">Can you explain that again? I didn't follow.</div></div>
+        <div class="q-example"><div class="q-example-text">What does this metric actually mean?</div></div>
+        <div class="q-example"><div class="q-example-text">Who owns this? I'm not sure where to look.</div></div>
+        <div class="q-example"><div class="q-example-text">Is this decision final or still open?</div></div>
+        <div class="q-example"><div class="q-example-text">What would a good answer to this look like?</div></div>
+      </div>
+    </section>
+
+    <div class="divider"><span class="divider-icon">☕</span></div>
+
+    <!-- ── SECTION 3: Today's sessions ── -->
+    <section class="clearing" id="s-meetings">
+      <div class="eyebrow">
+        <div class="q-marker green">◈</div>
+        <span class="section-label">Today's sessions</span>
+      </div>
+      <h2 class="st">Your coffees await.</h2>
+      <p style="color:var(--text-secondary); margin-bottom:26px; font-size:15px;">These are the sessions lined up for today. Each pair will walk you through a specific area of how we work. Come curious, come with questions, and take notes in whatever format works for you.</p>
+
+      <div class="meeting-list">
+        <div class="meeting-item">
+          <div class="meeting-icon">🌍</div>
+          <div class="meeting-body">
+            <div class="meeting-title">The Big Picture</div>
+            <div class="meeting-who">With Fabio + Noam</div>
+            <div class="meeting-desc">A high-level walk through how the product works: where it sits in the monday ecosystem, how it is built, and where it is going. Think of this as the map of the territory you will be exploring for the next few months.</div>
+          </div>
+        </div>
+        <div class="meeting-item">
+          <div class="meeting-icon">📦</div>
+          <div class="meeting-body">
+            <div class="meeting-title">The Product</div>
+            <div class="meeting-who">With Nick + Shannon</div>
+            <div class="meeting-desc">The core features of Campaigns: what they are, how users interact with them, and how the pieces fit together. A great session to come with questions about anything you've already seen in the product that made you go "wait, why?"</div>
+          </div>
+        </div>
+        <div class="meeting-item">
+          <div class="meeting-icon">✨</div>
+          <div class="meeting-body">
+            <div class="meeting-title">The AI Lab</div>
+            <div class="meeting-who">With Uras + Nassim</div>
+            <div class="meeting-desc">How AI shows up in Campaigns: what we've built, how it works under the hood, and where the team is taking it next. AI is central to what we do, so this one is worth being curious about.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 20px;">
+        <span class="gilad-note-label">A few tips for your sessions</span>
+        <div class="tip-list">
+          <div class="tip-item">
+            <div class="tip-icon">📝</div>
+            <div class="tip-text"><strong>Write things down as you go.</strong> You will get a lot of information quickly. Notes in whatever format works for you: linear, structured, chaotic. Doesn't matter.</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">🙋</div>
+            <div class="tip-text"><strong>Interrupt if something is unclear.</strong> Do not wait until the end. If you lose the thread, say so. People are happy to pause and re-explain.</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">🔁</div>
+            <div class="tip-text"><strong>Follow up after.</strong> A Slack message saying "I was thinking about what you said about X, and I have a follow-up question" is always welcome.</div>
+          </div>
+          <div class="tip-item">
+            <div class="tip-icon">😌</div>
+            <div class="tip-text"><strong>It is okay to not retain everything.</strong> You will hear a lot of names, concepts and context this week. Nobody expects it all to stick immediately.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"><span class="divider-icon">🍄</span></div>
+
+    <!-- ── SECTION 4: Sessions map ── -->
+    <section class="clearing" id="s-map">
+      <div class="eyebrow">
+        <div class="q-marker ghost">◈</div>
+        <span class="section-label">Your 10-day journey</span>
+      </div>
+      <h2 class="st">The path so far.</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 22px; font-size: 15px;">Tick each session off when it happens. The map stays with you every day.</p>
+
+      <div class="days-grid">
+        <div class="day-card" data-session="fabio-noam">
+          <span class="dc-emoji">🌍</span>
+          <div class="dc-name">The Big Picture</div>
+          <div class="dc-who">With Fabio + Noam</div>
+          <button class="dc-tick" onclick="toggleMet('fabio-noam', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="nick-shannon">
+          <span class="dc-emoji">📦</span>
+          <div class="dc-name">The Product</div>
+          <div class="dc-who">With Nick + Shannon</div>
+          <button class="dc-tick" onclick="toggleMet('nick-shannon', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="uras-nassim">
+          <span class="dc-emoji">✨</span>
+          <div class="dc-name">The AI Lab</div>
+          <div class="dc-who">With Uras + Nassim</div>
+          <button class="dc-tick" onclick="toggleMet('uras-nassim', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="mia-patric">
+          <span class="dc-emoji">🎨</span>
+          <div class="dc-name">The Studio</div>
+          <div class="dc-who">With Mia + Patric</div>
+          <button class="dc-tick" onclick="toggleMet('mia-patric', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="amit-chandra">
+          <span class="dc-emoji">🏗️</span>
+          <div class="dc-name">The Foundation</div>
+          <div class="dc-who">With Amit + Chandra</div>
+          <button class="dc-tick" onclick="toggleMet('amit-chandra', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="alessia-gabi">
+          <span class="dc-emoji">📣</span>
+          <div class="dc-name">The Market</div>
+          <div class="dc-who">With Alessia + Gabi</div>
+          <button class="dc-tick" onclick="toggleMet('alessia-gabi', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="gilad">
+          <span class="dc-emoji">🌀</span>
+          <div class="dc-name">The Flywheel</div>
+          <div class="dc-who">With Gilad</div>
+          <button class="dc-tick" onclick="toggleMet('gilad', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="analysts">
+          <span class="dc-emoji">🔬</span>
+          <div class="dc-name">Your Analyst Crew</div>
+          <div class="dc-who">With Gregory, Nikki + Olivia</div>
+          <button class="dc-tick" onclick="toggleMet('analysts', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="library">
+          <span class="dc-emoji">📚</span>
+          <div class="dc-name">The Library</div>
+          <div class="dc-who">Data + tools deep dive</div>
+          <button class="dc-tick" onclick="toggleMet('library', event)" title="Mark as done">✓</button>
+        </div>
+        <div class="day-card" data-session="summit">
+          <span class="dc-emoji">⛰️</span>
+          <div class="dc-name">The Summit</div>
+          <div class="dc-who">Chapter Two begins</div>
+          <button class="dc-tick" onclick="toggleMet('summit', event)" title="Mark as done">✓</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="mushrooms">
+      <svg width="26" height="36" viewBox="0 0 26 36" fill="none"><rect x="11" y="20" width="4" height="16" fill="#1a3a1e" rx="2"/><ellipse cx="13" cy="20" rx="10" ry="7" fill="#2d5a32"/><ellipse cx="8" cy="18" rx="2" ry="1.5" fill="rgba(255,255,255,0.18)"/></svg>
+      <svg width="18" height="28" viewBox="0 0 18 28" fill="none"><rect x="7.5" y="16" width="3" height="12" fill="#1a3a1e" rx="1.5"/><ellipse cx="9" cy="16" rx="7" ry="5" fill="#4a7a32"/><ellipse cx="5.5" cy="14.5" rx="1.5" ry="1" fill="rgba(255,255,255,0.15)"/></svg>
+      <svg width="22" height="32" viewBox="0 0 22 32" fill="none"><rect x="9" y="18" width="4" height="14" fill="#1a3a1e" rx="2"/><ellipse cx="11" cy="18" rx="9" ry="6" fill="#c04a1e"/><ellipse cx="7" cy="16" rx="2" ry="1.5" fill="rgba(255,255,255,0.25)"/><ellipse cx="14" cy="15" rx="1.5" ry="1" fill="rgba(255,255,255,0.2)"/></svg>
+    </div>
+    <p>Day 3 of 10 · The Campaigns Adventure</p>
+  </footer>
+
+  <!-- MINIMAP -->
+  <div id="minimap">
+    <div class="map-hdr" onclick="toggleMap()">
+      <span class="map-ttl">Adventure Map</span>
+      <button class="map-tog" id="map-tog">−</button>
+    </div>
+    <div class="map-body">
+      <svg class="map-svg" viewBox="0 0 168 188" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="paper">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/>
+            <feColorMatrix type="saturate" values="0" in="noise" result="grey"/>
+            <feBlend in="SourceGraphic" in2="grey" mode="multiply" result="blend"/>
+            <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+          </filter>
+        </defs>
+        <rect width="168" height="188" fill="#f0e2b0" rx="5"/>
+        <rect width="168" height="188" fill="url(#paper)" rx="5" opacity="0.18"/>
+        <rect x="3" y="3" width="162" height="182" fill="none" stroke="#c4933a" stroke-width="1" rx="4" opacity="0.4"/>
+        <g stroke="#7a4a18" stroke-width="0.8" fill="none" opacity="0.35">
+          <polygon points="4,188 12,170 20,188" fill="#c4a052" stroke="none" opacity="0.2"/>
+          <polygon points="148,188 158,165 168,188" fill="#c4a052" stroke="none" opacity="0.2"/>
+          <line x1="8" y1="188" x2="8" y2="182"/><line x1="16" y1="188" x2="16" y2="178"/>
+          <line x1="156" y1="188" x2="156" y2="180"/><line x1="162" y1="188" x2="162" y2="184"/>
+        </g>
+        <!-- Path -->
+        <g stroke="#7a4a18" stroke-width="1.8" stroke-dasharray="4,3.5" fill="none" stroke-linecap="round" opacity="0.7">
+          <line x1="32" y1="170" x2="64" y2="150"/>
+          <line x1="64" y1="150" x2="106" y2="140"/>
+          <line x1="106" y1="140" x2="140" y2="120"/>
+          <line x1="140" y1="120" x2="122" y2="97"/>
+          <line x1="122" y1="97"  x2="76"  y2="84"/>
+          <line x1="76"  y1="84"  x2="108" y2="61"/>
+          <line x1="108" y1="61"  x2="142" y2="43"/>
+          <line x1="142" y1="43"  x2="112" y2="24"/>
+          <line x1="112" y1="24"  x2="68"  y2="11"/>
+        </g>
+        <!-- Future nodes -->
+        <g fill="#e8d09a" stroke="#9a6830" stroke-width="1.2">
+          <circle cx="140" cy="120" r="9"/>
+          <circle cx="122" cy="97"  r="9"/>
+          <circle cx="76"  cy="84"  r="9"/>
+          <circle cx="108" cy="61"  r="9"/>
+          <circle cx="142" cy="43"  r="9"/>
+          <circle cx="112" cy="24"  r="9"/>
+          <circle cx="68"  cy="11"  r="9"/>
+        </g>
+        <!-- Emoji labels -->
+        <g font-size="10" text-anchor="middle">
+          <text x="140" y="124">✨</text>
+          <text x="122" y="101">🎨</text>
+          <text x="76"  y="88" >🏗️</text>
+          <text x="108" y="65" >📣</text>
+          <text x="142" y="47" >🌀</text>
+          <text x="112" y="28" >📚</text>
+          <text x="68"  y="15" >⛰️</text>
+        </g>
+        <!-- Node name labels -->
+        <g fill="#7a4a18" font-size="5.8" font-family="Inter" opacity="0.75">
+          <text x="151" y="116" text-anchor="start">AI Lab</text>
+          <text x="133" y="93"  text-anchor="start">Studio</text>
+          <text x="87"  y="80"  text-anchor="start">Foundation</text>
+          <text x="119" y="57"  text-anchor="start">Market</text>
+          <text x="153" y="39"  text-anchor="start">Flywheel</text>
+          <text x="123" y="20"  text-anchor="start">Library</text>
+          <text x="79"  y="8"   text-anchor="start">Summit</text>
+        </g>
+        <!-- Day 1 — completed -->
+        <circle cx="32" cy="170" r="10" fill="#c4a052" stroke="#8a5a10" stroke-width="1.5" opacity="0.65"/>
+        <text x="32" y="174" text-anchor="middle" fill="#3a2000" font-size="9" font-family="Inter" font-weight="700">🌱</text>
+        <!-- Day 2 — completed -->
+        <circle cx="64" cy="150" r="10" fill="#c4a052" stroke="#8a5a10" stroke-width="1.5" opacity="0.65"/>
+        <text x="64" y="154" text-anchor="middle" fill="#3a2000" font-size="9" font-family="Inter" font-weight="700">🌍</text>
+        <!-- Day 3 — active -->
+        <circle cx="106" cy="140" r="14" fill="rgba(245,185,40,0.2)" stroke="none">
+          <animate attributeName="r" values="12;16;12" dur="2.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.2;0.07;0.2" dur="2.8s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="106" cy="140" r="10" fill="#f5c842" stroke="#8a5a10" stroke-width="1.8"/>
+        <text x="106" y="144" text-anchor="middle" fill="#3a2000" font-size="9" font-family="Inter" font-weight="700">📦</text>
+        <!-- YOU label -->
+        <text x="106" y="131" text-anchor="middle" fill="#8a5a10" font-size="6.2" font-family="Inter" font-weight="700">YOU</text>
+        <!-- Compass -->
+        <g transform="translate(16, 158)" opacity="0.35" fill="#7a4a18">
+          <text font-size="7" x="-3" y="-10" text-anchor="middle">N</text>
+          <line x1="0" y1="-8" x2="0" y2="8" stroke="#7a4a18" stroke-width="0.8"/>
+          <line x1="-8" y1="0" x2="8" y2="0" stroke="#7a4a18" stroke-width="0.8"/>
+          <polygon points="0,-8 -2,-2 2,-2" fill="#7a4a18"/>
+        </g>
+      </svg>
+      <p class="map-note">Your companion for all 10 days. Tick each session when it happens.</p>
+    </div>
+  </div>
+
+  <script>
+    // ── STARS ──
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 90; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = 1 + Math.random() * 2;
+      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*72}%;width:${size}px;height:${size}px;animation-duration:${2.5+Math.random()*4}s;animation-delay:${Math.random()*5}s;opacity:${0.08+Math.random()*0.45};`;
+      starsEl.appendChild(s);
+    }
+
+    // ── FIREFLIES ──
+    for (let i = 0; i < 22; i++) {
+      const ff = document.createElement('div');
+      ff.className = 'firefly';
+      const size = 2.5 + Math.random() * 2.5;
+      const dx = (Math.random() - 0.5) * 200;
+      const dy = -(80 + Math.random() * 120);
+      const dur = 10 + Math.random() * 14;
+      const delay = Math.random() * 12;
+      ff.style.cssText = `left:${5+Math.random()*88}vw;top:${10+Math.random()*75}vh;width:${size}px;height:${size}px;--dx:${dx}px;--dy:${dy}px;animation-duration:${dur}s,${1.5+Math.random()*2}s;animation-delay:${delay}s,${Math.random()*3}s;`;
+      document.body.appendChild(ff);
+      ff.addEventListener('animationiteration', (e) => {
+        if (e.animationName === 'ffDrift') {
+          ff.style.left = (5 + Math.random() * 88) + 'vw';
+          ff.style.top  = (10 + Math.random() * 75) + 'vh';
+        }
+      });
+    }
+
+    // ── SCROLL REVEAL ──
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.clearing').forEach(c => obs.observe(c));
+
+    // ── MINIMAP TOGGLE ──
+    function toggleMap() {
+      const map = document.getElementById('minimap');
+      const tog = document.getElementById('map-tog');
+      map.classList.toggle('collapsed');
+      tog.textContent = map.classList.contains('collapsed') ? '+' : '−';
+    }
+
+    // ── SPLASH ──
+    function splashStars() {
+      const el = document.getElementById('splash-stars');
+      if (!el) return;
+      for (let i = 0; i < 60; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const sz = 1 + Math.random() * 2;
+        s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*65}%;width:${sz}px;height:${sz}px;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;opacity:${0.1+Math.random()*0.5};`;
+        el.appendChild(s);
+      }
+    }
+    splashStars();
+
+    let splashDone = false;
+    function dismissSplash() {
+      if (splashDone) return;
+      splashDone = true;
+      const sp = document.getElementById('splash');
+      sp.classList.add('dismissed');
+      document.body.style.overflow = '';
+      sp.addEventListener('transitionend', () => sp.remove(), { once: true });
+    }
+    function startJourney() {
+      dismissSplash();
+      if (ytPlayer) {
+        ytPlayer.unMute(); ytPlayer.setVolume(0); ytPlayer.playVideo();
+        soundActive = true;
+        document.getElementById('sound-btn').textContent = '♫';
+        document.getElementById('sound-btn').classList.add('playing');
+        clearInterval(fadeInterval);
+        let vol = 0;
+        fadeInterval = setInterval(() => {
+          vol = Math.min(vol + 1.5, 62);
+          ytPlayer.setVolume(vol);
+          if (vol >= 62) clearInterval(fadeInterval);
+        }, 100);
+      }
+    }
+    document.body.style.overflow = 'hidden';
+
+    // ── YOUTUBE AUDIO ──
+    let ytPlayer = null, soundActive = false, fadeInterval = null;
+    window.onYouTubeIframeAPIReady = function () {
+      ytPlayer = new YT.Player('yt-audio', {
+        videoId: '2G8LAiHSCAs',
+        playerVars: { autoplay:1, mute:1, controls:0, disablekb:1, loop:1, playlist:'2G8LAiHSCAs', modestbranding:1, rel:0 },
+        events: {
+          onReady: function (e) {
+            e.target.unMute(); e.target.setVolume(0);
+            soundActive = true;
+            document.getElementById('sound-btn').textContent = '♫';
+            document.getElementById('sound-btn').classList.add('playing');
+            clearInterval(fadeInterval);
+            let vol = 0;
+            fadeInterval = setInterval(() => {
+              vol = Math.min(vol + 1.5, 62);
+              e.target.setVolume(vol);
+              if (vol >= 62) clearInterval(fadeInterval);
+            }, 100);
+          }
+        }
+      });
+    };
+
+    // ── SESSION TRACKER ──
+    const MET_KEY = 'fiona-onboarding-met-v2';
+    function loadMet() { try { return JSON.parse(localStorage.getItem(MET_KEY) || '[]'); } catch { return []; } }
+    function saveMet(s) { try { localStorage.setItem(MET_KEY, JSON.stringify(s)); } catch {} }
+    function renderMet(sessions) {
+      document.querySelectorAll('.day-card[data-session]').forEach(card => {
+        card.classList.toggle('met', sessions.includes(card.dataset.session));
+      });
+    }
+    function toggleMet(session, e) {
+      e.stopPropagation();
+      const met = loadMet();
+      const idx = met.indexOf(session);
+      if (idx > -1) met.splice(idx, 1); else met.push(session);
+      saveMet(met); renderMet(met);
+    }
+    renderMet(loadMet());
+
+    function toggleSound() {
+      const btn = document.getElementById('sound-btn');
+      if (!ytPlayer) return;
+      if (soundActive) {
+        clearInterval(fadeInterval);
+        let vol = ytPlayer.getVolume();
+        fadeInterval = setInterval(() => {
+          vol = Math.max(vol - 3, 0);
+          ytPlayer.setVolume(vol);
+          if (vol <= 0) { ytPlayer.pauseVideo(); clearInterval(fadeInterval); }
+        }, 60);
+        soundActive = false; btn.textContent = '♪'; btn.classList.remove('playing');
+      } else {
+        ytPlayer.unMute(); ytPlayer.setVolume(0); ytPlayer.playVideo();
+        soundActive = true; btn.textContent = '♫'; btn.classList.add('playing');
+        clearInterval(fadeInterval);
+        let vol = 0;
+        fadeInterval = setInterval(() => {
+          vol = Math.min(vol + 2, 62);
+          ytPlayer.setVolume(vol);
+          if (vol >= 62) clearInterval(fadeInterval);
+        }, 80);
+      }
+    }
+  </script>
+
+  <div id="yt-audio" style="position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;pointer-events:none;opacity:0;" aria-hidden="true"></div>
+  <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
