@@ -314,6 +314,58 @@
       padding: 2px 8px; border-radius: 4px; color: var(--gold);
     }
 
+    /* ── Five Dysfunctions bridge ── */
+    .dots-lead {
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 26px;
+      max-width: 640px;
+    }
+    .dots-lead strong { color: var(--text-primary); }
+    .pillar-connect {
+      border-radius: 16px;
+      padding: 24px 26px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .pillar-connect.commitment {
+      background: rgba(0, 212, 255, 0.07);
+      border-color: rgba(0, 212, 255, 0.22);
+      box-shadow: 0 0 32px rgba(0, 212, 255, 0.04);
+    }
+    .pillar-connect.accountability {
+      background: rgba(245, 200, 66, 0.07);
+      border-color: rgba(245, 200, 66, 0.22);
+      box-shadow: 0 0 32px rgba(245, 200, 66, 0.05);
+    }
+    .pillar-connect h3 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(20px, 4vw, 26px);
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .pillar-connect p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .pillar-connect p:last-of-type { margin-bottom: 0; }
+    .pillar-connect p strong { color: var(--text-primary); }
+    .wi-bridge {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .pillar-connect.commitment .wi-bridge strong { color: var(--teal); }
+    .pillar-connect.accountability .wi-bridge strong { color: var(--gold); }
+
     /* ── HOW IT WORKS STEPS ── */
     .steps { display: flex; flex-direction: column; gap: 16px; }
     .step {
@@ -503,7 +555,38 @@
         <span class="gilad-note-label">Gilad</span>
         <p>One of the things I'm most proud of in this team is how we think about accountability. Not in a "watch your back" way, but in a genuine "I care about this, I said I'd do it, and I want to follow through" kind of way.</p>
         <p>Each week, every member of the team shares their <strong>Winning Image</strong> in Slack, in <span class="channel-name">#campaigns-winning-image</span>. That is the real home of the ritual. Slackbot posts a Monday reminder there, and everyone replies in that thread with what they are focused on for the week.</p>
-        <p>Read through this page, then join the channel and scroll back through a few Mondays. You'll see exactly how people write theirs. When you're ready to post your own, you'll do it the same way. It is one of the fastest ways to understand what everyone is actually working on.</p>
+        <p>We spoke today about <strong>The Five Dysfunctions of a Team</strong>. I wrote the next section on purpose so you can connect that conversation to this ritual. The Winning Image is where <strong>commitment</strong> and <strong>accountability</strong> stop being slides and start being something we do every Monday and Friday.</p>
+        <p>Read that section next if you can. Then carry on for what the prompt looks like and how to use the channel.</p>
+      </div>
+    </section>
+
+    <div class="divider"><span class="divider-icon">🔗</span></div>
+
+    <!-- ── Five Dysfunctions ↔ Winning Image (emphasis) ── -->
+    <section class="clearing" id="s-five">
+      <div class="eyebrow">
+        <div class="q-marker teal">📘</div>
+        <span class="section-label">After our session today</span>
+      </div>
+      <h2 class="st">Connecting the dots.</h2>
+      <p class="dots-lead">In our onboarding conversation we walked through <strong>The Five Dysfunctions of a Team</strong> and what healthier teams do at each layer. The Winning Image is not an extra idea on the side of that model. It is one of the main ways this team <strong>practises</strong> two of those behaviours every single week: <strong>commitment</strong> and <strong>accountability</strong>. Below is the map from what we talked about to what you will see in Slack.</p>
+
+      <div class="pillar-connect commitment">
+        <h3>Commitment</h3>
+        <p>In the model, lack of commitment often looks like fuzzy priorities and half-hearted buy-in. Everyone is busy, but nobody has said clearly what they are actually in for.</p>
+        <p><strong>Your Monday post is where commitment becomes concrete.</strong> You start with the epic, your goal, and why it matters. You are not hiding behind vague "lots on". You are stating what you are committing to deliver focus on this week. The team can align around that.</p>
+        <div class="wi-bridge"><strong>Winning Image → Commitment:</strong> the thread in <span class="channel-name">#campaigns-winning-image</span> is our shared moment to turn alignment into clear, visible promises for the week.</div>
+      </div>
+
+      <div class="pillar-connect accountability">
+        <h3>Accountability</h3>
+        <p>Avoidance of accountability is what happens when we dodge looking at whether we followed through on what we said mattered. The healthy version is not blame. It is clarity about expectations and honesty about results.</p>
+        <p><strong>When everyone's priorities live in one channel, accountability becomes normal.</strong> We can see what each person named as their week. The Friday reminder asks how your weekly image is going so that reflection is built in, not saved for a tense moment months later.</p>
+        <div class="wi-bridge"><strong>Winning Image → Accountability:</strong> visible priorities on Monday, honest follow-up on Friday. Same ritual holding both ends of the week.</div>
+      </div>
+
+      <div class="card" style="margin-top: 18px;">
+        <p style="margin-bottom: 0;">Trust, productive conflict, and attention to results show up in other forums and habits. For <strong>commitment</strong> and <strong>accountability</strong> specifically, think of this channel as where the model meets your calendar. Come back to this page whenever you want to remind yourself why the habit exists.</p>
       </div>
     </section>
 
@@ -521,21 +604,6 @@
         <p style="font-family:'Fraunces',serif; font-size:19px; font-weight:700; color:var(--text-primary); font-style:italic; padding: 4px 0 10px; line-height: 1.35;">What is your weekly winning image? Start with the epic, your goal, and why it matters.</p>
         <p>Your Winning Image is your answer to that. It is not a long document or a formal plan. It is a clear, personal statement of what you are focused on and what you are trying to complete this week. Think of it as a promise to yourself, made visible to the team.</p>
         <p>In practice most people keep it to a handful of bullets: epics, outcomes, or commitments that someone reading on Friday could recognise as done or not done.</p>
-      </div>
-    </section>
-
-    <!-- ── Five Dysfunctions link ── -->
-    <section class="clearing" id="s-five">
-      <div class="eyebrow">
-        <div class="q-marker teal">📘</div>
-        <span class="section-label">Five dysfunctions in practice</span>
-      </div>
-      <h2 class="st">Why this ritual exists.</h2>
-      <div class="card">
-        <p>The Winning Image is one of the ways we put <strong>The Five Dysfunctions of a Team</strong> into practice. We will unpack the full model together in our session on it, but you can already see two layers showing up here every Monday.</p>
-        <p><strong>Commitment.</strong> A winning image forces clarity. You say what you are committing to this week instead of leaving your priorities fuzzy for yourself or for others.</p>
-        <p><strong>Accountability.</strong> When everyone's focus is visible in <span class="channel-name">#campaigns-winning-image</span>, we can follow through on what we said mattered and talk honestly when the week does not go to plan. The Friday check-in is part of that same habit.</p>
-        <p>Trust, healthy conflict, and attention to results matter too, and they show up elsewhere in how we work. This channel is a steady, weekly anchor for <strong>commitment</strong> and <strong>accountability</strong> in particular.</p>
       </div>
     </section>
 
