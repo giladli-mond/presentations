@@ -265,6 +265,55 @@
       flex-shrink: 0; margin-top: 7px;
     }
 
+    /* ── Slack thread mock (matches #campaigns-winning-image) ── */
+    .slack-mock {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 14px;
+    }
+    .slack-mock-bot {
+      background: rgba(0,0,0,0.28);
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .slack-mock-bot-meta {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;
+    }
+    .slack-mock-bot-text {
+      font-size: 12px; color: var(--text-secondary); line-height: 1.55;
+    }
+    .slack-mock-bot-text strong { color: var(--text-primary); font-weight: 600; }
+    .slack-mock-reply {
+      padding: 16px 18px 18px 22px;
+      border-left: 3px solid rgba(245,200,66,0.4);
+      margin-left: 14px;
+      background: rgba(16,36,18,0.35);
+    }
+    .slack-mock-reply-meta {
+      font-size: 11px; color: var(--text-muted); margin-bottom: 12px;
+    }
+    .slack-mock-reply-meta strong { color: var(--text-primary); font-weight: 600; }
+    .wi-bullets-plain {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+      padding-left: 0; list-style: none;
+    }
+    .wi-bullets-plain li {
+      position: relative; padding-left: 14px; margin-bottom: 8px;
+    }
+    .wi-bullets-plain li:last-child { margin-bottom: 0; }
+    .wi-bullets-plain li::before {
+      content: '•'; position: absolute; left: 0; color: var(--gold); font-weight: 700;
+    }
+    .channel-name {
+      font-family: ui-monospace, monospace;
+      font-size: 0.92em;
+      background: rgba(245,200,66,0.08);
+      border: 1px solid rgba(245,200,66,0.2);
+      padding: 2px 8px; border-radius: 4px; color: var(--gold);
+    }
+
     /* ── HOW IT WORKS STEPS ── */
     .steps { display: flex; flex-direction: column; gap: 16px; }
     .step {
@@ -453,8 +502,8 @@
       <div class="card">
         <span class="gilad-note-label">Gilad</span>
         <p>One of the things I'm most proud of in this team is how we think about accountability. Not in a "watch your back" way, but in a genuine "I care about this, I said I'd do it, and I want to follow through" kind of way.</p>
-        <p>Each week, every member of the team publishes their <strong>Winning Image</strong> for the week. It is one of our most consistent rituals, and I'd love for you to start getting familiar with it now, even before you write your own.</p>
-        <p>Read through this, look at the team's posts when they come out on Monday, and feel free to ask anyone about theirs. It is a great way to understand what people are actually working on.</p>
+        <p>Each week, every member of the team shares their <strong>Winning Image</strong> in Slack, in <span class="channel-name">#campaigns-winning-image</span>. That is the real home of the ritual. Slackbot posts a Monday reminder there, and everyone replies in that thread with what they are focused on for the week.</p>
+        <p>Read through this page, then join the channel and scroll back through a few Mondays. You'll see exactly how people write theirs. When you're ready to post your own, you'll do it the same way. It is one of the fastest ways to understand what everyone is actually working on.</p>
       </div>
     </section>
 
@@ -468,10 +517,10 @@
       </div>
       <h2 class="st">What is the Winning Image?</h2>
       <div class="card">
-        <p>At the start of every week, each person on the team posts a short, honest answer to one question:</p>
-        <p style="font-family:'Fraunces',serif; font-size:22px; font-weight:700; color:var(--text-primary); font-style:italic; padding: 4px 0 8px; line-height: 1.3;">"If this week goes well, what will I have done?"</p>
-        <p>That is your Winning Image. It is not a long document or a formal plan. It is a clear, personal statement of what you are focused on and what you are trying to complete by Friday. Think of it as a promise to yourself, made visible to the team.</p>
-        <p>It usually includes one headline, the thing that defines the week, and two or three supporting commitments beneath it. Nothing more.</p>
+        <p>Every Monday, Slackbot nudges the channel with the same prompt the team built together:</p>
+        <p style="font-family:'Fraunces',serif; font-size:19px; font-weight:700; color:var(--text-primary); font-style:italic; padding: 4px 0 10px; line-height: 1.35;">What is your weekly winning image? Start with the epic, your goal, and why it matters.</p>
+        <p>Your Winning Image is your answer to that. It is not a long document or a formal plan. It is a clear, personal statement of what you are focused on and what you are trying to complete this week. Think of it as a promise to yourself, made visible to the team.</p>
+        <p>In practice most people keep it to a handful of bullets: epics, outcomes, or commitments that someone reading on Friday could recognise as done or not done.</p>
       </div>
     </section>
 
@@ -481,38 +530,33 @@
         <div class="q-marker teal">◈</div>
         <span class="section-label">An example</span>
       </div>
-      <h2 class="st">What one looks like.</h2>
-      <p style="color:var(--text-secondary); margin-bottom:22px; font-size:15px;">This is a typical Winning Image from the team. Simple, honest, specific.</p>
+      <h2 class="st">What one looks like in Slack.</h2>
+      <p style="color:var(--text-secondary); margin-bottom:22px; font-size:15px;">Real posts live in <span class="channel-name">#campaigns-winning-image</span> as replies under the Monday reminder. Short bullets, nothing fancy.</p>
 
       <div class="wi-card">
         <div class="wi-card-header">
-          <span class="wi-week-label">Week of 21 April 2026</span>
-          <span class="wi-date-label">Posted Monday morning</span>
+          <span class="wi-week-label"><span class="channel-name">#campaigns-winning-image</span></span>
+          <span class="wi-date-label">Week of 21 April 2026 · Monday thread</span>
         </div>
-        <div class="wi-author">
-          <div class="wi-avatar">G</div>
-          <div>
-            <div class="wi-name">Gilad</div>
-            <div class="wi-role">Product Lead</div>
-          </div>
-        </div>
-        <div class="wi-body">
-          <span class="wi-focus-label">This week I'm winning if...</span>
-          <div class="wi-focus-text">Fiona has a great first week and I've unblocked the team on the Q2 strategy doc.</div>
-          <div class="wi-commits">
-            <div class="wi-commit">
-              <div class="wi-commit-dot"></div>
-              <div>Welcome Fiona properly, run the values session, and get her first week set up well.</div>
+        <div class="wi-body" style="padding-top: 22px;">
+          <div class="slack-mock">
+            <div class="slack-mock-bot">
+              <div class="slack-mock-bot-meta">Slackbot · Reminder</div>
+              <div class="slack-mock-bot-text"><strong>@channel</strong> What is your weekly winning image? Start with the epic, your goal, and why it matters.</div>
             </div>
-            <div class="wi-commit">
-              <div class="wi-commit-dot"></div>
-              <div>Share the Q2 strategy draft with the team and get first-round feedback from Eng and Design.</div>
-            </div>
-            <div class="wi-commit">
-              <div class="wi-commit-dot"></div>
-              <div>Close out the open decisions from last week's retro.</div>
+            <div class="slack-mock-reply">
+              <div class="slack-mock-reply-meta"><strong>Gilad</strong> · Product Lead · reply in thread</div>
+              <ul class="wi-bullets-plain">
+                <li>Fiona's onboarding</li>
+                <li>Finalise our Boards</li>
+                <li>Shared contacts: decide and work on next steps</li>
+                <li>Activation &amp; Resurrection: decide and work on next steps</li>
+                <li>Basic features: map and align</li>
+                <li>My PRs: at least one over the line</li>
+              </ul>
             </div>
           </div>
+          <p style="font-size:13px; color:var(--text-muted); margin:0;">Order and wording change week to week. Specific beats vague. Honest beats impressive.</p>
         </div>
       </div>
     </section>
@@ -531,29 +575,29 @@
         <div class="step">
           <div class="step-num">1</div>
           <div class="step-body">
-            <div class="step-title">Monday morning, before you start</div>
-            <div class="step-desc">Post your Winning Image in the team channel. Do it before you dive into work, not during. It helps you set the tone for the week rather than just reacting to whatever lands first.</div>
+            <div class="step-title">Monday: reply in <span class="channel-name">#campaigns-winning-image</span></div>
+            <div class="step-desc">Wait for the Slackbot reminder (Monday morning, UK time). Post your Winning Image as a <strong>reply in that thread</strong>, not as a standalone message. That keeps everyone's week in one place and makes it easy to scan.</div>
           </div>
         </div>
         <div class="step">
           <div class="step-num">2</div>
           <div class="step-body">
-            <div class="step-title">One headline. A few bullets. That's it.</div>
-            <div class="step-desc">The headline is the one thing that makes the week feel like a win. The bullets support it. Keep it specific enough that you and anyone reading it can tell by Friday whether you got there.</div>
+            <div class="step-title">Follow the prompt: epic, goal, why it matters</div>
+            <div class="step-desc">Most people use a short list of bullets tied to epics or outcomes. You do not need a perfect narrative. You do need enough specificity that you (and anyone reading) can tell on Friday whether the week landed.</div>
           </div>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <div class="step-body">
-            <div class="step-title">Read the team's posts</div>
-            <div class="step-desc">Everyone posts, everyone reads. It takes two minutes and gives you a clear picture of what the whole team is focused on that week. It is also a good way to know who to avoid bothering with big requests on a heavy week.</div>
+            <div class="step-title">Read everyone else's replies</div>
+            <div class="step-desc">Same thread, two minutes of reading. You will see who is heads-down, who is on support, and who has capacity. It helps you calibrate asks and offers of help.</div>
           </div>
         </div>
         <div class="step">
           <div class="step-num">4</div>
           <div class="step-body">
-            <div class="step-title">Friday: look back</div>
-            <div class="step-desc">Did you hit it? Great. Did something change mid-week and you pivoted? That's a story worth understanding. What matters is not a perfect score but the reflection: what happened, and what does it tell you?</div>
+            <div class="step-title">Friday: mid-week check-in</div>
+            <div class="step-desc">On Friday afternoon (UK), Slackbot posts another reminder in the same channel asking how your weekly image is going. Use it to share progress, flag a pivot, or say honestly that the week went sideways. Same spirit as Monday: reflection beats performance.</div>
           </div>
         </div>
       </div>
