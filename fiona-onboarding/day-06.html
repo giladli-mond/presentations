@@ -319,6 +319,20 @@
     a.diagram-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(245,200,66,0.45); }
     a.diagram-cta:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
     .diagram-hint { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 10px; line-height: 1.5; }
+    .diagram-frame {
+      margin: 18px 0 16px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.35);
+    }
+    .diagram-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
 
     /* ── SPLASH ── */
     #splash {
@@ -354,9 +368,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Paste canonical flywheel diagram URL here (opens in new tab). -->
-  <script>window.FLYWHEEL_DIAGRAM_URL = '';</script>
 
   <!-- SPLASH -->
   <div id="splash">
@@ -421,7 +432,7 @@
         <span class="gilad-note-label">Gilad</span>
         <p>Week one was about orientation. Week two is about going deeper: understanding <strong>why we made the decisions we made</strong> as a team and as a product, and starting your first real onboarding task around the <strong>flywheel</strong>.</p>
         <p>This week you will move from observing to doing. More hands-on work, more investigation, more building. We do not expect you to finish the flywheel task in a single week. The point is to explore it properly and add one piece after another. By the end you will have touched finance, core flows in the product, AI, and how we measure the whole thing. It is the best crash course I know for how Campaigns actually works.</p>
-        <p>Start with the canonical diagram linked below. That is the map. Everything else this week hangs off it.</p>
+        <p>Start with the canonical diagram below. That is the map. Everything else this week hangs off it.</p>
       </div>
     </section>
 
@@ -450,12 +461,16 @@
         <span class="section-label">Your north star this week</span>
       </div>
       <h2 class="st">The flywheel diagram.</h2>
-      <p style="color:var(--text-secondary); margin-bottom:18px; font-size:15px;">This link is the single source of truth for how we draw the Campaigns flywheel. Bookmark it. You will come back to it all week.</p>
+      <p style="color:var(--text-secondary); margin-bottom:18px; font-size:15px;">This is our single source of truth for how we draw the Campaigns flywheel: five stages in a loop (active campaign creators, campaigns and workflows sent, contacts managed, AI-driven actions and recommendations, successful campaigns delivered), with definitions, pros and cons, and the metrics we track at each step. Bookmark this page or save the image. You will come back to it all week.</p>
+
+      <div class="diagram-frame">
+        <img src="./flywheel-diagram.png" alt="Campaigns flywheel: Active Campaign Creators, Total Campaigns Sent and Workflows initiated, Contacts Managed including capturing, AI Driven Actions and meaningful recommendations, Successful Campaigns Delivered, with metric callouts around each stage." loading="lazy" decoding="async">
+      </div>
 
       <div class="diagram-cta-row">
-        <a id="flywheel-diagram-link" class="diagram-cta" href="#" target="_blank" rel="noopener noreferrer">Open the flywheel diagram ↗</a>
+        <a class="diagram-cta" href="./flywheel-diagram.png" target="_blank" rel="noopener noreferrer">Open full-size diagram ↗</a>
       </div>
-      <p class="diagram-hint">If the button does not open yet, I am still wiring the URL in this page. Ping me on Slack and I will send the link directly.</p>
+      <p class="diagram-hint">Opens the PNG in a new tab so you can zoom in on each metric box.</p>
 
       <div class="flywheel-card" style="margin-top:28px;">
         <div class="flywheel-header">
@@ -847,17 +862,6 @@
       saveMet(met); renderMet(met);
     }
     renderMet(loadMet());
-
-    // ── Flywheel diagram URL (set in window.FLYWHEEL_DIAGRAM_URL near top of body) ──
-    (function () {
-      var u = typeof window.FLYWHEEL_DIAGRAM_URL === 'string' ? window.FLYWHEEL_DIAGRAM_URL.trim() : '';
-      var a = document.getElementById('flywheel-diagram-link');
-      var hint = document.querySelector('.diagram-hint');
-      if (a && u) {
-        a.href = u;
-        if (hint) hint.style.display = 'none';
-      }
-    })();
 
     function toggleSound() {
       const btn = document.getElementById('sound-btn');
